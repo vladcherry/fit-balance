@@ -43,6 +43,7 @@
       'photo.addProduct': 'Добавить продукт', 'photo.save': 'Записать в дневник',
       'photo.saved': 'Записано: +{kcal} ккал',
 
+      'entry.time': 'Время',
       'editor.name': 'Название', 'editor.grams': 'Вес, г', 'editor.kcal': 'Ккал',
       'editor.delete': 'Удалить', 'editor.done': 'Готово', 'editor.newItem': 'Новый продукт',
       'editor.hint': 'Меняете вес — калории пересчитываются. Впишите ккал, чтобы задать точно.',
@@ -60,23 +61,28 @@
 
       'meal.breakfast': 'Завтрак', 'meal.lunch': 'Обед', 'meal.dinner': 'Ужин', 'meal.snack': 'Перекус',
 
-      'stats.eyebrow': 'FitBalance · 30 дней', 'stats.accumulated': 'накопленный дефицит в жировом эквиваленте',
-      'stats.perDay': 'Дефицит по дням · цель 700', 'stats.toNextKg': 'До эквивалента −2,5 кг',
+      'stats.eyebrow': 'FitBalance · статистика', 'stats.accumulated': 'накопленный дефицит в жировом эквиваленте',
+      'stats.perDay': 'Дефицит по дням · цель {target}', 'stats.toNextKg': 'До эквивалента {kg} кг',
       'stats.remaining': 'ещё {kcal} ккал', 'stats.last30': 'Последние 30 дней',
       'stats.surplus': 'профицит', 'stats.deficit': 'дефицит',
       'stats.week': 'Неделя', 'stats.month': 'Месяц', 'stats.year': 'Год',
+      'stats.accumulatedSurplus': 'накопленный профицит в жировом эквиваленте',
+      'hist.eyebrow': 'FitBalance · дни', 'hist.title': 'ИСТОРИЯ',
+      'hist.today': 'Сегодня', 'hist.empty': 'Пока ни одного записанного дня',
 
       'prof.title': 'ВАШИ НАСТРОЙКИ', 'prof.body': 'Данные тела', 'prof.sex': 'Пол', 'prof.male': 'Мужской',
-      'prof.age': 'Возраст', 'prof.ageValue': '34 года', 'prof.height': 'Рост, см', 'prof.weight': 'Вес, кг',
-      'prof.goalNorm': 'Цель и норма', 'prof.lose': 'Похудение', 'prof.change': 'Изменить',
-      'prof.deficitPerDay': 'Дефицит в день', 'prof.calculated': 'рассчитано',
+      'prof.female': 'Женский',
+      'prof.age': 'Возраст', 'prof.height': 'Рост, см', 'prof.weight': 'Вес, кг',
+      'prof.goalNorm': 'Цель и норма', 'prof.lose': 'Похудение', 'prof.maintain': 'Поддержание веса',
+      'prof.deficitPerDay': 'Дефицит в день', 'prof.calculated': 'рассчитано по данным тела',
+      'prof.manualNorm': 'задано вручную', 'prof.recalc': 'Считать по данным тела',
       'prof.perDayGrams': '≈ {g} г в день',
       'prof.activitySource': 'Откуда берётся активность', 'prof.manual': 'Ввод вручную',
       'prof.manualHint': 'Вид, время, интенсивность — и приложение считает ккал',
       'prof.healthConnect': 'Health Connect', 'prof.healthHint': 'Android, в следующей версии', 'prof.later': 'Позже',
       'prof.language': 'Язык',
       'prof.disclaimer': 'Фото разбираются на устройстве и никуда не уходят. Жировой эквивалент (7 700 ккал = 1 кг) — условный ориентир, а не измерение состава тела.',
-      'prof.reset': 'Сбросить день до демо-данных', 'prof.resetDone': 'День сброшен',
+      'prof.reset': 'Сбросить данные до демо', 'prof.resetDone': 'Данные сброшены',
 
       'install.title': 'Установить FitBalance',
       'install.sub': 'Откроется с домашнего экрана, как обычное приложение',
@@ -92,8 +98,8 @@
       'prof.checking': 'Проверяю…', 'prof.upToDate': 'У вас последняя версия',
       'prof.updating': 'Есть новая версия — обновляю…', 'prof.dev': 'локальная сборка',
 
-      'weekdays': ['чт', 'пт', 'сб', 'вс', 'пн', 'вт', 'ср'],
-      'dateLine': 'СР 17.09'
+      'weekdays': ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'],
+      'months': ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
     },
     en: {
       'nav.today': 'Today', 'nav.history': 'History', 'nav.stats': 'Stats', 'nav.profile': 'Profile',
@@ -128,6 +134,7 @@
       'photo.addProduct': 'Add an item', 'photo.save': 'Save to diary',
       'photo.saved': 'Saved: +{kcal} kcal',
 
+      'entry.time': 'Time',
       'editor.name': 'Name', 'editor.grams': 'Weight, g', 'editor.kcal': 'Kcal',
       'editor.delete': 'Delete', 'editor.done': 'Done', 'editor.newItem': 'New item',
       'editor.hint': 'Change the weight and the calories follow. Type the calories to set them exactly.',
@@ -144,23 +151,28 @@
 
       'meal.breakfast': 'Breakfast', 'meal.lunch': 'Lunch', 'meal.dinner': 'Dinner', 'meal.snack': 'Snack',
 
-      'stats.eyebrow': 'FitBalance · 30 days', 'stats.accumulated': 'accumulated deficit as fat equivalent',
-      'stats.perDay': 'Deficit per day · target 700', 'stats.toNextKg': 'To −2.5 kg equivalent',
+      'stats.eyebrow': 'FitBalance · statistics', 'stats.accumulated': 'accumulated deficit as fat equivalent',
+      'stats.perDay': 'Deficit per day · target {target}', 'stats.toNextKg': 'To {kg} kg equivalent',
       'stats.remaining': '{kcal} kcal to go', 'stats.last30': 'Last 30 days',
       'stats.surplus': 'surplus', 'stats.deficit': 'deficit',
       'stats.week': 'Week', 'stats.month': 'Month', 'stats.year': 'Year',
+      'stats.accumulatedSurplus': 'accumulated surplus in fat equivalent',
+      'hist.eyebrow': 'FitBalance · days', 'hist.title': 'HISTORY',
+      'hist.today': 'Today', 'hist.empty': 'No day recorded yet',
 
       'prof.title': 'YOUR SETTINGS', 'prof.body': 'Body data', 'prof.sex': 'Sex', 'prof.male': 'Male',
-      'prof.age': 'Age', 'prof.ageValue': '34 years', 'prof.height': 'Height, cm', 'prof.weight': 'Weight, kg',
-      'prof.goalNorm': 'Goal and requirement', 'prof.lose': 'Lose weight', 'prof.change': 'Change',
-      'prof.deficitPerDay': 'Daily deficit', 'prof.calculated': 'calculated',
+      'prof.female': 'Female',
+      'prof.age': 'Age', 'prof.height': 'Height, cm', 'prof.weight': 'Weight, kg',
+      'prof.goalNorm': 'Goal and requirement', 'prof.lose': 'Lose weight', 'prof.maintain': 'Maintain weight',
+      'prof.deficitPerDay': 'Daily deficit', 'prof.calculated': 'calculated from the body data',
+      'prof.manualNorm': 'set by hand', 'prof.recalc': 'Calculate from the body data',
       'prof.perDayGrams': '≈ {g} g per day',
       'prof.activitySource': 'Where activity comes from', 'prof.manual': 'Manual entry',
       'prof.manualHint': 'Type, duration, intensity — the app does the calories',
       'prof.healthConnect': 'Health Connect', 'prof.healthHint': 'Android, next release', 'prof.later': 'Later',
       'prof.language': 'Language',
       'prof.disclaimer': 'Photos are analysed on the device and never leave it. The fat equivalent (7,700 kcal = 1 kg) is a conventional figure, not a body-composition measurement.',
-      'prof.reset': 'Reset the day to demo data', 'prof.resetDone': 'Day reset',
+      'prof.reset': 'Reset the data to demo', 'prof.resetDone': 'Data reset',
 
       'install.title': 'Install FitBalance',
       'install.sub': 'Opens from the home screen like any other app',
@@ -176,8 +188,8 @@
       'prof.checking': 'Checking…', 'prof.upToDate': 'You are on the latest version',
       'prof.updating': 'A new version is available — updating…', 'prof.dev': 'local build',
 
-      'weekdays': ['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed'],
-      'dateLine': 'WED 17.09'
+      'weekdays': ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      'months': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     }
   };
 
@@ -187,7 +199,6 @@
   var INTENSITY = { light: 0.8, moderate: 1.0, high: 1.3 };
   var ACTIVITY_TYPES = ['walking', 'running', 'gym', 'cycling', 'swimming', 'chores'];
   var DURATION_PRESETS = [15, 30, 45, 60, 90];
-  var WEEK = [-950, -720, 260, -640, -1100, -1120, -970];
 
   function seedEntries() {
     return [
@@ -198,6 +209,117 @@
       { time: '19:30', kind: 'activity', key: 'act.chores', kcal: 140 },
       { time: '20:40', kind: 'food', key: 'meal.dinner', kcal: 900 }
     ];
+  }
+
+  /* ---------------- days ---------------- */
+
+  function dateKey(date) {
+    return date.getFullYear() + '-' +
+      String(date.getMonth() + 1).padStart(2, '0') + '-' +
+      String(date.getDate()).padStart(2, '0');
+  }
+
+  function todayKey() { return dateKey(new Date()); }
+
+  function dayBefore(date, back) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() - back);
+  }
+
+  /* Demo history, so a fresh install has charts with something in them. The
+     numbers are generated from the day index rather than randomly, so the same
+     day always looks the same. */
+  function seedHistory(days, norm) {
+    var history = {};
+    var now = new Date();
+    for (var back = 1; back <= days; back += 1) {
+      // Mostly days in deficit, a few over - the shape a real month tends to have.
+      var wanted = back % 9 === 4
+        ? -260
+        : Math.round(520 + Math.sin(back * 1.7) * 260 + Math.cos(back * 0.6) * 90);
+      var burned = back % 7 === 3 ? 0 : Math.round(260 + Math.sin(back * 2.3) * 180);
+      history[key(back)] = {
+        eaten: norm + burned - wanted,
+        burned: burned,
+        maintenance: norm
+      };
+    }
+    function key(back) { return dateKey(dayBefore(now, back)); }
+    return history;
+  }
+
+  function sumEntries(entries) {
+    var eaten = 0, burned = 0;
+    entries.forEach(function (e) {
+      if (e.kind === 'food') { eaten += e.kcal; } else { burned += e.kcal; }
+    });
+    return { eaten: eaten, burned: burned };
+  }
+
+  /* Midnight passed: today's entries become a closed day and the diary is empty
+     again. Called on load and whenever the app comes back to the foreground. */
+  function rollOverDay() {
+    var key = todayKey();
+    if (state.today === key) { return false; }
+    if (state.today && state.entries.length) {
+      var sums = sumEntries(state.entries);
+      state.history[state.today] = {
+        eaten: sums.eaten, burned: sums.burned, maintenance: maintenance()
+      };
+    }
+    state.today = key;
+    state.entries = [];
+    state.editingEntry = -1;
+    state.meal = { type: state.meal.type, items: [], editing: -1 };
+    save();
+    return true;
+  }
+
+  /* Today is read from the live diary; earlier days from the closed record, so
+     a change to the maintenance figure never rewrites the past. */
+  function dayStats(key) {
+    if (key === state.today) {
+      var sums = sumEntries(state.entries);
+      return {
+        key: key, eaten: sums.eaten, burned: sums.burned,
+        maintenance: maintenance(), isToday: true
+      };
+    }
+    var day = state.history[key];
+    if (!day) { return null; }
+    return {
+      key: key, eaten: day.eaten, burned: day.burned,
+      maintenance: day.maintenance, isToday: false
+    };
+  }
+
+  function dayDeficit(day) { return day.maintenance + day.burned - day.eaten; }
+
+  function gramsOf(kcal) { return Math.round(Math.abs(kcal) / KCAL_PER_KG * 1000); }
+
+  /* The last `count` days, oldest first. Days with nothing recorded are present
+     but marked, so a chart shows a gap rather than dropping a column. */
+  function lastDays(count) {
+    var now = new Date();
+    var out = [];
+    for (var back = count - 1; back >= 0; back -= 1) {
+      var key = dateKey(dayBefore(now, back));
+      out.push(dayStats(key) || {
+        key: key, eaten: 0, burned: 0, maintenance: maintenance(), empty: true
+      });
+    }
+    return out;
+  }
+
+  /* Every day on record, newest first — what the history screen lists. */
+  function recordedDays() {
+    var keys = Object.keys(state.history);
+    if (keys.indexOf(state.today) === -1) { keys.push(state.today); }
+    return keys.sort().reverse().map(function (key) { return dayStats(key); })
+      .filter(function (day) { return !!day; });
+  }
+
+  function accumulatedDeficit() {
+    return recordedDays().reduce(function (sum, day) { return sum + dayDeficit(day); }, 0);
   }
 
   /* A recognised food becomes a draft item: the model names it and supplies a
@@ -215,10 +337,17 @@
 
   var state = {
     lang: 'ru',
+    sex: 'male',
+    age: 34,
+    height: 182,
     weight: 84.5,
-    maintenance: 2200,
+    maintenance: null,          // null = derived from the body data below
     target: 700,
+    statsPeriod: 'week',
+    today: null,                // the date `entries` belong to
     entries: seedEntries(),
+    editingEntry: -1,
+    history: null,              // date -> closed day; filled with demo days on first run
     draft: { type: 'walking', minutes: 45, intensity: 'moderate', manual: '' },
     meal: { type: 'lunch', items: [], editing: -1 }
   };
@@ -232,18 +361,31 @@
     return { kcal: Math.round(kcal), grams: Math.round(grams) };
   }
 
+  /* Mifflin-St Jeor resting metabolic rate, times 1.2 for ordinary daily
+     movement. Deliberately *not* an activity multiplier on top of that:
+     workouts are entered by hand and added as their own line, so a higher
+     multiplier here would count them twice. */
+  function calculatedMaintenance() {
+    var base = 10 * state.weight + 6.25 * state.height - 5 * state.age;
+    var rmr = state.sex === 'female' ? base - 161 : base + 5;
+    return Math.round(rmr * 1.2 / 10) * 10;
+  }
+
+  function maintenance() {
+    return state.maintenance === null || state.maintenance === undefined
+      ? calculatedMaintenance()
+      : state.maintenance;
+  }
+
   function totals() {
-    var eaten = 0, burned = 0;
-    state.entries.forEach(function (e) {
-      if (e.kind === 'food') { eaten += e.kcal; } else { burned += e.kcal; }
-    });
-    var deficit = state.maintenance + burned - eaten;
+    var sums = sumEntries(state.entries);
+    var deficit = maintenance() + sums.burned - sums.eaten;
     return {
-      eaten: eaten,
-      burned: burned,
+      eaten: sums.eaten,
+      burned: sums.burned,
       deficit: deficit,
       leftToBurn: Math.max(0, state.target - deficit),
-      grams: Math.round(Math.abs(deficit) / KCAL_PER_KG * 1000)
+      grams: gramsOf(deficit)
     };
   }
 
@@ -290,6 +432,19 @@
 
   function el(id) { return document.getElementById(id); }
 
+  /* "СР 17.09" / "WED 17.09" for the home screen. */
+  function dateLabel(date) {
+    var weekday = COPY[state.lang].weekdays[(date.getDay() + 6) % 7];
+    return (weekday + ' ' + String(date.getDate()).padStart(2, '0') + '.' +
+      String(date.getMonth() + 1).padStart(2, '0')).toUpperCase();
+  }
+
+  function parseKey(key) {
+    var parts = key.split('-');
+    return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+  }
+
+
   function button(label, pressed, onClick, className) {
     var b = document.createElement('button');
     b.type = 'button';
@@ -319,8 +474,7 @@
     document.querySelectorAll('[data-i18n-aria]').forEach(function (node) {
       node.setAttribute('aria-label', t(node.getAttribute('data-i18n-aria')));
     });
-    el('today-date').textContent = t('dateLine');
-    el('p-age').textContent = t('prof.ageValue');
+    el('today-date').textContent = dateLabel(new Date());
   }
 
   function renderHome() {
@@ -338,12 +492,22 @@
 
     el('m-eaten').textContent = num(s.eaten);
     el('m-burned').textContent = num(s.burned);
-    el('m-norm').textContent = num(state.maintenance);
+    el('m-norm').textContent = num(maintenance());
 
     document.querySelector('[data-i18n="home.deficitNow"]').textContent =
       s.deficit >= 0 ? t('home.deficitNow') : t('home.surplusNow');
     el('deficit-kcal').textContent = num(Math.abs(s.deficit));
     el('deficit-grams').textContent = t('unit.kcal') + ' · ≈ ' + num(s.grams) + ' ' + t('unit.g');
+
+    /* The two roll-ups next to the deficit card: a week in grams, a month in
+       kilograms, both of fat equivalent. */
+    var week = lastDays(7).reduce(function (sum, d) { return sum + (d.empty ? 0 : dayDeficit(d)); }, 0);
+    var month = lastDays(30).reduce(function (sum, d) { return sum + (d.empty ? 0 : dayDeficit(d)); }, 0);
+    el('home-7').innerHTML = (week >= 0 ? '−' : '+') + num(gramsOf(week)) +
+      ' <span>' + t('unit.g') + '</span>';
+    el('home-30').innerHTML = (month >= 0 ? '−' : '+') +
+      num(Math.round(Math.abs(month) / KCAL_PER_KG * 10) / 10) +
+      ' <span>' + t('unit.kg') + '</span>';
 
     var feed = el('feed');
     feed.innerHTML = '';
@@ -351,8 +515,15 @@
       feed.innerHTML = '<div class="feed__empty">' + t('home.empty') + '</div>';
       return;
     }
-    state.entries.slice().reverse().forEach(function (e) {
-      var row = document.createElement('div');
+    // Newest first, by the clock rather than by the order things were added -
+    // an entry whose time was edited has to move with it.
+    byTimeDescending(state.entries).forEach(function (e) {
+      var index = state.entries.indexOf(e);
+      var wrap = document.createElement('div');
+      wrap.className = 'feed__wrap' + (state.editingEntry === index ? ' is-editing' : '');
+
+      var row = document.createElement('button');
+      row.type = 'button';
       row.className = 'feed__row';
       var burn = e.kind === 'activity';
       row.innerHTML =
@@ -362,8 +533,113 @@
       row.children[0].textContent = e.time;
       row.children[1].textContent = t(e.key);
       row.children[2].textContent = (burn ? '−' : '+') + num(e.kcal);
-      feed.appendChild(row);
+      row.addEventListener('click', function () {
+        state.editingEntry = state.editingEntry === index ? -1 : index;
+        renderHome();
+      });
+      wrap.appendChild(row);
+
+      if (state.editingEntry === index) { wrap.appendChild(buildEntryEditor(e, index)); }
+      feed.appendChild(wrap);
     });
+  }
+
+  function byTimeDescending(entries) {
+    return entries.slice().sort(function (a, b) {
+      return a.time === b.time ? 0 : (a.time < b.time ? 1 : -1);
+    });
+  }
+
+  /* Tapping a diary entry opens it: the time, the calories and what it was are
+     all editable, and it can be removed. */
+  function buildEntryEditor(entry, index) {
+    var box = document.createElement('div');
+    box.className = 'editor';
+
+    var pair = document.createElement('div');
+    pair.className = 'editor__pair';
+
+    var timeLabel = document.createElement('label');
+    var timeCaption = document.createElement('span');
+    timeCaption.className = 'editor__k';
+    timeCaption.textContent = t('entry.time');
+    var timeInput = document.createElement('input');
+    timeInput.type = 'time';
+    timeInput.value = entry.time;
+    timeLabel.appendChild(timeCaption);
+    timeLabel.appendChild(timeInput);
+
+    var kcalField = numberField(t('editor.kcal'), entry.kcal);
+    pair.appendChild(timeLabel);
+    pair.appendChild(kcalField);
+    box.appendChild(pair);
+
+    var caption = document.createElement('div');
+    caption.className = 'editor__k';
+    caption.style.margin = '10px 0 0';
+    caption.textContent = t(entry.kind === 'food' ? 'photo.mealType' : 'act.type');
+    box.appendChild(caption);
+
+    var chips = document.createElement('div');
+    chips.className = 'chips chips--inline';
+    chips.style.marginTop = '6px';
+    var keys = entry.kind === 'food'
+      ? MEAL_TYPES.map(function (k) { return 'meal.' + k; })
+      : ACTIVITY_TYPES.map(function (k) { return 'act.' + k; });
+    keys.forEach(function (key) {
+      chips.appendChild(button(t(key), entry.key === key, function () {
+        entry.key = key;
+        save();
+        renderHome();
+      }, 'chip'));
+    });
+    box.appendChild(chips);
+
+    var row = document.createElement('div');
+    row.className = 'editor__row';
+    var del = document.createElement('button');
+    del.type = 'button';
+    del.className = 'editor__del';
+    del.textContent = t('editor.delete');
+    var done = document.createElement('button');
+    done.type = 'button';
+    done.className = 'editor__done';
+    done.textContent = t('editor.done');
+    row.appendChild(del);
+    row.appendChild(done);
+    box.appendChild(row);
+
+    timeInput.addEventListener('change', function () {
+      if (!this.value) { this.value = entry.time; return; }
+      entry.time = this.value;
+      save();
+      renderHome();
+    });
+
+    kcalField.__input.addEventListener('change', function () {
+      var value = parseInt(String(this.value).replace(',', '.'), 10);
+      if (!isNaN(value) && value >= 0 && value <= 20000) {
+        entry.kcal = value;
+        save();
+        renderHome();
+      } else {
+        this.value = entry.kcal;
+      }
+    });
+
+    del.addEventListener('click', function () {
+      state.entries.splice(index, 1);
+      state.editingEntry = -1;
+      save();
+      renderHome();
+    });
+
+    done.addEventListener('click', function () {
+      state.editingEntry = -1;
+      renderHome();
+    });
+
+    return box;
   }
 
   function itemLabel(it) {
@@ -581,41 +857,101 @@
     el('act-basis').textContent = t('act.basis', { weight: num(state.weight) });
   }
 
-  function renderStats() {
-    var seg = el('stats-period');
-    if (!seg.children.length) {
-      ['week', 'month', 'year'].forEach(function (key, i) {
-        seg.appendChild(button(t('stats.' + key), i === 0, function () {
-          Array.prototype.forEach.call(seg.children, function (b, j) {
-            b.setAttribute('aria-pressed', i === j ? 'true' : 'false');
-          });
-        }));
-      });
-    } else {
-      ['week', 'month', 'year'].forEach(function (key, i) {
-        seg.children[i].textContent = t('stats.' + key);
+  var STATS_PERIODS = { week: 7, month: 30, year: 365 };
+
+  /* Year view is twelve monthly columns; the shorter views are one column per
+     day. Both come out as { value, label, isNow } so the chart draws either. */
+  function statsColumns(period) {
+    if (period !== 'year') {
+      return lastDays(STATS_PERIODS[period]).map(function (day) {
+        var date = parseKey(day.key);
+        return {
+          value: day.empty ? 0 : dayDeficit(day),
+          label: period === 'week'
+            ? COPY[state.lang].weekdays[(date.getDay() + 6) % 7]
+            : String(date.getDate()),
+          isNow: day.isToday
+        };
       });
     }
 
-    var peak = 1200;
+    var now = new Date();
+    var buckets = [];
+    for (var back = 11; back >= 0; back -= 1) {
+      var month = new Date(now.getFullYear(), now.getMonth() - back, 1);
+      buckets.push({ year: month.getFullYear(), month: month.getMonth(), total: 0 });
+    }
+    recordedDays().forEach(function (day) {
+      var date = parseKey(day.key);
+      for (var i = 0; i < buckets.length; i += 1) {
+        if (buckets[i].year === date.getFullYear() && buckets[i].month === date.getMonth()) {
+          buckets[i].total += dayDeficit(day);
+          return;
+        }
+      }
+    });
+    return buckets.map(function (bucket, i) {
+      return {
+        value: bucket.total,
+        label: COPY[state.lang].months[bucket.month],
+        isNow: i === buckets.length - 1
+      };
+    });
+  }
+
+  function renderStats() {
+    var seg = el('stats-period');
+    var periods = ['week', 'month', 'year'];
+    if (!seg.children.length) {
+      periods.forEach(function (key, i) {
+        seg.appendChild(button(t('stats.' + key), i === 0, function () {
+          state.statsPeriod = key;
+          save();
+          renderStats();
+        }));
+      });
+    }
+    periods.forEach(function (key, i) {
+      seg.children[i].textContent = t('stats.' + key);
+      seg.children[i].setAttribute('aria-pressed', state.statsPeriod === key ? 'true' : 'false');
+    });
+
+    var columns = statsColumns(state.statsPeriod);
+    var periodTotal = columns.reduce(function (sum, c) { return sum + c.value; }, 0);
+    var accumulated = accumulatedDeficit();
+
+    el('stats-title').innerHTML = '≈ ' + (accumulated >= 0 ? '−' : '+') +
+      num(Math.round(Math.abs(accumulated) / KCAL_PER_KG * 10) / 10) +
+      ' <span data-i18n="unit.kg">' + t('unit.kg') + '</span>';
+    document.querySelector('[data-i18n="stats.accumulated"]').textContent =
+      t(accumulated >= 0 ? 'stats.accumulated' : 'stats.accumulatedSurplus');
+
+    el('stats-period-label').textContent = t('stats.perDay', { target: num(state.target) });
+    el('stats-period-total').innerHTML = (periodTotal >= 0 ? '−' : '+') +
+      num(gramsOf(periodTotal)) + ' <span>' + t('unit.g') + '</span>';
+
+    /* One scale for both halves of the chart, taken from the tallest column, so
+       a surplus bar and a deficit bar of the same size look the same. */
+    var peak = columns.reduce(function (max, c) { return Math.max(max, Math.abs(c.value)); }, 1);
     var pos = el('chart-pos'), neg = el('chart-neg'), days = el('chart-days');
     pos.innerHTML = ''; neg.innerHTML = ''; days.innerHTML = '';
-    WEEK.forEach(function (value, i) {
-      var isToday = i === WEEK.length - 1;
+    columns.forEach(function (column) {
       var up = document.createElement('div');
       up.className = 'chart__col';
       var down = document.createElement('div');
       down.className = 'chart__col';
       var bar = document.createElement('div');
       bar.className = 'chart__bar';
-      if (value > 0) {
+      var height = Math.round(Math.abs(column.value) / peak * 86);
+
+      if (column.value < 0) {                 // a surplus day sits above the axis
         bar.classList.add('is-surplus');
-        bar.style.height = Math.min(26, Math.round(value / peak * 86)) + 'px';
+        bar.style.height = Math.min(26, height) + 'px';
         bar.style.borderRadius = '4px 4px 0 0';
         up.appendChild(bar);
       } else {
-        if (isToday) { bar.classList.add('is-today'); }
-        bar.style.height = Math.round(-value / peak * 86) + 'px';
+        if (column.isNow) { bar.classList.add('is-today'); }
+        bar.style.height = height + 'px';
         bar.style.borderRadius = '0 0 4px 4px';
         down.appendChild(bar);
       }
@@ -623,32 +959,88 @@
       neg.appendChild(down);
 
       var day = document.createElement('div');
-      day.className = 'chart__day' + (isToday ? ' is-today' : '');
-      day.textContent = COPY[state.lang].weekdays[i];
+      day.className = 'chart__day' + (column.isNow ? ' is-today' : '');
+      day.textContent = column.label;
       days.appendChild(day);
     });
+    days.classList.toggle('is-dense', columns.length > 14);
 
-    el('stats-remaining').textContent = t('stats.remaining', { kcal: num(770) });
+    /* The next half-kilo of fat equivalent, and what is left to reach it. */
+    var kg = accumulated / KCAL_PER_KG;
+    var milestone = (Math.floor(Math.abs(kg) / 0.5) + 1) * 0.5;
+    var remaining = Math.round(milestone * KCAL_PER_KG - Math.abs(accumulated));
+    el('stats-milestone').textContent = t('stats.toNextKg', {
+      kg: num(kg >= 0 ? milestone : -milestone)
+    });
+    el('stats-remaining').textContent = t('stats.remaining', { kcal: num(remaining) });
+    el('goal-fill').style.width =
+      Math.max(2, Math.min(100, Math.round((1 - remaining / (0.5 * KCAL_PER_KG)) * 100))) + '%';
 
+    /* Thirty days at a glance: one cell per day, shaded by how close that day
+       came to the deficit target. */
     var strip = el('strip');
-    if (!strip.children.length) {
-      var levels = [3, 2, 1, 3, 0, 2, 3, 3, 1, 2, 3, 0, 2, 3, 3, 2, 1, 3, 2, 3, 0, 2, 3, 1, 3, 3, 2, 3, 3, 3];
-      var fills = ['#17120f', '#f6d9d8', '#e8807f', '#d8161d'];
-      levels.forEach(function (lv) {
-        var cell = document.createElement('div');
-        cell.style.background = fills[lv];
-        strip.appendChild(cell);
-      });
+    strip.innerHTML = '';
+    var fills = ['#17120f', '#f6d9d8', '#e8807f', '#d8161d'];
+    lastDays(30).forEach(function (day) {
+      var cell = document.createElement('div');
+      var deficit = day.empty ? 0 : dayDeficit(day);
+      var level = deficit <= 0 ? 0
+        : deficit < state.target * 0.5 ? 1
+        : deficit < state.target ? 2
+        : 3;
+      cell.style.background = fills[level];
+      cell.title = day.key;
+      strip.appendChild(cell);
+    });
+  }
+
+  function renderHistory() {
+    var list = el('history-list');
+    list.innerHTML = '';
+    var days = recordedDays();
+    if (!days.length) {
+      list.innerHTML = '<div class="feed__empty">' + t('hist.empty') + '</div>';
+      return;
     }
+    days.forEach(function (day) {
+      var deficit = dayDeficit(day);
+      var row = document.createElement('div');
+      row.className = 'day';
+      row.innerHTML =
+        '<div class="day__head">' +
+          '<span class="day__date"></span>' +
+          '<span class="day__kcal"></span>' +
+        '</div>' +
+        '<div class="day__sub"></div>';
+      row.querySelector('.day__date').textContent = day.isToday
+        ? t('hist.today')
+        : dateLabel(parseKey(day.key));
+      var kcal = row.querySelector('.day__kcal');
+      kcal.textContent = (deficit >= 0 ? '−' : '+') + num(Math.abs(deficit)) + ' ' + t('unit.kcal');
+      kcal.className = 'day__kcal' + (deficit >= 0 ? ' is-deficit' : ' is-surplus');
+      row.querySelector('.day__sub').textContent =
+        t('home.eaten') + ' ' + num(day.eaten) + ' · ' +
+        t('home.burned') + ' ' + num(day.burned) + ' · ≈ ' + num(gramsOf(deficit)) + ' ' + t('unit.g');
+      list.appendChild(row);
+    });
   }
 
   function renderProfile() {
-    el('p-target').textContent = num(state.target);
-    el('p-norm').textContent = num(state.maintenance);
+    var manual = state.maintenance !== null && state.maintenance !== undefined;
+    el('p-target').value = state.target;
+    el('p-norm').value = maintenance();
+    el('p-norm-note').textContent = t(manual ? 'prof.manualNorm' : 'prof.calculated');
+    el('p-norm-reset').hidden = !manual;
     el('p-target-g').textContent = t('prof.perDayGrams', {
       g: num(Math.round(state.target / KCAL_PER_KG * 1000))
     });
+    el('p-goal').textContent = t(state.target > 0 ? 'prof.lose' : 'prof.maintain');
+    el('p-age').value = state.age;
+    el('p-height').value = state.height;
     el('p-weight').value = state.weight;
+    Array.prototype.forEach.call(el('p-sex').children, function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-sex') === state.sex ? 'true' : 'false');
+    });
     Array.prototype.forEach.call(el('lang-switch').children, function (b) {
       b.setAttribute('aria-pressed', b.getAttribute('data-lang') === state.lang ? 'true' : 'false');
     });
@@ -660,6 +1052,7 @@
     renderMeal();
     renderActivity();
     renderStats();
+    renderHistory();
     renderProfile();
   }
 
@@ -911,14 +1304,62 @@
       toast(t('photo.saved', { kcal: num(m.kcal) }));
     });
 
-    el('p-weight').addEventListener('change', function () {
-      var w = parseFloat(String(this.value).replace(',', '.'));
-      if (!isNaN(w) && w > 20 && w < 400) {
-        state.weight = Math.round(w * 10) / 10;
+    /* Body data feeds the maintenance figure, so each field re-renders the
+       screens that show it. Out-of-range input is refused, and the field snaps
+       back to the stored value rather than silently keeping a bad number. */
+    function bodyField(id, key, min, max, decimals) {
+      el(id).addEventListener('change', function () {
+        var value = parseFloat(String(this.value).replace(',', '.'));
+        if (!isNaN(value) && value >= min && value <= max) {
+          state[key] = decimals ? Math.round(value * 10) / 10 : Math.round(value);
+          save();
+          renderHome();
+          renderProfile();
+          renderActivity();
+        }
+        this.value = state[key];
+      });
+    }
+    bodyField('p-age', 'age', 14, 100, false);
+    bodyField('p-height', 'height', 120, 230, false);
+    bodyField('p-weight', 'weight', 30, 300, true);
+
+    el('p-sex').addEventListener('click', function (e) {
+      var picked = e.target.closest('[data-sex]');
+      if (!picked) { return; }
+      state.sex = picked.getAttribute('data-sex');
+      save();
+      renderHome();
+      renderProfile();
+    });
+
+    el('p-target').addEventListener('change', function () {
+      var value = parseInt(this.value, 10);
+      if (!isNaN(value) && value >= 0 && value <= 2000) {
+        state.target = value;
         save();
-        renderActivity();
+        renderHome();
       }
-      this.value = state.weight;
+      renderProfile();
+    });
+
+    // Typing over the maintenance figure overrides the calculation; the reset
+    // button hands it back to the body data.
+    el('p-norm').addEventListener('change', function () {
+      var value = parseInt(this.value, 10);
+      if (!isNaN(value) && value >= 800 && value <= 6000) {
+        state.maintenance = value;
+        save();
+        renderHome();
+      }
+      renderProfile();
+    });
+
+    el('p-norm-reset').addEventListener('click', function () {
+      state.maintenance = null;
+      save();
+      renderHome();
+      renderProfile();
     });
 
     el('lang-switch').addEventListener('click', function (e) {
@@ -936,8 +1377,10 @@
     reset.setAttribute('data-i18n', 'prof.reset');
     reset.addEventListener('click', function () {
       state.entries = seedEntries();
+      state.editingEntry = -1;
+      state.history = seedHistory(45, calculatedMaintenance());
       save();
-      renderHome();
+      renderAll();
       toast(t('prof.resetDone'));
     });
     var disclaimer = document.querySelector('#screen-profile .disclaimer');
@@ -1077,6 +1520,12 @@
   /* ---------------- start ---------------- */
 
   load();
+
+  /* First run, or a save from before the diary kept days: give the app a today
+     and a demo history so nothing renders against empty state. */
+  if (!state.history) { state.history = seedHistory(45, calculatedMaintenance()); }
+  if (!state.today) { state.today = todayKey(); }
+  rollOverDay();
 
   // ?seed=meal fills the meal with a recognition result. Used by tools/make-screenshots.sh
   // and handy for demos; it never runs on its own.

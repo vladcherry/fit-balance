@@ -153,3 +153,54 @@ enough to host ourselves, and needed no conversion step.
 - Replacing this with a food-specific model is a contained change — the class table and the model
   URL live in one file, `prototype/recognise.js`. The decision to revisit is whether a
   food-specific model justifies either a hub dependency or the work of converting and hosting one.
+
+---
+
+## 8. Maintenance is calculated from the body data, at rest, and can be overridden
+
+**Decision.** The daily maintenance requirement is Mifflin-St Jeor resting metabolic rate from
+sex, age, height and weight, multiplied by **1.2** for ordinary daily movement — and nothing
+more. The user can type over the figure, and a button hands it back to the calculation.
+
+**Context.** The profile collected body data that changed nothing: sex and age were decorative
+tiles, height an input with no handler, and the "calculated" maintenance was the constant 2200
+from the mock-up. The spec ([product-spec.md](product-spec.md#2-user-profile)) had always asked
+for the calculation.
+
+**Consequences.**
+
+- **The 1.2 is deliberate and is the whole point.** A conventional TDEE formula multiplies by
+  1.4–1.9 to account for exercise. This app already counts exercise as its own diary line, so a
+  higher multiplier here would count every workout twice — once in the requirement and once in
+  what was burned. The figure is therefore "what the body spends before training", and training
+  is added on top, visibly.
+- The manual override exists because the formula is a population average with a real error bar
+  on any individual. Someone who has measured their own requirement should not have to fight the
+  app, and the screen states which of the two is in force.
+- Changing the body data re-derives today's requirement but never rewrites history: each closed
+  day keeps the maintenance figure it was recorded with.
+
+---
+
+## 9. The diary keeps days, and the statistics come from them
+
+**Decision.** The app stores a per-day record — eaten, burned and the maintenance figure in force
+— and every aggregate on the home, history and statistics screens is calculated from it. Today's
+entries stay editable; at the first launch after midnight the day closes into the record and the
+diary starts empty.
+
+**Context.** The prototype only ever knew about today. The weekly chart, the 30-day strip, the
+accumulated fat equivalent and the "7 days / 30 days" roll-ups were all fixed numbers from the
+design, and the History tab opened the statistics screen because there was no history to show.
+
+**Consequences.**
+
+- A day is the unit of the record, which is what makes "accumulated deficit" meaningful. The
+  price is that editing a past day is not possible yet — only today is open.
+- Each closed day stores its own maintenance figure, so changing the profile later does not
+  silently rewrite what the past looked like.
+- A fresh install seeds 45 demo days, generated from the day index rather than randomly, so the
+  charts have something to draw and the same day always looks the same. Resetting the data in the
+  profile regenerates them.
+- Storage is still one localStorage key. A year of days is a few tens of kilobytes, so this holds
+  for the prototype; the real app will want IndexedDB.

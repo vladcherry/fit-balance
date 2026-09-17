@@ -55,6 +55,7 @@ echo "Writing to docs/screenshots/"
 shoot home '#home'
 shoot meal '?seed=meal#photo'
 shoot activity '#activity'
+shoot history '#history'
 shoot stats '#stats'
 shoot profile '#profile'
 echo "Done."

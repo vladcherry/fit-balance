@@ -9,12 +9,13 @@ Open it on a phone and install it to the home screen — the app offers to do th
 step-by-step instructions on iOS, where Safari has no install API.
 
 > **Status: prototype.** `prototype/` is a clickable, installable static prototype of the chosen
-> design, with working on-device food recognition. The real application has not been started yet;
-> this repository holds the prototype, the product spec and the decision log.
+> design: on-device food recognition, an editable diary, a day history and statistics that come
+> from the recorded days rather than from fixed mock-up numbers. The real application has not been
+> started yet; this repository holds the prototype, the product spec and the decision log.
 
-| Today | Meal | Activity | Stats |
-| --- | --- | --- | --- |
-| <img src="docs/screenshots/home.png" width="190" alt="Home screen"> | <img src="docs/screenshots/meal.png" width="190" alt="Meal screen"> | <img src="docs/screenshots/activity.png" width="190" alt="Activity screen"> | <img src="docs/screenshots/stats.png" width="190" alt="Statistics screen"> |
+| Today | Meal | Activity | History | Stats |
+| --- | --- | --- | --- | --- |
+| <img src="docs/screenshots/home.png" width="150" alt="Home screen"> | <img src="docs/screenshots/meal.png" width="150" alt="Meal screen"> | <img src="docs/screenshots/activity.png" width="150" alt="Activity screen"> | <img src="docs/screenshots/history.png" width="150" alt="History screen"> | <img src="docs/screenshots/stats.png" width="150" alt="Statistics screen"> |
 
 ## What it does
 
@@ -30,6 +31,13 @@ Food is logged by photographing the plate, or by hand. Either way the result is 
 whose name, weight and calories can all be edited — change a weight and the calories follow the
 item's kcal-per-100 g. Activity is entered by hand: pick the type, the duration and the
 intensity, and the app estimates the calories from MET and body weight.
+
+Everything already written to the diary stays editable: tapping an entry opens its time, its
+calories and what it was, or removes it. At midnight the day closes into the history, which is
+what the history screen lists and what the statistics are calculated from.
+
+The daily maintenance requirement is derived from the body data in the profile — sex, age, height
+and weight, through Mifflin-St Jeor — and can be typed over by hand when the user knows better.
 
 ## The headline number
 

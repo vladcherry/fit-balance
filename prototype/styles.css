@@ -133,8 +133,19 @@ body {
 /* ---------- feed ---------- */
 
 .feed { margin: 6px 22px 0; }
-.feed__row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--hairline); }
-.feed__row:last-child { border-bottom: 0; }
+.feed__wrap:last-child .feed__row { border-bottom: 0; }
+.feed__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--hairline);
+  text-align: left;
+  background: none;
+}
+.feed__wrap.is-editing .feed__row { border-bottom: 0; }
+.feed__wrap.is-editing .feed__name { color: var(--red-deep); }
 .feed__time { width: 44px; font-size: 11px; font-weight: 700; color: var(--ink-muted); }
 .feed__name { flex-grow: 1; font-size: 15px; font-weight: 700; }
 .feed__kcal { font-family: var(--display); font-size: 19px; }
@@ -400,8 +411,31 @@ button, .btn { font: inherit; border: 0; background: none; color: inherit; curso
 
 .goalcard { margin: 9px 22px 0; padding: 14px 16px; border-radius: 18px; background: var(--ink); color: var(--white); }
 .goalcard__split { display: flex; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #332c28; }
-.goalcard__split > div { flex-grow: 1; flex-basis: 0; }
+.goalcard__split > div, .goalcard__split > label { flex-grow: 1; flex-basis: 0; display: block; }
 .goalcard__big { font-family: var(--display); font-size: 30px; line-height: 1.05; margin-top: 2px; }
+/* The two big figures are editable in place; they keep the display face and
+   carry an underline so it is visible that they can be typed over. */
+.goalcard__input {
+  width: 100%;
+  padding: 0 0 2px;
+  border: 0;
+  border-bottom: 1px dashed #5a504b;
+  background: none;
+  color: var(--white);
+  font-family: var(--display);
+  font-size: 30px;
+  line-height: 1.05;
+  -moz-appearance: textfield;
+}
+.goalcard__input::-webkit-outer-spin-button,
+.goalcard__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.goalcard__input:focus { outline: none; border-bottom-color: var(--white); }
+.goalcard #p-norm-reset { margin-top: 12px; }
+
+/* A body-data row that needs the full width for its control. */
+.tile--wide { margin: 9px 22px 0; }
+.tile--wide .seg--tile { margin: 6px 0 0; }
+.seg--tile button { height: 40px; background: #e7e1dd; font-size: 13px; }
 .pill { height: 36px; padding: 0 14px; border-radius: 18px; background: #2a2320; font-size: 12px; font-weight: 700; }
 .pill--light { background: var(--surface); color: var(--ink); }
 .pill[disabled] { opacity: 0.5; }
@@ -556,3 +590,18 @@ button, .btn { font: inherit; border: 0; background: none; color: inherit; curso
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
+/* ---------- history ---------- */
+
+.days { margin: 10px 22px 0; }
+.day { padding: 12px 0; border-bottom: 1px solid var(--hairline); }
+.day:last-child { border-bottom: 0; }
+.day__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.day__date { font-size: 15px; font-weight: 700; }
+.day__kcal { font-family: var(--display); font-size: 20px; }
+.day__kcal.is-deficit { color: var(--red); }
+.day__kcal.is-surplus { color: var(--ink-muted); }
+.day__sub { margin-top: 2px; font-size: 12px; font-weight: 600; color: var(--ink-muted); }
+
+/* A month or a year has too many columns for every label to fit. */
+.chart__days.is-dense .chart__day { font-size: 8px; letter-spacing: -0.02em; }

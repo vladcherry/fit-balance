@@ -57,15 +57,15 @@
       </div>
       <div class="stack">
         <div class="stack__k" data-i18n="home.days7">7 дней</div>
-        <div class="stack__v">−680 <span data-i18n="unit.g">г</span></div>
+        <div class="stack__v" id="home-7"></div>
         <div class="stack__k" data-i18n="home.days30">30 дней</div>
-        <div class="stack__v">−2,4 <span data-i18n="unit.kg">кг</span></div>
+        <div class="stack__v" id="home-30"></div>
       </div>
     </div>
 
     <div class="section-head">
       <h2 class="section-title" data-i18n="home.feed">ЛЕНТА ДНЯ</h2>
-      <button type="button" class="link" data-go="stats" data-i18n="home.all">Всё</button>
+      <button type="button" class="link" data-go="history" data-i18n="home.all">Всё</button>
     </div>
     <div class="feed" id="feed"></div>
 
@@ -225,15 +225,15 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/></svg>
         </button>
       </div>
-      <h1 id="stats-title" style="font-family:var(--display);font-size:72px;line-height:0.98;letter-spacing:-0.02em;margin:10px 0 0">≈ −2,4 <span data-i18n="unit.kg">кг</span></h1>
+      <h1 id="stats-title" style="font-family:var(--display);font-size:60px;line-height:0.98;letter-spacing:-0.02em;margin:10px 0 0;white-space:nowrap">≈ −2,4 <span data-i18n="unit.kg">кг</span></h1>
       <div style="font-size:13px;font-weight:700;margin-top:4px" data-i18n="stats.accumulated">накопленный дефицит в жировом эквиваленте</div>
     </div>
 
     <div class="seg" style="margin-top:18px" id="stats-period"></div>
 
     <div class="label" style="display:flex;justify-content:space-between;align-items:baseline">
-      <span data-i18n="stats.perDay">Дефицит по дням · цель 700</span>
-      <span style="font-family:var(--display);font-size:22px;color:var(--red)">−680 <span data-i18n="unit.g">г</span></span>
+      <span id="stats-period-label">Дефицит по дням</span>
+      <span id="stats-period-total" style="font-family:var(--display);font-size:22px;color:var(--red)"></span>
     </div>
 
     <div class="chart">
@@ -245,10 +245,10 @@
 
     <div class="goal">
       <div class="goal__row">
-        <span data-i18n="stats.toNextKg">До эквивалента −2,5 кг</span>
-        <span style="color:var(--red)" id="stats-remaining">ещё 770 ккал</span>
+        <span id="stats-milestone"></span>
+        <span style="color:var(--red)" id="stats-remaining"></span>
       </div>
-      <div class="goal__bar"><div class="goal__fill" style="width:96%"></div></div>
+      <div class="goal__bar"><div class="goal__fill" id="goal-fill" style="width:0%"></div></div>
     </div>
 
     <div class="label" data-i18n="stats.last30">Последние 30 дней</div>
@@ -259,6 +259,22 @@
       <span data-i18n="stats.deficit">дефицит</span>
     </div>
 
+    <div class="grow"></div>
+  </section>
+
+  <!-- ============ HISTORY ============ -->
+  <section class="screen" id="screen-history" aria-labelledby="hist-title">
+    <div class="hero hero--flat">
+      <div class="hero__top">
+        <button type="button" class="icon-btn" data-go="home" data-i18n-aria="nav.today" aria-label="Сегодня">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5 8 12l6.5 7"/></svg>
+        </button>
+        <span class="eyebrow" style="flex-grow:1" data-i18n="hist.eyebrow">FitBalance · дни</span>
+      </div>
+      <h1 class="hero__headline" id="hist-title" data-i18n="hist.title">ИСТОРИЯ</h1>
+    </div>
+
+    <div class="days" id="history-list"></div>
     <div class="grow"></div>
   </section>
 
@@ -275,31 +291,37 @@
     </div>
 
     <div class="label" data-i18n="prof.body">Данные тела</div>
+    <div class="tile tile--wide">
+      <span class="tile__k" data-i18n="prof.sex">Пол</span>
+      <div class="seg seg--tile" id="p-sex">
+        <button type="button" data-sex="male" data-i18n="prof.male" aria-pressed="true">Мужской</button>
+        <button type="button" data-sex="female" data-i18n="prof.female" aria-pressed="false">Женский</button>
+      </div>
+    </div>
     <div class="grid2">
-      <button type="button" class="tile"><span class="tile__k" data-i18n="prof.sex">Пол</span><span class="tile__v" data-i18n="prof.male">Мужской</span></button>
-      <button type="button" class="tile"><span class="tile__k" data-i18n="prof.age">Возраст</span><span class="tile__v" id="p-age">34</span></button>
-      <div class="tile"><label class="tile__k" for="p-height" data-i18n="prof.height">Рост, см</label><input id="p-height" type="number" inputmode="numeric" value="182"></div>
-      <div class="tile"><label class="tile__k" for="p-weight" data-i18n="prof.weight">Вес, кг</label><input id="p-weight" type="number" inputmode="decimal" step="0.1" value="84.5"></div>
+      <div class="tile"><label class="tile__k" for="p-age" data-i18n="prof.age">Возраст</label><input id="p-age" type="number" inputmode="numeric" min="14" max="100" step="1"></div>
+      <div class="tile"><label class="tile__k" for="p-height" data-i18n="prof.height">Рост, см</label><input id="p-height" type="number" inputmode="numeric" min="120" max="230" step="1"></div>
+      <div class="tile"><label class="tile__k" for="p-weight" data-i18n="prof.weight">Вес, кг</label><input id="p-weight" type="number" inputmode="decimal" min="30" max="300" step="0.1"></div>
     </div>
 
     <div class="label" data-i18n="prof.goalNorm">Цель и норма</div>
     <div class="goalcard">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="flex-grow:1;font-size:14px;font-weight:700" data-i18n="prof.lose">Похудение</div>
-        <button type="button" class="pill" data-i18n="prof.change">Изменить</button>
+        <div style="flex-grow:1;font-size:14px;font-weight:700" id="p-goal">Похудение</div>
       </div>
       <div class="goalcard__split">
-        <div>
-          <div class="stack__k" data-i18n="prof.deficitPerDay">Дефицит в день</div>
-          <div class="goalcard__big" id="p-target">700</div>
-          <div style="font-size:11px;font-weight:600;margin-top:1px" id="p-target-g"></div>
-        </div>
-        <div>
-          <div class="stack__k" data-i18n="home.maintenance">Норма</div>
-          <div class="goalcard__big" id="p-norm">2 200</div>
-          <div style="font-size:11px;font-weight:600;margin-top:1px" data-i18n="prof.calculated">рассчитано</div>
-        </div>
+        <label>
+          <span class="stack__k" data-i18n="prof.deficitPerDay">Дефицит в день</span>
+          <input class="goalcard__big goalcard__input" id="p-target" type="number" inputmode="numeric" min="0" max="2000" step="50">
+          <span style="display:block;font-size:11px;font-weight:600;margin-top:1px" id="p-target-g"></span>
+        </label>
+        <label>
+          <span class="stack__k" data-i18n="home.maintenance">Норма</span>
+          <input class="goalcard__big goalcard__input" id="p-norm" type="number" inputmode="numeric" min="800" max="6000" step="10">
+          <span style="display:block;font-size:11px;font-weight:600;margin-top:1px" id="p-norm-note" data-i18n="prof.calculated">рассчитано</span>
+        </label>
       </div>
+      <button type="button" class="pill" id="p-norm-reset" data-i18n="prof.recalc" hidden>Считать по данным тела</button>
     </div>
 
     <div class="label" data-i18n="prof.activitySource">Откуда берётся активность</div>
@@ -351,7 +373,7 @@
       <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/></svg>
       <span data-i18n="nav.today">Сегодня</span>
     </button>
-    <button type="button" data-go="stats">
+    <button type="button" data-go="history">
       <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M8 2.5v4M16 2.5v4"/></svg>
       <span data-i18n="nav.history">История</span>
     </button>
