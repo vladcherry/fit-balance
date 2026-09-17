@@ -60,35 +60,52 @@ the intent is visible.
 
 ---
 
-## 4. Food recognition starts on a multimodal LLM
+## 4. Food recognition runs on the device
 
-**Decision.** Start with a multimodal model (Claude Sonnet 5) prompted with a strict JSON schema:
-photo in, dishes with portions, calories and macros out. Add a specialised nutrition API as a
-second source only if portion accuracy proves insufficient.
+**Decision.** The photo is analysed on the phone. No image is sent to any server — ours or a
+vendor's.
 
-**Context.** Full analysis in [food-recognition-api.md](food-recognition-api.md).
+**Context.** Cloud options were analysed first ([food-recognition-api.md](food-recognition-api.md))
+and a multimodal LLM was the initial choice. On-device was chosen instead because it turns the
+privacy promise from a policy into a property of the system. How the pipeline actually works, what
+it downloads and what it costs in accuracy is in
+[on-device-recognition.md](on-device-recognition.md).
 
-**Consequences.** Cheap to start and easy to iterate — the output format and the response
-language are controlled by the prompt rather than by a vendor's schema. The tradeoff is that
-there is no proprietary nutrition database behind the numbers; they come from the model's own
-knowledge. Portion estimation is the weak point of every option on the market, which is why the
-result must always be editable.
+**Consequences.**
+
+- Accuracy drops. A compact model that fits on a phone will not match a frontier cloud model at
+  identifying an unusual dish or judging a portion. Editable results and `≈` on every number stop
+  being a nicety and become load-bearing.
+- A model bundle of roughly 20–50 MB has to be downloaded once and cached. It must load on demand
+  when the photo screen is first opened, never on first paint.
+- Recognition works offline, which the cloud version never could.
+- **This decision has a hook into decision 3.** The best on-device quality available today comes
+  from a native SDK, which needs a native wrapper. If the project goes native for recognition,
+  then Health Connect and Apple Health become reachable and manual-only activity entry should be
+  reconsidered. The real question underneath is whether this is a web app or a native app; the
+  recognition library is downstream of that. Staying a pure PWA means browser ML (ONNX Runtime
+  Web or TensorFlow.js) and accepting the lower accuracy.
 
 ---
 
 ## 5. Meal photos are never stored
 
-**Decision.** The image is sent for analysis and discarded as soon as the response returns. Only
-the resulting numbers are persisted. Nothing is written to disk or object storage on our side.
+**Decision.** The picture is analysed on the device and discarded. Only the resulting numbers are
+persisted. Nothing is uploaded, and nothing is written to disk or object storage anywhere.
 
-**Consequences.** No photo history, no "look at what I ate last Tuesday", and no re-analysis of
-an old picture with a better model later. That is the intended tradeoff.
+**Context.** This was originally the weaker claim "*we* do not keep the photo", because a cloud
+analysis provider applies its own retention policy regardless of what we do. Decision 4 removed
+that gap.
 
-**Caveat that must not be lost.** This promise only covers our own systems. A third-party
-analysis provider applies its own retention policy — Anthropic's standard API retention is up to
-30 days, and zero data retention is a separate commercial agreement. So the honest statement in
-the UI is that *we* do not keep the photo, not that it exists nowhere. Either the wording stays
-precise, or a zero-data-retention agreement is signed and the stronger claim becomes true.
+**Consequences.** The claim is now literally true and needs no footnote, no contract and no
+trust in a third party — the photo cannot leave the device because nothing ever sends it.
+
+The tradeoffs stay: no photo history, no "what did I eat last Tuesday", and no re-analysis of an
+old picture with a better model later. That is intended.
+
+If a hybrid escape hatch is ever added — an explicit per-photo "send this one to the cloud for a
+better estimate" — the default guarantee still holds, but the UI wording must distinguish the two
+paths honestly.
 
 ---
 

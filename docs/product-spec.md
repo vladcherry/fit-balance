@@ -79,11 +79,16 @@ Steamed vegetables ~180 g  100 kcal
                            720 kcal
 ```
 
-Photo estimation is never exact, so **every value is editable** before the meal is written to the
-diary, and every number is displayed with `≈`. The provider analysis is in
-[food-recognition-api.md](food-recognition-api.md).
+The analysis runs **on the device** — the picture is never uploaded. How that pipeline works, and
+what it costs in bundle size and accuracy, is in
+[on-device-recognition.md](on-device-recognition.md); the cloud options that were considered
+first are in [food-recognition-api.md](food-recognition-api.md).
 
-The photo itself is discarded immediately after analysis — see section 10.
+Photo estimation is never exact — and an on-device model is at the lower end of the accuracy
+range — so **every value is editable** before the meal is written to the diary, every number is
+displayed with `≈`, and the confidence of the estimate is visible to the user.
+
+The photo itself is discarded right after analysis — see section 10.
 
 ### 4.2 By hand
 
@@ -217,13 +222,12 @@ Weekly and monthly statistics show:
 
 ## 10. Privacy
 
-Meal photos are **not stored**. The image is sent for analysis and discarded as soon as the
-result returns; only the resulting numbers are persisted. This is stated in the UI on the photo
-screen and in the profile.
+Meal photos are **not stored and never leave the device**. The image is analysed locally and
+discarded as soon as the result is produced; only the resulting numbers are persisted. This is
+stated in the UI on the photo screen and in the profile.
 
-Caveat: this promise covers our own systems. A third-party analysis provider has its own
-retention policy, which must be reflected in the wording or eliminated with a zero-data-retention
-agreement. See [decisions.md](decisions.md#5-meal-photos-are-never-stored).
+Because analysis is local, the guarantee holds without depending on a vendor's retention policy.
+See [decisions.md](decisions.md#5-meal-photos-are-never-stored).
 
 ## 11. Localisation
 
@@ -239,12 +243,17 @@ Russian and English ship together in the first release.
 
 - **PWA**: installable to the home screen, offline-first. Entries are written locally
   (IndexedDB) and synced when the network returns.
-- Photo analysis requires connectivity; offline, only manual entry is available.
+- Photo analysis runs locally, so it works offline too — but the model bundle (roughly 20–50 MB)
+  has to be downloaded once, on demand, the first time the photo screen is opened.
 - Base layout target is a 390 × 844 phone screen, scaling up to tablet.
 
 ## 13. Open questions
 
+- **Web app or native app.** On-device recognition can be done in the browser (ONNX Runtime Web
+  or TensorFlow.js, lower accuracy, stays a pure PWA) or through a native SDK behind a wrapper
+  (better accuracy and portion estimates). The second option also makes Health Connect and Apple
+  Health reachable, which would reopen the manual-activity decision. Everything else waits on
+  this one.
 - Client stack and hosting.
 - Whether accounts and server-side sync are in the first release, or whether it stays local-only.
-- Whether a zero-data-retention agreement with the analysis provider is worth the cost.
-- Health Connect integration on Android — which release.
+- Which food taxonomy and nutrition table to ship, and how large it is allowed to be.

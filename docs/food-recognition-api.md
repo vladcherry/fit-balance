@@ -1,6 +1,13 @@
-# Food recognition from a photo — provider analysis
+# Food recognition from a photo — cloud provider analysis
 
-Researched 2026-09-17. Decision recorded in [decisions.md](decisions.md#4-food-recognition-starts-on-a-multimodal-llm).
+Researched 2026-09-17.
+
+> **Superseded.** This document compares *cloud* providers and concluded with a multimodal LLM.
+> The project went **on-device** instead — see
+> [decisions.md](decisions.md#4-food-recognition-runs-on-the-device) and
+> [on-device-recognition.md](on-device-recognition.md). The accuracy and privacy sections below
+> still hold and are the reason the decision changed, so the document is kept as the record of
+> the road not taken.
 
 ## The problem
 
@@ -89,14 +96,18 @@ only for our own systems.
 verifiable. Upgrading to "the photo exists nowhere" requires either a zero-data-retention
 agreement or on-device recognition.
 
-## Decision
+## Where this landed
 
-Start on **Claude Sonnet 5** with a strict JSON schema and a prompt that forces explicit portion
-estimates and an uncertainty flag per item. Keep the analysis behind a thin internal interface so
-the provider can be swapped without touching the UI.
+The original conclusion was to start on **Claude Sonnet 5** with a strict JSON schema.
 
-Revisit if portion accuracy proves insufficient in real use — the likely next step is Passio as a
-second source for packaged goods and portion sizing, not a wholesale replacement.
+That was overturned by the privacy section above. Sending every meal photo to a third party, with
+a retention window we do not control, was not compatible with the promise the product wanted to
+make — so recognition moved onto the device. Passio's on-device mode, noted above as the one
+option that removes the question entirely, is the closest cloud-vendor relative of what was
+chosen.
+
+Whichever engine ends up running, keep the analysis behind a thin internal interface so it can be
+swapped without touching the UI. See [on-device-recognition.md](on-device-recognition.md).
 
 ## Sources
 

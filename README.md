@@ -50,15 +50,15 @@ figure is rendered with `≈` and labelled as an approximation.
 | --- | --- |
 | [docs/product-spec.md](docs/product-spec.md) | Full product specification |
 | [docs/decisions.md](docs/decisions.md) | Decision log — what was chosen and why |
-| [docs/food-recognition-api.md](docs/food-recognition-api.md) | Analysis of food-recognition APIs |
+| [docs/on-device-recognition.md](docs/on-device-recognition.md) | How on-device photo analysis works, and what it costs |
+| [docs/food-recognition-api.md](docs/food-recognition-api.md) | Analysis of cloud food-recognition APIs (the road not taken) |
 | [docs/design.md](docs/design.md) | Visual direction, design tokens, screen inventory |
 
 ## Privacy
 
-Meal photos are **not stored**. A picture is sent for analysis and discarded as soon as the
-result comes back — only the resulting numbers are kept. See
-[docs/decisions.md](docs/decisions.md#5-meal-photos-are-never-stored) for the one caveat that
-comes with third-party analysis providers.
+Meal photos are analysed **on the device** and never leave it. Nothing is uploaded; only the
+resulting numbers are kept. The guarantee is a property of the system rather than a policy —
+see [docs/on-device-recognition.md](docs/on-device-recognition.md).
 
 ## Languages
 
