@@ -1,7 +1,7 @@
 /* Minimal offline shell for the prototype.
    Bump CACHE when the shell changes so old copies are dropped. */
 
-var CACHE = 'fitbalance-prototype-v1';
+var CACHE = 'fitbalance-prototype-v2';
 var SHELL = [
   './',
   './index.html',

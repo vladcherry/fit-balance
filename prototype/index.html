@@ -95,9 +95,20 @@
       <h1 class="hero__headline" id="photo-headline" data-i18n="photo.headline">ЭТО ОБЕД НА ≈ 720 ККАЛ?</h1>
     </div>
 
-    <div class="placeholder">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9c938d" stroke-width="1.5" stroke-linecap="round"><path d="M3 8.5h3.2L8 6h8l1.8 2.5H21v11H3z"/><circle cx="12" cy="13.5" r="3.6"/></svg>
-      <span data-i18n="photo.placeholder">[ФОТО БЛЮДА]</span>
+    <label class="placeholder" id="photo-frame" for="photo-input">
+      <img id="photo-preview" alt="">
+      <span class="placeholder__empty">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9c938d" stroke-width="1.5" stroke-linecap="round"><path d="M3 8.5h3.2L8 6h8l1.8 2.5H21v11H3z"/><circle cx="12" cy="13.5" r="3.6"/></svg>
+        <span data-i18n="photo.tapToShoot">Нажмите, чтобы снять фото</span>
+      </span>
+      <span class="placeholder__retake" data-i18n="photo.retake">Переснять</span>
+      <span class="placeholder__busy" data-i18n="photo.analysing">Разбираю на устройстве…</span>
+    </label>
+    <input id="photo-input" class="visually-hidden" type="file" accept="image/*">
+
+    <div class="notice photo-demo-note">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b4121a" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.2v.1"/></svg>
+      <span data-i18n="photo.demoNote">Модель распознавания ещё не подключена — числа ниже демонстрационные.</span>
     </div>
 
     <div class="notice">

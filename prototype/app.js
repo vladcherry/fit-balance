@@ -25,7 +25,10 @@
       'home.empty': 'Сегодня пока ничего не записано',
 
       'photo.eyebrow': 'Распознавание на устройстве', 'photo.cancel': 'Отмена',
-      'photo.headline': 'ЭТО ОБЕД НА ≈ 720 ККАЛ?', 'photo.placeholder': '[ФОТО БЛЮДА]',
+      'photo.headline': 'ЭТО ОБЕД НА ≈ 720 ККАЛ?',
+      'photo.tapToShoot': 'Нажмите, чтобы снять фото',
+      'photo.retake': 'Переснять', 'photo.analysing': 'Разбираю на устройстве…',
+      'photo.demoNote': 'Модель распознавания ещё не подключена — числа ниже демонстрационные.',
       'photo.privacy': 'Снимок разбирается прямо на телефоне и никуда не отправляется.',
       'photo.found': 'Что нашлось · можно поправить', 'photo.total': 'Итого',
       'photo.addProduct': 'Добавить продукт', 'photo.save': 'Записать в дневник',
@@ -79,7 +82,10 @@
       'home.empty': 'Nothing logged yet today',
 
       'photo.eyebrow': 'On-device recognition', 'photo.cancel': 'Cancel',
-      'photo.headline': 'A ≈ 720 KCAL LUNCH?', 'photo.placeholder': '[MEAL PHOTO]',
+      'photo.headline': 'A ≈ 720 KCAL LUNCH?',
+      'photo.tapToShoot': 'Tap to take a photo',
+      'photo.retake': 'Retake', 'photo.analysing': 'Analysing on the device…',
+      'photo.demoNote': 'The recognition model is not wired up yet — the numbers below are demo values.',
       'photo.privacy': 'The picture is analysed on the phone and never leaves it.',
       'photo.found': 'What was found · editable', 'photo.total': 'Total',
       'photo.addProduct': 'Add an item', 'photo.save': 'Save to diary',
@@ -461,6 +467,25 @@
       renderHome();
       go('home');
       toast(t('act.saved', { kcal: num(kcal) }));
+    });
+
+    // The picture is held as an object URL inside the page. Nothing is uploaded.
+    var photoUrl = null;
+    var busyTimer = null;
+    el('photo-input').addEventListener('change', function () {
+      var file = this.files && this.files[0];
+      this.value = '';
+      if (!file) { return; }
+      if (photoUrl) { URL.revokeObjectURL(photoUrl); }
+      photoUrl = URL.createObjectURL(file);
+
+      var frame = el('photo-frame');
+      el('photo-preview').src = photoUrl;
+      frame.classList.add('has-photo', 'is-busy');
+      el('screen-photo').classList.add('has-user-photo');
+
+      clearTimeout(busyTimer);
+      busyTimer = setTimeout(function () { frame.classList.remove('is-busy'); }, 900);
     });
 
     el('save-meal').addEventListener('click', function () {
