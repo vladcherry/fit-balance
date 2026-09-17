@@ -4,6 +4,38 @@ Decision: the photo is analysed on the phone and never leaves it. This document 
 that actually involves, what it costs, and the one consequence that reaches back into other
 decisions.
 
+## What is wired up today
+
+The prototype runs **MobileNet V2 (ImageNet-1k) on TensorFlow.js**, with the runtime
+(`prototype/vendor/tf.min.js`) and the weights (`prototype/model/mobilenet-v2/`) served from the
+app's own origin. Recognition lives in one file, `prototype/recognise.js`.
+
+```
+<img> (object URL) -> resize 224x224 -> /255 -> MobileNet V2 -> softmax -> food classes -> draft
+```
+
+What that means in practice:
+
+| | |
+| --- | --- |
+| Classes | ~40 edible ones out of ImageNet's 1000 — fast food, baked goods, fruit, vegetables |
+| Download | ~15 MB once (1.5 MB runtime + 14 MB weights), on first use of the photo screen |
+| Inference | a few hundred ms with WebGL; low seconds on the CPU fallback |
+| Portion | a typical serving per food, in grams, which the user corrects |
+| Items | one dish per picture — there is no detection step |
+
+Steps 3 (detect) and 5 (estimate the portion) of the pipeline below are **not** implemented. A
+picture of a plate is classified as a whole, and the weight is a prior, not a measurement.
+
+The honest boundary: a burger, a pizza, a banana or a bowl of broccoli lands well. A home-cooked
+plate of chicken with rice has no matching class, and the app says so instead of guessing — the
+top class has to clear a confidence floor, weaker food classes are offered as one-tap
+alternatives, and anything else routes to manual entry. The photo screen states the ~40-category
+limit on screen rather than letting the user discover it.
+
+Replacing the model means editing the class table and the model URL in `recognise.js`. Nothing
+else in the app knows which model is in use.
+
 ## The pipeline
 
 Nothing here touches the network after the model is downloaded once.

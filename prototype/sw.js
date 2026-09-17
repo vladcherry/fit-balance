@@ -1,7 +1,7 @@
 /* Minimal offline shell for the prototype.
    Bump CACHE when the shell changes so old copies are dropped. */
 
-var CACHE = 'fitbalance-prototype-v3';
+var CACHE = 'fitbalance-prototype-v4';
 var SHELL = [
   './',
   './index.html',
@@ -31,7 +31,14 @@ self.addEventListener('activate', function (event) {
   );
 });
 
-/* Network first, cache as the offline fallback.
+/* The recognition model and the ML runtime are ~15 MB and never change in
+   place - a new one would come at a new path. Those are served cache first, so
+   they are downloaded once and then cost nothing. */
+function isImmutableAsset(pathname) {
+  return pathname.indexOf('/model/') !== -1 || pathname.indexOf('/vendor/') !== -1;
+}
+
+/* Network first for everything else, cache as the offline fallback.
    The prototype changes often, and a cache-first shell keeps serving a stale
    copy for a cycle after each deploy - which reads as "the app is broken". */
 self.addEventListener('fetch', function (event) {
@@ -42,6 +49,20 @@ self.addEventListener('fetch', function (event) {
   }
   // The version check must always see the network, never a cached answer.
   if (url.pathname.endsWith('/version.json')) {
+    return;
+  }
+  if (isImmutableAsset(url.pathname)) {
+    event.respondWith(
+      caches.match(request).then(function (hit) {
+        return hit || fetch(request).then(function (response) {
+          if (response.ok) {
+            var copy = response.clone();
+            caches.open(CACHE).then(function (cache) { cache.put(request, copy); });
+          }
+          return response;
+        });
+      })
+    );
     return;
   }
   event.respondWith(

@@ -40,7 +40,7 @@ until curl -sf "http://localhost:$PORT/" >/dev/null; do sleep 0.3; done
 shoot() {
   local name="$1" path="$2"
   "$CHROME" \
-    --headless=old \
+    --headless=new \
     --disable-gpu \
     --hide-scrollbars \
     --force-device-scale-factor=1 \

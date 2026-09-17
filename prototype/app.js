@@ -27,8 +27,15 @@
       'photo.eyebrow': 'Распознавание на устройстве', 'photo.cancel': 'Отмена',
       'photo.newMeal': 'НОВЫЙ ПРИЁМ ПИЩИ', 'photo.headlineTotal': '≈ {kcal} ККАЛ',
       'photo.tapToShoot': 'Нажмите, чтобы снять фото',
-      'photo.retake': 'Переснять', 'photo.analysing': 'Разбираю на устройстве…',
-      'photo.demoNote': 'Модель распознавания ещё не подключена — числа ниже демонстрационные.',
+      'photo.retake': 'Переснять', 'photo.fromGallery': 'Из галереи',
+      'photo.analysing': 'Разбираю на устройстве…',
+      'photo.loadingModel': 'Загружаю модель… {percent}%',
+      'photo.recognised': 'Узнал: {name} · уверенность ≈ {percent}%. Проверьте вес и калории.',
+      'photo.unsure': 'Уверенности мало. Выберите вариант ниже или впишите вручную.',
+      'photo.noFood': 'Еду на снимке узнать не удалось. Впишите продукт вручную.',
+      'photo.modelFailed': 'Модель не загрузилась. Нужен интернет на первый раз — потом работает без сети.',
+      'photo.maybe': 'Может быть',
+      'photo.scope': 'Модель знает около 40 категорий: фастфуд, выпечку, фрукты и овощи. Остальное — вручную.',
       'photo.privacy': 'Снимок разбирается прямо на телефоне и никуда не отправляется.',
       'photo.mealType': 'Приём пищи', 'photo.items': 'Состав · можно поправить',
       'photo.emptyItems': 'Снимите фото или добавьте продукт вручную.',
@@ -39,6 +46,7 @@
       'editor.name': 'Название', 'editor.grams': 'Вес, г', 'editor.kcal': 'Ккал',
       'editor.delete': 'Удалить', 'editor.done': 'Готово', 'editor.newItem': 'Новый продукт',
       'editor.hint': 'Меняете вес — калории пересчитываются. Впишите ккал, чтобы задать точно.',
+      // Kept so a meal saved by the demo-recognition build still reads correctly.
       'food.chicken': 'Курица гриль', 'food.rice': 'Рис отварной', 'food.veg': 'Овощи на пару',
 
       'act.eyebrow': 'Активность вручную', 'act.title': 'Активность', 'act.headline': 'ЧТО И СКОЛЬКО?',
@@ -104,8 +112,15 @@
       'photo.eyebrow': 'On-device recognition', 'photo.cancel': 'Cancel',
       'photo.newMeal': 'NEW MEAL', 'photo.headlineTotal': '≈ {kcal} KCAL',
       'photo.tapToShoot': 'Tap to take a photo',
-      'photo.retake': 'Retake', 'photo.analysing': 'Analysing on the device…',
-      'photo.demoNote': 'The recognition model is not wired up yet — the numbers below are demo values.',
+      'photo.retake': 'Retake', 'photo.fromGallery': 'From gallery',
+      'photo.analysing': 'Analysing on the device…',
+      'photo.loadingModel': 'Loading the model… {percent}%',
+      'photo.recognised': 'Recognised: {name} · confidence ≈ {percent}%. Check the weight and calories.',
+      'photo.unsure': 'Not confident enough. Pick one below, or type it in by hand.',
+      'photo.noFood': 'No food could be recognised in the picture. Add the item by hand.',
+      'photo.modelFailed': 'The model failed to load. It needs the network once — after that it works offline.',
+      'photo.maybe': 'Maybe',
+      'photo.scope': 'The model knows about forty categories: fast food, baked goods, fruit and vegetables. Anything else goes in by hand.',
       'photo.privacy': 'The picture is analysed on the phone and never leaves it.',
       'photo.mealType': 'Meal', 'photo.items': 'Contents · editable',
       'photo.emptyItems': 'Take a photo, or add an item by hand.',
@@ -185,13 +200,15 @@
     ];
   }
 
-  /* What the demo "recognition" returns. Replaced by a real model later. */
-  function recognisedItems() {
-    return [
-      { key: 'food.chicken', grams: 200, kcal: 290, per100: 145 },
-      { key: 'food.rice', grams: 220, kcal: 330, per100: 150 },
-      { key: 'food.veg', grams: 180, kcal: 100, per100: 56 }
-    ];
+  /* A recognised food becomes a draft item: the model names it and supplies a
+     typical serving, and every number stays editable. */
+  function itemFromFood(food) {
+    return {
+      food: food.id,
+      grams: food.portion,
+      kcal: Math.round(food.kcal * food.portion / 100),
+      per100: food.kcal
+    };
   }
 
   var MEAL_TYPES = ['breakfast', 'lunch', 'snack', 'dinner'];
@@ -350,6 +367,10 @@
   }
 
   function itemLabel(it) {
+    if (it.food) {
+      var food = window.FoodRecognition && window.FoodRecognition.byId(it.food);
+      if (food) { return food[state.lang] || food.en; }
+    }
     if (it.key) { return t(it.key); }
     return it.name && it.name.trim() ? it.name : t('editor.newItem');
   }
@@ -394,7 +415,7 @@
 
     var nameInput = document.createElement('input');
     nameInput.type = 'text';
-    nameInput.value = it.key ? t(it.key) : (it.name || '');
+    nameInput.value = it.food || it.key ? itemLabel(it) : (it.name || '');
     nameInput.placeholder = t('editor.name');
     nameInput.setAttribute('aria-label', t('editor.name'));
     box.appendChild(nameInput);
@@ -428,6 +449,7 @@
 
     nameInput.addEventListener('input', function () {
       it.key = null;               // a typed name replaces the recognised label
+      it.food = null;
       it.name = this.value;
       fillRow(row, it);
       save();
@@ -663,6 +685,17 @@
     });
     var screen = el('screen-' + name);
     if (screen) { screen.scrollTop = 0; }
+    releaseModelSoon(name !== 'photo');
+  }
+
+  /* Phones, iOS Safari above all, hold a tight per-tab memory budget, so the
+     model does not stay resident after the photo screen is left. The delay
+     keeps it around while the user steps out and comes straight back. */
+  var modelUnloadTimer = null;
+  function releaseModelSoon(release) {
+    clearTimeout(modelUnloadTimer);
+    if (!release || !window.FoodRecognition) { return; }
+    modelUnloadTimer = setTimeout(function () { window.FoodRecognition.unload(); }, 30000);
   }
 
   function go(name, replace) {
@@ -736,39 +769,123 @@
       toast(t('act.saved', { kcal: num(kcal) }));
     });
 
-    // The picture is held as an object URL inside the page. Nothing is uploaded.
+    // The picture is held as an object URL inside the page. Nothing is uploaded:
+    // the model runs against this very <img>, on this device.
     var photoUrl = null;
-    var busyTimer = null;
-    el('photo-input').addEventListener('change', function () {
-      var file = this.files && this.files[0];
-      this.value = '';
-      if (!file) { return; }
+    var analysisId = 0;                       // a newer picture invalidates an older pass
+
+    function photoStatus(text) { el('photo-status').textContent = text; }
+
+    function photoNote(text, warn) {
+      el('photo-note-text').textContent = text || '';
+      el('photo-note').hidden = !text;
+      el('photo-note').classList.toggle('notice--warn', !!warn);
+      el('photo-note').classList.toggle('notice--ok', !warn);
+    }
+
+    function foodName(food) { return food[state.lang] || food.en; }
+
+    function renderGuesses(list) {
+      var chips = el('photo-guess-chips');
+      chips.innerHTML = '';
+      el('photo-guesses').hidden = !list || !list.length;
+      (list || []).forEach(function (food) {
+        chips.appendChild(button(foodName(food), false, function () {
+          applyFood(food);
+          photoNote(t('photo.recognised', {
+            name: foodName(food), percent: Math.round(food.probability * 100)
+          }), false);
+          renderGuesses(list.filter(function (other) { return other.id !== food.id; }));
+        }, 'chip'));
+      });
+    }
+
+    function dropRecognisedItems() {
+      state.meal.items = state.meal.items.filter(function (it) { return !it.food; });
+      state.meal.editing = -1;
+      renderMeal();
+      save();
+    }
+
+    // A recognition pass replaces earlier recognised items and leaves hand-typed ones alone.
+    function applyFood(food) {
+      var manual = state.meal.items.filter(function (it) { return !it.food; });
+      state.meal.items = [itemFromFood(food)].concat(manual);
+      state.meal.editing = -1;
+      renderMeal();
+      save();
+    }
+
+    function analyse(file) {
+      var run = ++analysisId;
+      var frame = el('photo-frame');
+      var preview = el('photo-preview');
+
       if (photoUrl) { URL.revokeObjectURL(photoUrl); }
       photoUrl = URL.createObjectURL(file);
+      preview.src = photoUrl;
 
-      var frame = el('photo-frame');
-      el('photo-preview').src = photoUrl;
+      // The previous picture's result must not survive into this one: what the
+      // model found last time is not in the frame any more. Hand-typed items are.
+      dropRecognisedItems();
       frame.classList.add('has-photo', 'is-busy');
-      el('screen-photo').classList.add('has-user-photo');
+      photoNote('');
+      renderGuesses([]);
+      photoStatus(t('photo.analysing'));
 
-      clearTimeout(busyTimer);
-      busyTimer = setTimeout(function () {
+      var decoded = preview.decode ? preview.decode() : Promise.resolve();
+      decoded.then(function () {
+        if (run !== analysisId) { return null; }
+        if (FoodRecognition.isLoaded()) { return null; }
+        // First run only: ~15 MB of runtime and weights. Never silent.
+        photoStatus(t('photo.loadingModel', { percent: 0 }));
+        return FoodRecognition.load(function (fraction) {
+          if (run !== analysisId) { return; }
+          photoStatus(t('photo.loadingModel', { percent: Math.round(fraction * 100) }));
+        });
+      }).then(function () {
+        if (run !== analysisId) { return null; }
+        photoStatus(t('photo.analysing'));
+        return FoodRecognition.classify(preview);
+      }).then(function (result) {
+        if (run !== analysisId || !result) { return; }
         frame.classList.remove('is-busy');
-        // A recognition pass replaces earlier recognised items and leaves hand-typed ones alone.
-        var manual = state.meal.items.filter(function (it) { return !it.key; });
-        state.meal.items = recognisedItems().concat(manual);
-        state.meal.editing = -1;
-        renderMeal();
-        save();
-      }, 900);
+        if (result.food) {
+          applyFood(result.food);
+          photoNote(t('photo.recognised', {
+            name: foodName(result.food),
+            percent: Math.round(result.food.probability * 100)
+          }), false);
+        } else {
+          photoNote(t(result.guesses.length ? 'photo.unsure' : 'photo.noFood'), true);
+        }
+        renderGuesses(result.guesses);
+      })['catch'](function (err) {
+        if (run !== analysisId) { return; }
+        frame.classList.remove('is-busy');
+        photoNote(t('photo.modelFailed'), true);
+        if (window.console) { console.error(err); }
+      });
+    }
+
+    // Two inputs, because one cannot be both: `capture` goes straight to the
+    // camera, the plain one opens the gallery.
+    ['photo-camera', 'photo-gallery'].forEach(function (id) {
+      el(id).addEventListener('change', function () {
+        var file = this.files && this.files[0];
+        this.value = '';                      // picking the same file again still fires
+        if (file) { analyse(file); }
+      });
     });
 
     function resetMeal() {
       state.meal = { type: state.meal.type, items: [], editing: -1 };
+      analysisId += 1;
       if (photoUrl) { URL.revokeObjectURL(photoUrl); photoUrl = null; }
       el('photo-preview').removeAttribute('src');
       el('photo-frame').classList.remove('has-photo', 'is-busy');
-      el('screen-photo').classList.remove('has-user-photo');
+      photoNote('');
+      renderGuesses([]);
     }
 
     el('add-item').addEventListener('click', function () {
@@ -964,7 +1081,10 @@
   // ?seed=meal fills the meal with a recognition result. Used by tools/make-screenshots.sh
   // and handy for demos; it never runs on its own.
   if (new URLSearchParams(location.search).get('seed') === 'meal') {
-    state.meal = { type: 'lunch', items: recognisedItems(), editing: 0 };
+    var seeded = ['cheeseburger', 'corn'].map(function (id) {
+      return itemFromFood(FoodRecognition.byId(id));
+    });
+    state.meal = { type: 'lunch', items: seeded, editing: 0 };
   }
 
   wire();

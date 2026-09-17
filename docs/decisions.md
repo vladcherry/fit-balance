@@ -120,3 +120,36 @@ physical claim about body fat that a single day's calorie balance cannot support
 **Consequences.** Slightly drier copy. In exchange the app does not promise something it cannot
 deliver, which matters because the fat-equivalent figure is already the most easily
 misunderstood number on the screen.
+
+---
+
+## 7. The first model shipped is MobileNet V2, served from our own origin
+
+**Decision.** The prototype now recognises food with MobileNet V2 (ImageNet-1k) running in
+TensorFlow.js. The runtime and the weights are committed to the repository and served from the
+same origin as the app — not from a CDN, not from a model hub.
+
+**Context.** Decision 4 settled *where* recognition runs; it did not pick a model. A food-specific
+classifier (Food-101 and its descendants) is the obvious want, but the usable ones are published
+through model hubs, which makes the app depend on a third party being reachable at the moment a
+user photographs their lunch. MobileNet V2 is available as a plain TF.js graph model, is small
+enough to host ourselves, and needed no conversion step.
+
+**Consequences.**
+
+- **The taxonomy is ImageNet's, not a food taxonomy.** Around forty of its thousand classes are
+  edible: fast food, baked goods, fruit, vegetables, a few dishes. A burger, a pizza or a banana
+  is recognised well. A plate of home-cooked chicken and rice is not a class at all, so the app
+  says it did not recognise anything rather than inventing a number. This is stated on the photo
+  screen, in plain words, where the user can see it.
+- Serving the weights ourselves costs ~15 MB in the repository and makes the first run a ~15 MB
+  download. In exchange there is no third-party request in the recognition path at all, the
+  privacy claim needs no footnote, and it works offline from the second run onward. The service
+  worker serves `model/` and `vendor/` cache-first, since a new model would arrive at a new path.
+- No detection step: one picture yields one dish, not a per-item breakdown of the plate. Adding
+  items by hand covers the rest.
+- No portion estimation: each recognised food starts from a typical serving in grams, which the
+  user corrects. This is the weakest number on the screen and is presented as such.
+- Replacing this with a food-specific model is a contained change — the class table and the model
+  URL live in one file, `prototype/recognise.js`. The decision to revisit is whether a
+  food-specific model justifies either a hub dependency or the work of converting and hosting one.

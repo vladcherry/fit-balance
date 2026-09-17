@@ -202,37 +202,74 @@ button, .btn { font: inherit; border: 0; background: none; color: inherit; curso
 .placeholder.has-photo img { display: block; }
 .placeholder.has-photo .placeholder__empty { display: none; }
 
-.placeholder__retake {
-  display: none;
+.placeholder__shoot {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.placeholder__actions {
   position: absolute;
   right: 10px;
   bottom: 10px;
-  padding: 8px 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 1;
+}
+.placeholder__pill {
+  padding: 9px 12px;
   border-radius: 10px;
   background: rgba(23, 18, 15, 0.8);
   color: var(--white);
   letter-spacing: 0.06em;
+  cursor: pointer;
 }
-.placeholder.has-photo .placeholder__retake { display: block; }
+/* "Retake" only means something once there is a picture to replace. */
+.placeholder:not(.has-photo) .placeholder__pill[for="photo-camera"] { display: none; }
 
 .placeholder__busy {
   display: none;
   position: absolute;
   inset: 0;
+  z-index: 2;
   align-items: center;
   justify-content: center;
+  gap: 10px;
+  padding: 0 18px;
   background: rgba(23, 18, 15, 0.74);
   color: var(--white);
   font-size: 12px;
   letter-spacing: 0.08em;
 }
 .placeholder.is-busy .placeholder__busy { display: flex; }
-.placeholder.is-busy .placeholder__retake { display: none; }
+.placeholder.is-busy .placeholder__actions { display: none; }
 
-/* Shown only once a real picture has been taken. `.notice` also sets
-   `display`, so these need to outrank it. */
-.notice.photo-demo-note { display: none; }
-.has-user-photo .notice.photo-demo-note { display: flex; }
+.spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: var(--white);
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2.4s; } }
+
+/* Alternatives the model also considered, offered as a one-tap correction. */
+.guesses { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 10px 22px 0; }
+.guesses__k {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7c736d;
+}
+.chips--inline { margin: 0; gap: 6px; }
+.chips--inline .chip { height: 36px; padding: 0 12px; font-size: 13px; }
 
 .visually-hidden {
   position: absolute;
@@ -260,6 +297,19 @@ button, .btn { font: inherit; border: 0; background: none; color: inherit; curso
   line-height: 1.4;
 }
 .notice svg { flex-shrink: 0; margin-top: 1px; }
+
+/* Modifiers have to follow `.notice` itself to outrank it. */
+.notice--ok { background: var(--surface); color: var(--ink); }
+.notice--warn { background: #fdf0d8; color: #7a4a05; }
+.notice--quiet { background: var(--surface); color: #6b625c; }
+
+/* `.notice` and `.guesses` set display, which would otherwise outrank [hidden]. */
+.notice[hidden], .guesses[hidden] { display: none; }
+
+/* The result line is not a warning until it says something went wrong. */
+.notice .notice__warn-icon { display: none; }
+.notice--warn .notice__ok-icon { display: none; }
+.notice--warn .notice__warn-icon { display: block; }
 
 .items { margin: 8px 22px 0; }
 .item-wrap { border-top: 1px solid var(--hairline); }

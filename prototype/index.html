@@ -95,25 +95,47 @@
       <h1 class="hero__headline" id="photo-headline">НОВЫЙ ПРИЁМ ПИЩИ</h1>
     </div>
 
-    <label class="placeholder" id="photo-frame" for="photo-input">
+    <div class="placeholder" id="photo-frame">
       <img id="photo-preview" alt="">
-      <span class="placeholder__empty">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9c938d" stroke-width="1.5" stroke-linecap="round"><path d="M3 8.5h3.2L8 6h8l1.8 2.5H21v11H3z"/><circle cx="12" cy="13.5" r="3.6"/></svg>
-        <span data-i18n="photo.tapToShoot">Нажмите, чтобы снять фото</span>
+      <label class="placeholder__shoot" for="photo-camera">
+        <span class="placeholder__empty">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9c938d" stroke-width="1.5" stroke-linecap="round"><path d="M3 8.5h3.2L8 6h8l1.8 2.5H21v11H3z"/><circle cx="12" cy="13.5" r="3.6"/></svg>
+          <span data-i18n="photo.tapToShoot">Нажмите, чтобы снять фото</span>
+        </span>
+      </label>
+      <span class="placeholder__actions">
+        <label class="placeholder__pill" for="photo-camera" data-i18n="photo.retake">Переснять</label>
+        <label class="placeholder__pill" for="photo-gallery" data-i18n="photo.fromGallery">Из галереи</label>
       </span>
-      <span class="placeholder__retake" data-i18n="photo.retake">Переснять</span>
-      <span class="placeholder__busy" data-i18n="photo.analysing">Разбираю на устройстве…</span>
-    </label>
-    <input id="photo-input" class="visually-hidden" type="file" accept="image/*">
+      <span class="placeholder__busy">
+        <span class="spinner" aria-hidden="true"></span>
+        <span id="photo-status" data-i18n="photo.analysing">Разбираю на устройстве…</span>
+      </span>
+    </div>
+    <!-- Two inputs: `capture` opens the camera directly, and without it the same
+         accept filter opens the gallery. One input cannot do both. -->
+    <input id="photo-camera" class="visually-hidden" type="file" accept="image/*" capture="environment">
+    <input id="photo-gallery" class="visually-hidden" type="file" accept="image/*">
 
-    <div class="notice photo-demo-note">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b4121a" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.2v.1"/></svg>
-      <span data-i18n="photo.demoNote">Модель распознавания ещё не подключена — числа ниже демонстрационные.</span>
+    <div class="notice" id="photo-note" hidden>
+      <svg class="notice__ok-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17.5 19.5 6.5"/></svg>
+      <svg class="notice__warn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.2v.1"/></svg>
+      <span id="photo-note-text"></span>
+    </div>
+
+    <div class="guesses" id="photo-guesses" hidden>
+      <span class="guesses__k" data-i18n="photo.maybe">Может быть</span>
+      <span class="chips chips--inline" id="photo-guess-chips"></span>
     </div>
 
     <div class="notice">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b4121a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
       <span data-i18n="photo.privacy">Снимок разбирается прямо на телефоне и никуда не отправляется.</span>
+    </div>
+
+    <div class="notice notice--quiet">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c736d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8v.1"/></svg>
+      <span data-i18n="photo.scope">Модель знает около 40 категорий: фастфуд, выпечку, фрукты и овощи. Остальное — вручную.</span>
     </div>
 
     <div class="label" data-i18n="photo.mealType">Приём пищи</div>
@@ -383,6 +405,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </div>
 
+<script src="recognise.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

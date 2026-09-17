@@ -9,8 +9,8 @@ Open it on a phone and install it to the home screen — the app offers to do th
 step-by-step instructions on iOS, where Safari has no install API.
 
 > **Status: prototype.** `prototype/` is a clickable, installable static prototype of the chosen
-> design. The real application has not been started yet; this repository holds the prototype, the
-> product spec and the decision log.
+> design, with working on-device food recognition. The real application has not been started yet;
+> this repository holds the prototype, the product spec and the decision log.
 
 | Today | Meal | Activity | Stats |
 | --- | --- | --- | --- |
@@ -55,14 +55,26 @@ Calorie balance is also shown in grams, using the conventional figure of
 measurement: day-to-day weight also moves with water, glycogen and gut contents. Every such
 figure is rendered with `≈` and labelled as an approximation.
 
+## Recognition
+
+Photographing a plate runs a real classifier on the phone: **MobileNet V2 on TensorFlow.js**, with
+the runtime and the weights served from this app's own origin. The first use of the photo screen
+downloads ~15 MB once, with the progress shown; from then on it works offline.
+
+The model's taxonomy is ImageNet's, so roughly forty of its classes are edible — fast food, baked
+goods, fruit, vegetables. A burger or a banana lands well; a home-cooked plate of chicken and rice
+has no class, and the app says it recognised nothing instead of inventing a number. The photo
+screen states that limit on screen. Recognised food arrives as a draft: the name, the weight and
+the calories are all editable, weaker guesses are offered as one-tap alternatives, and manual
+entry is always there. Details and what is deliberately missing (detection, portion estimation)
+are in [docs/on-device-recognition.md](docs/on-device-recognition.md).
+
 ## Privacy
 
 Meal photos are analysed **on the device** and never leave it. Nothing is uploaded; only the
-resulting numbers are kept. The guarantee is a property of the system rather than a policy —
-see [docs/on-device-recognition.md](docs/on-device-recognition.md).
-
-In the prototype the picture is held as an object URL inside the page. Recognition itself is not
-wired up yet, and the prototype says so on screen.
+resulting numbers are kept. The guarantee is a property of the system rather than a policy: the
+picture is held as an object URL inside the page, and the recognition path makes no network
+request at all — not even to a model CDN.
 
 ## Languages
 
@@ -82,7 +94,9 @@ Everything inside the repository — code, comments, commit messages, documentat
 
 ## Working on the prototype
 
-No build step, no dependencies — plain HTML, CSS and one script.
+No build step, no package manager — plain HTML, CSS and two scripts. The vendored TensorFlow.js
+build (`prototype/vendor/`) and the model weights (`prototype/model/`) are committed as they are
+served.
 
 ```bash
 python -m http.server 5173 --directory prototype
@@ -96,7 +110,7 @@ change does not appear.
 | `python tools/make-icons.py` | Regenerate the PWA icons |
 | `bash tools/make-screenshots.sh` | Regenerate the README screenshots from the running prototype |
 
-`?seed=meal` pre-fills a meal with a recognition result, which is how the screenshots are taken.
+`?seed=meal` pre-fills a meal without running the model, which is how the screenshots are taken.
 
 ### Deployment
 
