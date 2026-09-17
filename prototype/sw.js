@@ -1,7 +1,7 @@
 /* Minimal offline shell for the prototype.
    Bump CACHE when the shell changes so old copies are dropped. */
 
-var CACHE = 'fitbalance-prototype-v2';
+var CACHE = 'fitbalance-prototype-v3';
 var SHELL = [
   './',
   './index.html',
@@ -31,23 +31,32 @@ self.addEventListener('activate', function (event) {
   );
 });
 
+/* Network first, cache as the offline fallback.
+   The prototype changes often, and a cache-first shell keeps serving a stale
+   copy for a cycle after each deploy - which reads as "the app is broken". */
 self.addEventListener('fetch', function (event) {
   var request = event.request;
-  if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) {
+  var url = new URL(request.url);
+  if (request.method !== 'GET' || url.origin !== self.location.origin) {
+    return;
+  }
+  // The version check must always see the network, never a cached answer.
+  if (url.pathname.endsWith('/version.json')) {
     return;
   }
   event.respondWith(
-    caches.match(request).then(function (hit) {
-      if (hit) { return hit; }
-      return fetch(request).then(function (response) {
+    fetch(request)
+      .then(function (response) {
         if (response.ok) {
           var copy = response.clone();
           caches.open(CACHE).then(function (cache) { cache.put(request, copy); });
         }
         return response;
-      }).catch(function () {
-        return caches.match('./index.html');
-      });
-    })
+      })
+      .catch(function () {
+        return caches.match(request).then(function (hit) {
+          return hit || caches.match('./index.html');
+        });
+      })
   );
 });

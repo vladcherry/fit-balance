@@ -3,8 +3,18 @@
 A mobile-first PWA for tracking calories in and calories out, built around a single question:
 **how much is left to burn today?**
 
-> **Status: planning.** This repository currently holds the product spec, the decision log and
-> design notes. No application code yet.
+### ▶︎ [vladcherry.github.io/fit-balance](https://vladcherry.github.io/fit-balance/)
+
+Open it on a phone and install it to the home screen — the app offers to do that itself, with
+step-by-step instructions on iOS, where Safari has no install API.
+
+> **Status: prototype.** `prototype/` is a clickable, installable static prototype of the chosen
+> design. The real application has not been started yet; this repository holds the prototype, the
+> product spec and the decision log.
+
+| Today | Meal | Activity | Stats |
+| --- | --- | --- | --- |
+| <img src="docs/screenshots/home.png" width="190" alt="Home screen"> | <img src="docs/screenshots/meal.png" width="190" alt="Meal screen"> | <img src="docs/screenshots/activity.png" width="190" alt="Activity screen"> | <img src="docs/screenshots/stats.png" width="190" alt="Statistics screen"> |
 
 ## What it does
 
@@ -16,9 +26,10 @@ Open the app and immediately see the state of the day:
 - the daily maintenance requirement;
 - the current deficit, and its approximate fat equivalent in grams.
 
-Food is logged by photographing the plate — the picture is analysed and turned into dishes,
-portions and calories, all of which the user can correct. Activity is entered by hand: pick the
-type, the duration and the intensity, and the app estimates the calories.
+Food is logged by photographing the plate, or by hand. Either way the result is a list of items
+whose name, weight and calories can all be edited — change a weight and the calories follow the
+item's kcal-per-100 g. Activity is entered by hand: pick the type, the duration and the
+intensity, and the app estimates the calories from MET and body weight.
 
 ## The headline number
 
@@ -44,6 +55,21 @@ Calorie balance is also shown in grams, using the conventional figure of
 measurement: day-to-day weight also moves with water, glycogen and gut contents. Every such
 figure is rendered with `≈` and labelled as an approximation.
 
+## Privacy
+
+Meal photos are analysed **on the device** and never leave it. Nothing is uploaded; only the
+resulting numbers are kept. The guarantee is a property of the system rather than a policy —
+see [docs/on-device-recognition.md](docs/on-device-recognition.md).
+
+In the prototype the picture is held as an object URL inside the page. Recognition itself is not
+wired up yet, and the prototype says so on screen.
+
+## Languages
+
+The interface ships in **Russian and English** from the first release, switchable in the profile.
+Everything inside the repository — code, comments, commit messages, documentation — is
+**English only**.
+
 ## Documentation
 
 | Document | What's in it |
@@ -54,13 +80,27 @@ figure is rendered with `≈` and labelled as an approximation.
 | [docs/food-recognition-api.md](docs/food-recognition-api.md) | Analysis of cloud food-recognition APIs (the road not taken) |
 | [docs/design.md](docs/design.md) | Visual direction, design tokens, screen inventory |
 
-## Privacy
+## Working on the prototype
 
-Meal photos are analysed **on the device** and never leave it. Nothing is uploaded; only the
-resulting numbers are kept. The guarantee is a property of the system rather than a policy —
-see [docs/on-device-recognition.md](docs/on-device-recognition.md).
+No build step, no dependencies — plain HTML, CSS and one script.
 
-## Languages
+```bash
+python -m http.server 5173 --directory prototype
+```
 
-The interface ships in **Russian and English** from the first release. Everything inside the
-repository — code, comments, commit messages, documentation — is **English only**.
+Then open <http://localhost:5173>. A service worker is involved, so use a normal reload if a
+change does not appear.
+
+| Command | What it does |
+| --- | --- |
+| `python tools/make-icons.py` | Regenerate the PWA icons |
+| `bash tools/make-screenshots.sh` | Regenerate the README screenshots from the running prototype |
+
+`?seed=meal` pre-fills a meal with a recognition result, which is how the screenshots are taken.
+
+### Deployment
+
+Every push to `main` that touches `prototype/` is deployed to GitHub Pages by
+[.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml). The workflow stamps
+`version.json` with the commit SHA, which the app shows under **Profile → App** along with an
+update button.

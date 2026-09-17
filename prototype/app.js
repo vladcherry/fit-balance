@@ -25,14 +25,20 @@
       'home.empty': 'Сегодня пока ничего не записано',
 
       'photo.eyebrow': 'Распознавание на устройстве', 'photo.cancel': 'Отмена',
-      'photo.headline': 'ЭТО ОБЕД НА ≈ 720 ККАЛ?',
+      'photo.newMeal': 'НОВЫЙ ПРИЁМ ПИЩИ', 'photo.headlineTotal': '≈ {kcal} ККАЛ',
       'photo.tapToShoot': 'Нажмите, чтобы снять фото',
       'photo.retake': 'Переснять', 'photo.analysing': 'Разбираю на устройстве…',
       'photo.demoNote': 'Модель распознавания ещё не подключена — числа ниже демонстрационные.',
       'photo.privacy': 'Снимок разбирается прямо на телефоне и никуда не отправляется.',
-      'photo.found': 'Что нашлось · можно поправить', 'photo.total': 'Итого',
+      'photo.mealType': 'Приём пищи', 'photo.items': 'Состав · можно поправить',
+      'photo.emptyItems': 'Снимите фото или добавьте продукт вручную.',
+      'photo.total': 'Итого', 'photo.totalWeight': '{g} г всего',
       'photo.addProduct': 'Добавить продукт', 'photo.save': 'Записать в дневник',
-      'photo.saved': 'Обед записан: +720 ккал',
+      'photo.saved': 'Записано: +{kcal} ккал',
+
+      'editor.name': 'Название', 'editor.grams': 'Вес, г', 'editor.kcal': 'Ккал',
+      'editor.delete': 'Удалить', 'editor.done': 'Готово', 'editor.newItem': 'Новый продукт',
+      'editor.hint': 'Меняете вес — калории пересчитываются. Впишите ккал, чтобы задать точно.',
       'food.chicken': 'Курица гриль', 'food.rice': 'Рис отварной', 'food.veg': 'Овощи на пару',
 
       'act.eyebrow': 'Активность вручную', 'act.title': 'Активность', 'act.headline': 'ЧТО И СКОЛЬКО?',
@@ -64,6 +70,20 @@
       'prof.disclaimer': 'Фото разбираются на устройстве и никуда не уходят. Жировой эквивалент (7 700 ккал = 1 кг) — условный ориентир, а не измерение состава тела.',
       'prof.reset': 'Сбросить день до демо-данных', 'prof.resetDone': 'День сброшен',
 
+      'install.title': 'Установить FitBalance',
+      'install.sub': 'Откроется с домашнего экрана, как обычное приложение',
+      'install.action': 'Установить', 'install.dismiss': 'Скрыть',
+      'install.iosTitle': 'Установка на iPhone',
+      'install.ios1': 'Нажмите «Поделиться» в нижней панели Safari',
+      'install.ios2': 'Пролистайте список и выберите «На экран „Домой“»',
+      'install.ios3': 'Нажмите «Добавить» в правом верхнем углу',
+      'install.iosNote': 'Работает только в Safari. В Chrome на iPhone этого пункта нет.',
+      'install.gotIt': 'Понятно', 'install.done': 'Приложение установлено',
+
+      'prof.app': 'Приложение', 'prof.version': 'Версия', 'prof.update': 'Обновить',
+      'prof.checking': 'Проверяю…', 'prof.upToDate': 'У вас последняя версия',
+      'prof.updating': 'Есть новая версия — обновляю…', 'prof.dev': 'локальная сборка',
+
       'weekdays': ['чт', 'пт', 'сб', 'вс', 'пн', 'вт', 'ср'],
       'dateLine': 'СР 17.09'
     },
@@ -82,14 +102,20 @@
       'home.empty': 'Nothing logged yet today',
 
       'photo.eyebrow': 'On-device recognition', 'photo.cancel': 'Cancel',
-      'photo.headline': 'A ≈ 720 KCAL LUNCH?',
+      'photo.newMeal': 'NEW MEAL', 'photo.headlineTotal': '≈ {kcal} KCAL',
       'photo.tapToShoot': 'Tap to take a photo',
       'photo.retake': 'Retake', 'photo.analysing': 'Analysing on the device…',
       'photo.demoNote': 'The recognition model is not wired up yet — the numbers below are demo values.',
       'photo.privacy': 'The picture is analysed on the phone and never leaves it.',
-      'photo.found': 'What was found · editable', 'photo.total': 'Total',
+      'photo.mealType': 'Meal', 'photo.items': 'Contents · editable',
+      'photo.emptyItems': 'Take a photo, or add an item by hand.',
+      'photo.total': 'Total', 'photo.totalWeight': '{g} g in total',
       'photo.addProduct': 'Add an item', 'photo.save': 'Save to diary',
-      'photo.saved': 'Lunch saved: +720 kcal',
+      'photo.saved': 'Saved: +{kcal} kcal',
+
+      'editor.name': 'Name', 'editor.grams': 'Weight, g', 'editor.kcal': 'Kcal',
+      'editor.delete': 'Delete', 'editor.done': 'Done', 'editor.newItem': 'New item',
+      'editor.hint': 'Change the weight and the calories follow. Type the calories to set them exactly.',
       'food.chicken': 'Grilled chicken', 'food.rice': 'Boiled rice', 'food.veg': 'Steamed vegetables',
 
       'act.eyebrow': 'Manual activity', 'act.title': 'Activity', 'act.headline': 'WHAT AND HOW LONG?',
@@ -121,6 +147,20 @@
       'prof.disclaimer': 'Photos are analysed on the device and never leave it. The fat equivalent (7,700 kcal = 1 kg) is a conventional figure, not a body-composition measurement.',
       'prof.reset': 'Reset the day to demo data', 'prof.resetDone': 'Day reset',
 
+      'install.title': 'Install FitBalance',
+      'install.sub': 'Opens from the home screen like any other app',
+      'install.action': 'Install', 'install.dismiss': 'Dismiss',
+      'install.iosTitle': 'Installing on iPhone',
+      'install.ios1': 'Tap Share in the Safari toolbar',
+      'install.ios2': 'Scroll the list and choose “Add to Home Screen”',
+      'install.ios3': 'Tap “Add” in the top right corner',
+      'install.iosNote': 'Safari only — Chrome on iPhone does not offer this.',
+      'install.gotIt': 'Got it', 'install.done': 'App installed',
+
+      'prof.app': 'App', 'prof.version': 'Version', 'prof.update': 'Update',
+      'prof.checking': 'Checking…', 'prof.upToDate': 'You are on the latest version',
+      'prof.updating': 'A new version is available — updating…', 'prof.dev': 'local build',
+
       'weekdays': ['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed'],
       'dateLine': 'WED 17.09'
     }
@@ -145,14 +185,35 @@
     ];
   }
 
+  /* What the demo "recognition" returns. Replaced by a real model later. */
+  function recognisedItems() {
+    return [
+      { key: 'food.chicken', grams: 200, kcal: 290, per100: 145 },
+      { key: 'food.rice', grams: 220, kcal: 330, per100: 150 },
+      { key: 'food.veg', grams: 180, kcal: 100, per100: 56 }
+    ];
+  }
+
+  var MEAL_TYPES = ['breakfast', 'lunch', 'snack', 'dinner'];
+
   var state = {
     lang: 'ru',
     weight: 84.5,
     maintenance: 2200,
     target: 700,
     entries: seedEntries(),
-    draft: { type: 'walking', minutes: 45, intensity: 'moderate', manual: '' }
+    draft: { type: 'walking', minutes: 45, intensity: 'moderate', manual: '' },
+    meal: { type: 'lunch', items: [], editing: -1 }
   };
+
+  function mealTotals() {
+    var kcal = 0, grams = 0;
+    state.meal.items.forEach(function (it) {
+      kcal += Number(it.kcal) || 0;
+      grams += Number(it.grams) || 0;
+    });
+    return { kcal: Math.round(kcal), grams: Math.round(grams) };
+  }
 
   function totals() {
     var eaten = 0, burned = 0;
@@ -288,6 +349,178 @@
     });
   }
 
+  function itemLabel(it) {
+    if (it.key) { return t(it.key); }
+    return it.name && it.name.trim() ? it.name : t('editor.newItem');
+  }
+
+  function fillRow(row, it) {
+    row.querySelector('.item__name').textContent = itemLabel(it);
+    row.querySelector('.item__sub').textContent =
+      it.grams ? '≈ ' + num(it.grams) + ' ' + t('unit.g') : '—';
+    row.querySelector('.item__kcal').textContent = num(Number(it.kcal) || 0);
+  }
+
+  function updateMealSummary() {
+    var m = mealTotals();
+    el('meal-total').textContent = num(m.kcal);
+    el('meal-weight').textContent = m.grams ? t('photo.totalWeight', { g: num(m.grams) }) : '';
+    el('photo-headline').textContent = m.kcal
+      ? t('photo.headlineTotal', { kcal: num(m.kcal) })
+      : t('photo.newMeal');
+    el('save-meal').disabled = m.kcal === 0;
+    el('save-meal').style.opacity = m.kcal === 0 ? '0.45' : '1';
+  }
+
+  function numberField(labelText, value) {
+    var label = document.createElement('label');
+    var caption = document.createElement('span');
+    caption.className = 'editor__k';
+    caption.textContent = labelText;
+    var input = document.createElement('input');
+    input.type = 'number';
+    input.inputMode = 'numeric';
+    input.min = '0';
+    input.value = value === '' || value === undefined ? '' : value;
+    label.appendChild(caption);
+    label.appendChild(input);
+    label.__input = input;
+    return label;
+  }
+
+  function buildEditor(it, index, row) {
+    var box = document.createElement('div');
+    box.className = 'editor';
+
+    var nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.value = it.key ? t(it.key) : (it.name || '');
+    nameInput.placeholder = t('editor.name');
+    nameInput.setAttribute('aria-label', t('editor.name'));
+    box.appendChild(nameInput);
+
+    var pair = document.createElement('div');
+    pair.className = 'editor__pair';
+    var gramsField = numberField(t('editor.grams'), it.grams);
+    var kcalField = numberField(t('editor.kcal'), it.kcal);
+    pair.appendChild(gramsField);
+    pair.appendChild(kcalField);
+    box.appendChild(pair);
+
+    var hint = document.createElement('div');
+    hint.className = 'editor__hint';
+    hint.textContent = t('editor.hint');
+    box.appendChild(hint);
+
+    var row2 = document.createElement('div');
+    row2.className = 'editor__row';
+    var del = document.createElement('button');
+    del.type = 'button';
+    del.className = 'editor__del';
+    del.textContent = t('editor.delete');
+    var done = document.createElement('button');
+    done.type = 'button';
+    done.className = 'editor__done';
+    done.textContent = t('editor.done');
+    row2.appendChild(del);
+    row2.appendChild(done);
+    box.appendChild(row2);
+
+    nameInput.addEventListener('input', function () {
+      it.key = null;               // a typed name replaces the recognised label
+      it.name = this.value;
+      fillRow(row, it);
+      save();
+    });
+
+    gramsField.__input.addEventListener('input', function () {
+      var g = parseFloat(String(this.value).replace(',', '.'));
+      it.grams = isNaN(g) || g < 0 ? '' : g;
+      if (it.per100 && it.grams !== '') {
+        it.kcal = Math.round(it.grams * it.per100 / 100);
+        kcalField.__input.value = it.kcal;
+      }
+      fillRow(row, it);
+      updateMealSummary();
+      save();
+    });
+
+    kcalField.__input.addEventListener('input', function () {
+      var k = parseFloat(String(this.value).replace(',', '.'));
+      it.kcal = isNaN(k) || k < 0 ? '' : Math.round(k);
+      if (it.grams > 0 && it.kcal !== '') { it.per100 = it.kcal / it.grams * 100; }
+      fillRow(row, it);
+      updateMealSummary();
+      save();
+    });
+
+    del.addEventListener('click', function () {
+      state.meal.items.splice(index, 1);
+      state.meal.editing = -1;
+      renderMeal();
+      save();
+    });
+
+    done.addEventListener('click', function () {
+      state.meal.editing = -1;
+      renderMeal();
+      save();
+    });
+
+    return box;
+  }
+
+  function renderMeal() {
+    var types = el('meal-types');
+    types.innerHTML = '';
+    MEAL_TYPES.forEach(function (key) {
+      types.appendChild(button(t('meal.' + key), state.meal.type === key, function () {
+        state.meal.type = key;
+        renderMeal();
+        save();
+      }, 'chip'));
+    });
+
+    var list = el('meal-items');
+    list.innerHTML = '';
+
+    if (!state.meal.items.length) {
+      var empty = document.createElement('div');
+      empty.className = 'items__empty';
+      empty.textContent = t('photo.emptyItems');
+      list.appendChild(empty);
+    }
+
+    state.meal.items.forEach(function (it, i) {
+      var wrap = document.createElement('div');
+      wrap.className = 'item-wrap' + (state.meal.editing === i ? ' is-editing' : '');
+
+      var row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'item';
+      row.innerHTML =
+        '<span style="flex-grow:1;min-width:0">' +
+          '<span class="item__name"></span>' +
+          '<span class="item__sub"></span>' +
+        '</span>' +
+        '<span class="item__kcal"></span>' +
+        '<svg class="item__chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" ' +
+        'stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M9.5 5 16 12l-6.5 7"/></svg>';
+      fillRow(row, it);
+      row.addEventListener('click', function () {
+        state.meal.editing = state.meal.editing === i ? -1 : i;
+        renderMeal();
+      });
+      wrap.appendChild(row);
+
+      if (state.meal.editing === i) { wrap.appendChild(buildEditor(it, i, row)); }
+      list.appendChild(wrap);
+    });
+
+    updateMealSummary();
+  }
+
   function renderActivity() {
     var types = el('act-types');
     types.innerHTML = '';
@@ -402,6 +635,7 @@
   function renderAll() {
     renderStaticCopy();
     renderHome();
+    renderMeal();
     renderActivity();
     renderStats();
     renderProfile();
@@ -411,7 +645,11 @@
 
   var MODALS = { photo: true, activity: true };
 
-  function go(name) {
+  /* Every forward move pushes a history entry, so the phone's own back gesture
+     walks back through the app instead of leaving it. */
+  var navDepth = 0;
+
+  function show(name) {
     document.querySelectorAll('.screen').forEach(function (s) {
       s.classList.toggle('is-active', s.id === 'screen-' + name);
     });
@@ -425,8 +663,36 @@
     });
     var screen = el('screen-' + name);
     if (screen) { screen.scrollTop = 0; }
-    if (location.hash !== '#' + name) { history.replaceState(null, '', '#' + name); }
   }
+
+  function go(name, replace) {
+    var current = history.state && history.state.screen;
+    show(name);
+    if (replace || current === name) {
+      history.replaceState({ screen: name }, '', '#' + name);
+      return;
+    }
+    history.pushState({ screen: name }, '', '#' + name);
+    navDepth += 1;
+  }
+
+  function goBack() {
+    if (navDepth > 0) {
+      history.back();
+      return;
+    }
+    go('home', true);           // deep link straight into a screen: nowhere to go back to
+  }
+
+  window.addEventListener('popstate', function (e) {
+    var name = (e.state && e.state.screen) || (location.hash || '#home').slice(1);
+    if (!document.getElementById('screen-' + name)) { name = 'home'; }
+    navDepth = Math.max(0, navDepth - 1);
+    show(name);
+
+    var sheet = el('ios-sheet');
+    if (sheet && !sheet.hidden) { sheet.hidden = true; }
+  });
 
   function nowLabel() {
     var d = new Date();
@@ -437,6 +703,7 @@
 
   function wire() {
     document.addEventListener('click', function (e) {
+      if (e.target.closest('[data-back]')) { goBack(); return; }
       var target = e.target.closest('[data-go]');
       if (target) { go(target.getAttribute('data-go')); }
     });
@@ -465,7 +732,7 @@
       el('act-manual').value = '';
       save();
       renderHome();
-      go('home');
+      goBack();
       toast(t('act.saved', { kcal: num(kcal) }));
     });
 
@@ -485,15 +752,46 @@
       el('screen-photo').classList.add('has-user-photo');
 
       clearTimeout(busyTimer);
-      busyTimer = setTimeout(function () { frame.classList.remove('is-busy'); }, 900);
+      busyTimer = setTimeout(function () {
+        frame.classList.remove('is-busy');
+        // A recognition pass replaces earlier recognised items and leaves hand-typed ones alone.
+        var manual = state.meal.items.filter(function (it) { return !it.key; });
+        state.meal.items = recognisedItems().concat(manual);
+        state.meal.editing = -1;
+        renderMeal();
+        save();
+      }, 900);
+    });
+
+    function resetMeal() {
+      state.meal = { type: state.meal.type, items: [], editing: -1 };
+      if (photoUrl) { URL.revokeObjectURL(photoUrl); photoUrl = null; }
+      el('photo-preview').removeAttribute('src');
+      el('photo-frame').classList.remove('has-photo', 'is-busy');
+      el('screen-photo').classList.remove('has-user-photo');
+    }
+
+    el('add-item').addEventListener('click', function () {
+      state.meal.items.push({ name: '', grams: '', kcal: '' });
+      state.meal.editing = state.meal.items.length - 1;
+      renderMeal();
+      save();
+      var input = el('meal-items').querySelector('.item-wrap.is-editing .editor input');
+      if (input) { input.focus(); }
     });
 
     el('save-meal').addEventListener('click', function () {
-      state.entries.push({ time: nowLabel(), kind: 'food', key: 'meal.lunch', kcal: 720 });
+      var m = mealTotals();
+      if (!m.kcal) { return; }
+      state.entries.push({
+        time: nowLabel(), kind: 'food', key: 'meal.' + state.meal.type, kcal: m.kcal
+      });
+      resetMeal();
       save();
       renderHome();
-      go('home');
-      toast(t('photo.saved'));
+      renderMeal();
+      goBack();
+      toast(t('photo.saved', { kcal: num(m.kcal) }));
     });
 
     el('p-weight').addEventListener('change', function () {
@@ -529,13 +827,152 @@
     disclaimer.parentNode.insertBefore(reset, disclaimer);
   }
 
+  /* ---------------- version ---------------- */
+
+  /* version.json is written by the Pages workflow at deploy time. Missing it means
+     the prototype is being served locally, which is worth showing plainly. */
+
+  var loadedVersion = null;
+
+  function fetchVersion() {
+    return fetch('./version.json?ts=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });
+  }
+
+  function showVersion(info) {
+    var node = el('app-version');
+    if (!info) {
+      node.textContent = t('prof.dev');
+      return;
+    }
+    var built = info.built ? new Date(info.built) : null;
+    node.textContent = info.version + (built && !isNaN(built)
+      ? ' · ' + built.toLocaleDateString(state.lang === 'ru' ? 'ru-RU' : 'en-US', {
+        day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+      })
+      : '');
+  }
+
+  function setupVersion() {
+    fetchVersion().then(function (info) {
+      loadedVersion = info && info.version;
+      showVersion(info);
+    });
+
+    el('check-update').addEventListener('click', function () {
+      var btn = this;
+      btn.disabled = true;
+      toast(t('prof.checking'));
+
+      Promise.all([
+        fetchVersion(),
+        'serviceWorker' in navigator
+          ? navigator.serviceWorker.getRegistration().then(function (reg) {
+            return reg ? reg.update().catch(function () { return null; }) : null;
+          })
+          : Promise.resolve(null)
+      ]).then(function (results) {
+        var info = results[0];
+        btn.disabled = false;
+        showVersion(info);
+        var latest = info && info.version;
+        if (latest && loadedVersion && latest === loadedVersion) {
+          toast(t('prof.upToDate'));
+          return;
+        }
+        toast(t('prof.updating'));
+        setTimeout(function () { location.reload(); }, 900);
+      });
+    });
+  }
+
+  /* ---------------- install prompt ---------------- */
+
+  var DISMISS_KEY = 'fitbalance.install.dismissed';
+
+  function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true;
+  }
+
+  function isIos() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+
+  function installDismissed() {
+    try { return localStorage.getItem(DISMISS_KEY) === '1'; } catch (err) { return false; }
+  }
+
+  function setupInstall() {
+    var bar = el('install-bar');
+    var sheet = el('ios-sheet');
+    var deferred = null;
+
+    function show() {
+      if (isStandalone() || installDismissed()) { return; }
+      bar.hidden = false;
+    }
+
+    function hide(remember) {
+      bar.hidden = true;
+      if (remember) {
+        try { localStorage.setItem(DISMISS_KEY, '1'); } catch (err) { /* private mode */ }
+      }
+    }
+
+    // Chrome and Edge: keep the browser's own mini-infobar away and use our button.
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferred = e;
+      show();
+    });
+
+    window.addEventListener('appinstalled', function () {
+      deferred = null;
+      hide(false);
+      toast(t('install.done'));
+    });
+
+    el('install-go').addEventListener('click', function () {
+      if (deferred) {
+        deferred.prompt();
+        deferred.userChoice.then(function (choice) {
+          deferred = null;
+          if (choice && choice.outcome === 'accepted') { hide(false); }
+        });
+        return;
+      }
+      sheet.hidden = false;
+    });
+
+    el('install-close').addEventListener('click', function () { hide(true); });
+    el('ios-close').addEventListener('click', function () { sheet.hidden = true; });
+    sheet.addEventListener('click', function (e) {
+      if (e.target === sheet) { sheet.hidden = true; }
+    });
+
+    // Safari never fires beforeinstallprompt, so offer the manual route on iOS directly.
+    if (isIos()) { setTimeout(show, 1200); }
+  }
+
   /* ---------------- start ---------------- */
 
   load();
+
+  // ?seed=meal fills the meal with a recognition result. Used by tools/make-screenshots.sh
+  // and handy for demos; it never runs on its own.
+  if (new URLSearchParams(location.search).get('seed') === 'meal') {
+    state.meal = { type: 'lunch', items: recognisedItems(), editing: 0 };
+  }
+
   wire();
   renderAll();
+  setupVersion();
+  setupInstall();
   var initial = (location.hash || '#home').slice(1);
-  go(document.getElementById('screen-' + initial) ? initial : 'home');
+  go(document.getElementById('screen-' + initial) ? initial : 'home', true);
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {

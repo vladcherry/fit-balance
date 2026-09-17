@@ -86,13 +86,13 @@
   <section class="screen is-modal" id="screen-photo" aria-labelledby="photo-headline">
     <div class="hero hero--flat">
       <div class="hero__top">
-        <button type="button" class="icon-btn" data-go="home" data-i18n-aria="a11y.back" aria-label="Назад">
+        <button type="button" class="icon-btn" data-back data-i18n-aria="a11y.back" aria-label="Назад">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5 8 12l6.5 7"/></svg>
         </button>
         <span class="eyebrow" style="flex-grow:1" data-i18n="photo.eyebrow">Распознавание на устройстве</span>
-        <button type="button" style="height:44px;padding:0 12px;font-size:13px;font-weight:800" data-go="home" data-i18n="photo.cancel">Отмена</button>
+        <button type="button" style="height:44px;padding:0 12px;font-size:13px;font-weight:800" data-back data-i18n="photo.cancel">Отмена</button>
       </div>
-      <h1 class="hero__headline" id="photo-headline" data-i18n="photo.headline">ЭТО ОБЕД НА ≈ 720 ККАЛ?</h1>
+      <h1 class="hero__headline" id="photo-headline">НОВЫЙ ПРИЁМ ПИЩИ</h1>
     </div>
 
     <label class="placeholder" id="photo-frame" for="photo-input">
@@ -116,23 +116,13 @@
       <span data-i18n="photo.privacy">Снимок разбирается прямо на телефоне и никуда не отправляется.</span>
     </div>
 
-    <div class="label" data-i18n="photo.found">Что нашлось · можно поправить</div>
-    <div class="items">
-      <div class="item">
-        <div style="flex-grow:1"><div class="item__name" data-i18n="food.chicken">Курица гриль</div><div class="item__sub">≈ 200 <span data-i18n="unit.g">г</span></div></div>
-        <div class="item__kcal">290</div>
-      </div>
-      <div class="item">
-        <div style="flex-grow:1"><div class="item__name" data-i18n="food.rice">Рис отварной</div><div class="item__sub">≈ 220 <span data-i18n="unit.g">г</span></div></div>
-        <div class="item__kcal">330</div>
-      </div>
-      <div class="item">
-        <div style="flex-grow:1"><div class="item__name" data-i18n="food.veg">Овощи на пару</div><div class="item__sub">≈ 180 <span data-i18n="unit.g">г</span></div></div>
-        <div class="item__kcal">100</div>
-      </div>
-    </div>
+    <div class="label" data-i18n="photo.mealType">Приём пищи</div>
+    <div class="chips" id="meal-types"></div>
 
-    <button type="button" class="btn btn--quiet" style="margin:10px 22px 0" data-i18n="photo.addProduct">Добавить продукт</button>
+    <div class="label" data-i18n="photo.items">Состав · можно поправить</div>
+    <div class="items" id="meal-items"></div>
+
+    <button type="button" class="btn btn--quiet" style="margin:10px 22px 0" id="add-item" data-i18n="photo.addProduct">Добавить продукт</button>
 
     <div class="grow"></div>
 
@@ -140,9 +130,9 @@
       <div style="display:flex;align-items:center">
         <div style="flex-grow:1">
           <div class="stack__k" data-i18n="photo.total">Итого</div>
-          <div style="font-size:11px;font-weight:600;margin-top:3px">Б 53 · Ж 12 · У 87</div>
+          <div style="font-size:11px;font-weight:600;margin-top:3px" id="meal-weight"></div>
         </div>
-        <div style="font-family:var(--display);font-size:40px;line-height:1">720</div>
+        <div style="font-family:var(--display);font-size:40px;line-height:1" id="meal-total">0</div>
       </div>
     </div>
 
@@ -155,11 +145,11 @@
   <section class="screen is-modal" id="screen-activity" aria-labelledby="act-headline">
     <div class="hero hero--flat">
       <div class="hero__top">
-        <button type="button" class="icon-btn" data-go="home" data-i18n-aria="a11y.back" aria-label="Назад">
+        <button type="button" class="icon-btn" data-back data-i18n-aria="a11y.back" aria-label="Назад">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5 8 12l6.5 7"/></svg>
         </button>
         <span class="eyebrow" style="flex-grow:1" data-i18n="act.eyebrow">Активность вручную</span>
-        <button type="button" style="height:44px;padding:0 12px;font-size:13px;font-weight:800" data-go="home" data-i18n="photo.cancel">Отмена</button>
+        <button type="button" style="height:44px;padding:0 12px;font-size:13px;font-weight:800" data-back data-i18n="photo.cancel">Отмена</button>
       </div>
       <h1 class="hero__headline" id="act-headline" data-i18n="act.headline">ЧТО И СКОЛЬКО?</h1>
     </div>
@@ -254,7 +244,7 @@
   <section class="screen" id="screen-profile" aria-labelledby="prof-title">
     <div class="hero hero--flat">
       <div class="hero__top">
-        <button type="button" class="icon-btn" data-go="home" data-i18n-aria="a11y.back" aria-label="Назад">
+        <button type="button" class="icon-btn" data-back data-i18n-aria="a11y.back" aria-label="Назад">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5 8 12l6.5 7"/></svg>
         </button>
         <span class="eyebrow" style="flex-grow:1">FITBALANCE</span>
@@ -315,6 +305,17 @@
       <button type="button" data-lang="en" aria-pressed="false">English</button>
     </div>
 
+    <div class="label" data-i18n="prof.app">Приложение</div>
+    <div class="list">
+      <div class="list__row">
+        <div style="flex-grow:1;min-width:0">
+          <div class="list__name" data-i18n="prof.version">Версия</div>
+          <div class="list__sub" id="app-version">—</div>
+        </div>
+        <button type="button" class="pill pill--light" id="check-update" data-i18n="prof.update">Обновить</button>
+      </div>
+    </div>
+
     <div class="grow"></div>
 
     <div class="disclaimer">
@@ -341,6 +342,43 @@
       <span data-i18n="nav.profile">Профиль</span>
     </button>
   </nav>
+
+  <div class="install" id="install-bar" hidden>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4.5 19.5h15"/></svg>
+    <div style="flex-grow:1;min-width:0">
+      <div class="install__title" data-i18n="install.title">Установить FitBalance</div>
+      <div class="install__sub" data-i18n="install.sub">Откроется с домашнего экрана, как обычное приложение</div>
+    </div>
+    <button type="button" class="install__go" id="install-go" data-i18n="install.action">Установить</button>
+    <button type="button" class="install__close" id="install-close" data-i18n-aria="install.dismiss" aria-label="Скрыть">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+
+  <div class="sheet" id="ios-sheet" hidden>
+    <div class="sheet__box" role="dialog" aria-modal="true" aria-labelledby="ios-title">
+      <h2 class="sheet__title" id="ios-title" data-i18n="install.iosTitle">Установка на iPhone</h2>
+      <ol class="steps">
+        <li>
+          <span class="steps__n">1</span>
+          <span data-i18n="install.ios1">Нажмите «Поделиться» в нижней панели Safari</span>
+          <svg class="steps__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3.5"/><path d="m8 7.5 4-4 4 4"/><path d="M6 12.5H4.5v8h15v-8H18"/></svg>
+        </li>
+        <li>
+          <span class="steps__n">2</span>
+          <span data-i18n="install.ios2">Пролистайте список и выберите «На экран „Домой“»</span>
+          <svg class="steps__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 9v6M9 12h6"/></svg>
+        </li>
+        <li>
+          <span class="steps__n">3</span>
+          <span data-i18n="install.ios3">Нажмите «Добавить» в правом верхнем углу</span>
+          <svg class="steps__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+        </li>
+      </ol>
+      <p class="sheet__note" data-i18n="install.iosNote">Работает только в Safari. В Chrome на iPhone этого пункта нет.</p>
+      <button type="button" class="btn btn--primary btn--wide" id="ios-close" data-i18n="install.gotIt">Понятно</button>
+    </div>
+  </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </div>
