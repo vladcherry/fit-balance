@@ -1,12 +1,14 @@
 /* Minimal offline shell for the prototype.
    Bump CACHE when the shell changes so old copies are dropped. */
 
-var CACHE = 'fitbalance-prototype-v4';
+var CACHE = 'fitbalance-prototype-v5';
 var SHELL = [
   './',
   './index.html',
   './styles.css',
   './app.js',
+  './recognise.js',
+  './cloud.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png'

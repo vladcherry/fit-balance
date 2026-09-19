@@ -36,7 +36,21 @@
       'photo.modelFailed': 'Модель не загрузилась. Нужен интернет на первый раз — потом работает без сети.',
       'photo.maybe': 'Может быть',
       'photo.scope': 'Модель знает около 40 категорий: фастфуд, выпечку, фрукты и овощи. Остальное — вручную.',
-      'photo.privacy': 'Снимок разбирается прямо на телефоне и никуда не отправляется.',
+      'photo.privacy': 'Снимок разбирается на телефоне. Наружу он уходит, только если вы сами нажмёте «Уточнить в облаке».',
+
+      'cloud.title': 'Облачное распознавание',
+      'cloud.explain': 'Необязательно. Если вписать ключ, на экране фото появится кнопка «Уточнить в облаке» — она отправляет один снимок выбранной модели. Без неё всё остаётся на телефоне.',
+      'cloud.key': 'API-ключ', 'cloud.model': 'Модель', 'cloud.endpoint': 'Эндпоинт',
+      'cloud.storage': 'Ключ хранится только в этом браузере и уходит только на указанный эндпоинт.',
+      'cloud.refine': 'Уточнить в облаке', 'cloud.sending': 'Отправляю снимок…',
+      'cloud.willSend': 'Снимок уйдёт в {model}. Это единственный случай, когда фото покидает телефон.',
+      'cloud.needKey': 'Чтобы включить, впишите API-ключ в профиле.',
+      'cloud.done': '{model}: {count} — проверьте вес и калории.',
+      'cloud.nothing': '{model} не нашла еду на снимке.',
+      'cloud.failed': 'Облако не ответило: {message}',
+      'cloud.badKey': 'Ключ не принят ({status}). Проверьте его в профиле.',
+      'cloud.blocked': 'Не удалось связаться с {host}: нет сети, либо сервис не принимает запросы прямо со страницы (CORS) — тогда нужен прокси.',
+      'cloud.timeout': 'Облако не ответило за 45 секунд.',
       'photo.mealType': 'Приём пищи', 'photo.items': 'Состав · можно поправить',
       'photo.emptyItems': 'Снимите фото или добавьте продукт вручную.',
       'photo.total': 'Итого', 'photo.totalWeight': '{g} г всего',
@@ -127,7 +141,21 @@
       'photo.modelFailed': 'The model failed to load. It needs the network once — after that it works offline.',
       'photo.maybe': 'Maybe',
       'photo.scope': 'The model knows about forty categories: fast food, baked goods, fruit and vegetables. Anything else goes in by hand.',
-      'photo.privacy': 'The picture is analysed on the phone and never leaves it.',
+      'photo.privacy': 'The picture is analysed on the phone. It only leaves it if you press "Ask the cloud" yourself.',
+
+      'cloud.title': 'Cloud recognition',
+      'cloud.explain': 'Optional. With a key set, the photo screen gets an "Ask the cloud" button that sends one picture to the model you choose. Without it, everything stays on the phone.',
+      'cloud.key': 'API key', 'cloud.model': 'Model', 'cloud.endpoint': 'Endpoint',
+      'cloud.storage': 'The key is kept in this browser only, and is sent to the configured endpoint and nowhere else.',
+      'cloud.refine': 'Ask the cloud', 'cloud.sending': 'Sending the picture…',
+      'cloud.willSend': 'The picture goes to {model}. This is the only time a photo leaves the phone.',
+      'cloud.needKey': 'Add an API key in the profile to enable this.',
+      'cloud.done': '{model}: {count} — check the weights and calories.',
+      'cloud.nothing': '{model} found no food in the picture.',
+      'cloud.failed': 'The cloud did not answer: {message}',
+      'cloud.badKey': 'The key was refused ({status}). Check it in the profile.',
+      'cloud.blocked': 'Could not reach {host}: either there is no network, or the service refuses calls straight from a page (CORS), which needs a proxy.',
+      'cloud.timeout': 'The cloud did not answer within 45 seconds.',
       'photo.mealType': 'Meal', 'photo.items': 'Contents · editable',
       'photo.emptyItems': 'Take a photo, or add an item by hand.',
       'photo.total': 'Total', 'photo.totalWeight': '{g} g in total',
@@ -333,6 +361,16 @@
     };
   }
 
+  function itemFromCloud(item) {
+    return {
+      cloud: true,
+      name: item.name,
+      grams: item.grams,
+      kcal: item.kcal,
+      per100: item.per100
+    };
+  }
+
   var MEAL_TYPES = ['breakfast', 'lunch', 'snack', 'dinner'];
 
   var state = {
@@ -349,7 +387,9 @@
     editingEntry: -1,
     history: null,              // date -> closed day; filled with demo days on first run
     draft: { type: 'walking', minutes: 45, intensity: 'moderate', manual: '' },
-    meal: { type: 'lunch', items: [], editing: -1 }
+    meal: { type: 'lunch', items: [], editing: -1 },
+    // Optional second opinion. The key never leaves this browser.
+    cloud: { key: '', model: '', endpoint: '' }
   };
 
   function mealTotals() {
@@ -1046,6 +1086,10 @@
     });
   }
 
+  /* Set by wire(); the photo screen owns the button, but a language switch has
+     to reach it from here. */
+  var refreshCloudButton = function () {};
+
   function renderAll() {
     renderStaticCopy();
     renderHome();
@@ -1054,6 +1098,7 @@
     renderStats();
     renderHistory();
     renderProfile();
+    refreshCloudButton();
   }
 
   /* ---------------- navigation ---------------- */
@@ -1166,6 +1211,7 @@
     // the model runs against this very <img>, on this device.
     var photoUrl = null;
     var analysisId = 0;                       // a newer picture invalidates an older pass
+    var cloudBusy = false;
 
     function photoStatus(text) { el('photo-status').textContent = text; }
 
@@ -1194,7 +1240,7 @@
     }
 
     function dropRecognisedItems() {
-      state.meal.items = state.meal.items.filter(function (it) { return !it.food; });
+      state.meal.items = state.meal.items.filter(function (it) { return !it.food && !it.cloud; });
       state.meal.editing = -1;
       renderMeal();
       save();
@@ -1202,7 +1248,7 @@
 
     // A recognition pass replaces earlier recognised items and leaves hand-typed ones alone.
     function applyFood(food) {
-      var manual = state.meal.items.filter(function (it) { return !it.food; });
+      var manual = state.meal.items.filter(function (it) { return !it.food && !it.cloud; });
       state.meal.items = [itemFromFood(food)].concat(manual);
       state.meal.editing = -1;
       renderMeal();
@@ -1224,6 +1270,7 @@
       frame.classList.add('has-photo', 'is-busy');
       photoNote('');
       renderGuesses([]);
+      renderCloudButton();
       photoStatus(t('photo.analysing'));
 
       var decoded = preview.decode ? preview.decode() : Promise.resolve();
@@ -1261,6 +1308,108 @@
       });
     }
 
+    /* The cloud button only exists while there is a picture on screen. It is
+       never automatic: sending the photo is a decision the user makes per shot,
+       which is the whole reason the on-device promise survives having it. */
+    function renderCloudButton() {
+      var button = el('cloud-go');
+      var hint = el('cloud-hint');
+      var config = CloudRecognition.settings(state.cloud);
+      var hasPhoto = el('photo-frame').classList.contains('has-photo');
+
+      button.hidden = !hasPhoto;
+      hint.textContent = '';
+      if (!hasPhoto) { return; }
+
+      if (!config.key) {
+        button.disabled = true;
+        el('cloud-go-text').textContent = t('cloud.refine');
+        hint.textContent = t('cloud.needKey');
+        return;
+      }
+      button.disabled = cloudBusy;
+      el('cloud-go-text').textContent = t(cloudBusy ? 'cloud.sending' : 'cloud.refine');
+      hint.textContent = t('cloud.willSend', { model: config.model });
+    }
+
+    function cloudFailureText(err) {
+      var config = CloudRecognition.settings(state.cloud);
+      if (err && (err.status === 401 || err.status === 403)) {
+        return t('cloud.badKey', { status: err.status });
+      }
+      if (err && err.code === 'timeout') { return t('cloud.timeout'); }
+      if (err && err.code === 'network') {
+        var host = config.endpoint;
+        try { host = new URL(config.endpoint).host; } catch (parseError) { /* keep as typed */ }
+        return t('cloud.blocked', { host: host });
+      }
+      return t('cloud.failed', { message: (err && err.message) || 'unknown error' });
+    }
+
+    el('cloud-go').addEventListener('click', function () {
+      var config = CloudRecognition.settings(state.cloud);
+      if (cloudBusy || !config.key) { return; }
+      var run = ++analysisId;
+      var frame = el('photo-frame');
+
+      cloudBusy = true;
+      renderCloudButton();
+      frame.classList.add('is-busy');
+      photoStatus(t('cloud.sending'));
+      photoNote('');
+      renderGuesses([]);
+
+      CloudRecognition.analyse(el('photo-preview'), {
+        settings: state.cloud,
+        lang: state.lang
+      }).then(function (result) {
+        if (run !== analysisId) { return; }
+        if (!result.items.length) {
+          // Nothing came back worth using, so what the on-device pass found
+          // stays where it is rather than being cleared for nothing.
+          photoNote(t('cloud.nothing', { model: result.model }), true);
+          return;
+        }
+        state.meal.items = result.items.map(itemFromCloud).concat(
+          state.meal.items.filter(function (it) { return !it.food && !it.cloud; })
+        );
+        state.meal.editing = -1;
+        renderMeal();
+        save();
+        photoNote(t('cloud.done', {
+          model: result.model,
+          count: result.items.map(function (it) { return it.name; }).join(', ')
+        }), false);
+      })['catch'](function (err) {
+        if (run !== analysisId) { return; }
+        photoNote(cloudFailureText(err), true);
+        if (window.console) { console.error('cloud recognition failed', err); }
+      })['finally'](function () {
+        if (run !== analysisId) { return; }
+        cloudBusy = false;
+        frame.classList.remove('is-busy');
+        renderCloudButton();
+      });
+    });
+
+    /* Cloud settings. The key is written straight to the stored state, which
+       lives in this browser's localStorage and goes nowhere else. */
+    function cloudField(id, key, placeholderFrom) {
+      var input = el(id);
+      input.placeholder = placeholderFrom || '';
+      input.value = state.cloud[key] || '';
+      input.addEventListener('change', function () {
+        state.cloud[key] = this.value.trim();
+        save();
+        renderCloudButton();
+      });
+    }
+    refreshCloudButton = renderCloudButton;
+
+    cloudField('cloud-key', 'key');
+    cloudField('cloud-model', 'model', CloudRecognition.defaults().model);
+    cloudField('cloud-endpoint', 'endpoint', CloudRecognition.defaults().endpoint);
+
     // Two inputs, because one cannot be both: `capture` goes straight to the
     // camera, the plain one opens the gallery.
     ['photo-camera', 'photo-gallery'].forEach(function (id) {
@@ -1279,6 +1428,7 @@
       el('photo-frame').classList.remove('has-photo', 'is-busy');
       photoNote('');
       renderGuesses([]);
+      renderCloudButton();
     }
 
     el('add-item').addEventListener('click', function () {

@@ -130,11 +130,39 @@ Health become reachable, and manual-only activity entry should be reconsidered.
 So the choice is not "which recognition library" but **"is this a web app or a native app"**.
 Everything else follows from that.
 
-### Hybrid, if accuracy proves insufficient
+### Hybrid, if accuracy proves insufficient — this is what shipped
 
 On-device by default, with an explicit per-photo action — "get a better estimate" — that sends
 *that* picture to a cloud model. The user opts in each time, so the default guarantee holds and
 the escape hatch exists. It does mean shipping two code paths.
+
+This is now implemented in `prototype/cloud.js`:
+
+- **Opt-in twice.** Nothing happens without an API key in the profile, and then nothing happens
+  without a press on "Ask the cloud", per photo. There is no automatic fallback when the
+  on-device model is unsure — that would make the guarantee a lie in exactly the cases that
+  matter most.
+- **One shape of request.** `POST /chat/completions` with a text part and an `image_url` part,
+  which is what DeepSeek, OpenAI and Gemini's compatibility endpoint all accept. The endpoint and
+  the model are settings, so the provider is a field, not a rewrite.
+- **The picture is downscaled to 768 px** and re-encoded as JPEG before it is sent: a plate is
+  legible at that size, the upload is a few hundred kilobytes instead of several megabytes, and
+  the EXIF block does not travel.
+- **The reply is mined, not trusted.** Models wrap JSON in prose or a fence, so the parser digs
+  the object out; then every item must have a name, a weight between 1 g and 5 kg and a density
+  between 0 and 900 kcal/100 g, or it is dropped. A reply with nothing usable in it leaves the
+  on-device result alone rather than clearing it.
+- **Failures say what happened.** A refused key names the status, a model that cannot see
+  reports the provider's own message, and a request the browser could not make says so and
+  mentions CORS, since a static page has no way around it.
+
+Two caveats that belong to this shape and not to a bug:
+
+1. **The key is in localStorage**, so it is as safe as the device and the origin. That is
+   acceptable for a personal prototype and not acceptable for a released product with other
+   people's keys — a release wants a proxy that holds the key server-side.
+2. **The provider has to allow browser calls.** A service that sends no CORS headers cannot be
+   called from a page at all, whatever the key says.
 
 ## Where this leaves the accuracy problem
 

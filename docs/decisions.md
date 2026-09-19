@@ -204,3 +204,38 @@ design, and the History tab opened the statistics screen because there was no hi
   profile regenerates them.
 - Storage is still one localStorage key. A year of days is a few tens of kilobytes, so this holds
   for the prototype; the real app will want IndexedDB.
+
+---
+
+## 10. A cloud model is available as a second opinion, and its key never enters the repository
+
+**Decision.** The app can send a single photo to a cloud vision model — `deepseek-flash` by
+default — but only after the user has entered an API key in the profile and only when they press
+"Ask the cloud" on that particular picture. The key is stored in the browser's localStorage. No
+key is committed to this repository or served with the app.
+
+**Context.** The on-device model recognises around forty ImageNet classes, which covers fast food
+and produce and misses every home-cooked plate — the case the app exists for. A cloud model with
+vision closes that gap. The original request was to hardcode the key in the source.
+
+**Consequences.**
+
+- **Hardcoding was rejected, and the reason is not style.** This repository is public and the app
+  is a static page on GitHub Pages: a key in the source is a key in the git history forever and a
+  key in the page source of every visitor's browser. It would be spent by strangers within days.
+  A field in the profile costs one paste on first use and keeps the key on the device that owns
+  it.
+- **The privacy claim changes from absolute to conditional**, and every surface that carried it
+  had to change with it. The screen now reads "analysed on the phone; it only leaves if you press
+  Ask the cloud yourself", and the button states the destination before it is pressed. An
+  automatic cloud fallback for low-confidence results was deliberately not built: it would move
+  the photo exactly when the user had least reason to expect it.
+- **The provider is a setting, not a dependency.** The request is the OpenAI-shaped
+  `POST /chat/completions` that most vendors accept, so endpoint and model are text fields. If
+  `deepseek-flash` does not accept images after all, the screen shows the provider's own error
+  and the fix is typing a different model name, not a rewrite.
+- **A browser-only app cannot hide a key, and cannot force a provider to accept it.** Two limits
+  follow: localStorage is as safe as the device, and a provider without CORS headers cannot be
+  called from a page at all. Both are stated in
+  [on-device-recognition.md](on-device-recognition.md); both are answered by the same thing, a
+  server-side proxy, which is the next step whenever this stops being a personal prototype.

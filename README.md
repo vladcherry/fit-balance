@@ -77,12 +77,27 @@ the calories are all editable, weaker guesses are offered as one-tap alternative
 entry is always there. Details and what is deliberately missing (detection, portion estimation)
 are in [docs/on-device-recognition.md](docs/on-device-recognition.md).
 
+### The second opinion
+
+ImageNet's forty classes do not cover a home-cooked plate, so there is an optional cloud path for
+the photos the on-device model cannot name. It is **never automatic**: with an API key set in the
+profile, the photo screen grows an "Ask the cloud" button, and pressing it sends *that one*
+picture — downscaled to 768 px — to the configured model. The default is DeepSeek's
+`deepseek-flash`; the endpoint and model are settings, and the call is the usual OpenAI-shaped
+`POST /chat/completions`, so any compatible provider works.
+
+The key is typed into the app and lives in that browser's localStorage. It is not in this
+repository, not in the deployed files, and it is sent to the configured endpoint and nowhere else.
+
 ## Privacy
 
-Meal photos are analysed **on the device** and never leave it. Nothing is uploaded; only the
-resulting numbers are kept. The guarantee is a property of the system rather than a policy: the
-picture is held as an object URL inside the page, and the recognition path makes no network
-request at all — not even to a model CDN.
+With no cloud key configured — the default — meal photos are analysed **on the device** and never
+leave it. The picture is held as an object URL inside the page, and the on-device recognition path
+makes no network request at all, not even to a model CDN.
+
+The cloud path is the single exception, and it is drawn that way: it needs a key, it needs a press
+per photo, and the screen says where the picture is about to go before it goes. Nothing is
+uploaded in the background, and no photo is ever stored.
 
 ## Languages
 
@@ -102,9 +117,10 @@ Everything inside the repository — code, comments, commit messages, documentat
 
 ## Working on the prototype
 
-No build step, no package manager — plain HTML, CSS and two scripts. The vendored TensorFlow.js
-build (`prototype/vendor/`) and the model weights (`prototype/model/`) are committed as they are
-served.
+No build step, no package manager — plain HTML, CSS and three scripts (`app.js`, the on-device
+`recognise.js`, the optional cloud `cloud.js`). The vendored TensorFlow.js build
+(`prototype/vendor/`) and the model weights (`prototype/model/`) are committed as they are served.
+No API key is committed, and none is needed to run the app.
 
 ```bash
 python -m http.server 5173 --directory prototype

@@ -117,6 +117,12 @@
     <input id="photo-camera" class="visually-hidden" type="file" accept="image/*" capture="environment">
     <input id="photo-gallery" class="visually-hidden" type="file" accept="image/*">
 
+    <button type="button" class="btn btn--quiet cloud-btn" id="cloud-go" hidden>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18.5a4 4 0 0 1-.4-8A5.5 5.5 0 0 1 17.4 11a3.8 3.8 0 0 1-.4 7.5z"/></svg>
+      <span id="cloud-go-text" data-i18n="cloud.refine">Уточнить в облаке</span>
+    </button>
+    <div class="cloud-hint" id="cloud-hint"></div>
+
     <div class="notice" id="photo-note" hidden>
       <svg class="notice__ok-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17.5 19.5 6.5"/></svg>
       <svg class="notice__warn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.2v.1"/></svg>
@@ -343,6 +349,21 @@
       </div>
     </div>
 
+    <div class="label" data-i18n="cloud.title">Облачное распознавание</div>
+    <div class="notice notice--quiet">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c736d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8v.1"/></svg>
+      <span data-i18n="cloud.explain">Необязательно. Если вписать ключ, на экране фото появится кнопка «Уточнить в облаке» — она отправляет один снимок выбранной модели. Без неё всё остаётся на телефоне.</span>
+    </div>
+    <div class="tile tile--wide">
+      <label class="tile__k" for="cloud-key" data-i18n="cloud.key">API-ключ</label>
+      <input id="cloud-key" type="password" autocomplete="off" spellcheck="false" placeholder="sk-…">
+    </div>
+    <div class="grid2">
+      <div class="tile"><label class="tile__k" for="cloud-model" data-i18n="cloud.model">Модель</label><input id="cloud-model" type="text" autocomplete="off" spellcheck="false"></div>
+      <div class="tile"><label class="tile__k" for="cloud-endpoint" data-i18n="cloud.endpoint">Эндпоинт</label><input id="cloud-endpoint" type="url" autocomplete="off" spellcheck="false"></div>
+    </div>
+    <div class="cloud-hint" style="margin:6px 22px 0" data-i18n="cloud.storage">Ключ хранится только в этом браузере и уходит только на указанный эндпоинт.</div>
+
     <div class="label" data-i18n="prof.language">Язык</div>
     <div class="seg" id="lang-switch">
       <button type="button" data-lang="ru" aria-pressed="true">Русский</button>
@@ -428,6 +449,7 @@
 </div>
 
 <script src="recognise.js"></script>
+<script src="cloud.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
