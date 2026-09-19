@@ -88,10 +88,16 @@ picture — downscaled to 768 px — to the configured model. The default is Dee
 `deepseek-flash`; the endpoint and model are settings, and the call is the usual OpenAI-shaped
 `POST /chat/completions`, so any compatible provider works.
 
-The key is typed into the app and lives in that browser's localStorage. It is not in this
-repository, not in the deployed files, and it is sent to the configured endpoint and nowhere else.
-The profile explains where to obtain one and links to the provider's key page, following whatever
-endpoint is configured — DeepSeek, OpenAI or Google AI Studio.
+DeepSeek and Gemini have one-tap presets in the profile; anything else is a matter of typing an
+endpoint. Keys are stored per provider host, so switching between them never overwrites one with
+the other. The key is typed into the app and lives in that browser's localStorage: it is not in
+this repository, not in the deployed files, and it is sent to the configured endpoint and nowhere
+else. The profile explains where to obtain one and links to that provider's key page.
+
+**Developer mode**, also in the profile, adds a collapsed panel under the photo with the model's
+full reply — status, round-trip time, token usage, `finish_reason`, how many items survived
+validation, and the raw text itself. It is the fastest way to see why a reply produced fewer
+items than expected, and it is off by default.
 
 ## Privacy
 

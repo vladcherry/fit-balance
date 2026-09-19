@@ -129,6 +129,12 @@
       <span id="photo-note-text"></span>
     </div>
 
+    <details class="rawbox" id="cloud-raw" hidden>
+      <summary id="cloud-raw-summary" data-i18n="dev.rawTitle">Ответ модели</summary>
+      <div class="rawbox__meta" id="cloud-raw-meta"></div>
+      <pre class="rawbox__body" id="cloud-raw-body"></pre>
+    </details>
+
     <div class="guesses" id="photo-guesses" hidden>
       <span class="guesses__k" data-i18n="photo.maybe">Может быть</span>
       <span class="chips chips--inline" id="photo-guess-chips"></span>
@@ -355,6 +361,10 @@
       <span data-i18n="cloud.explain">Необязательно. Если вписать ключ, на экране фото появится кнопка «Уточнить в облаке» — она отправляет один снимок выбранной модели. Без неё всё остаётся на телефоне.</span>
     </div>
     <div class="tile tile--wide">
+      <span class="tile__k" data-i18n="cloud.provider">Провайдер</span>
+      <div class="seg seg--tile" id="cloud-providers"></div>
+    </div>
+    <div class="tile tile--wide">
       <label class="tile__k" for="cloud-key" data-i18n="cloud.key">API-ключ</label>
       <input id="cloud-key" type="password" autocomplete="off" spellcheck="false" placeholder="sk-…">
     </div>
@@ -378,6 +388,16 @@
       <button type="button" data-lang="ru" aria-pressed="true">Русский</button>
       <button type="button" data-lang="en" aria-pressed="false">English</button>
     </div>
+
+    <div class="label" data-i18n="dev.title">Для разработчика</div>
+    <div class="tile tile--wide">
+      <span class="tile__k" data-i18n="dev.mode">Режим разработчика</span>
+      <div class="seg seg--tile" id="dev-switch">
+        <button type="button" data-dev="off" data-i18n="dev.off" aria-pressed="true">Выключен</button>
+        <button type="button" data-dev="on" data-i18n="dev.on" aria-pressed="false">Включён</button>
+      </div>
+    </div>
+    <div class="cloud-hint" data-i18n="dev.hint">Показывает под снимком полный ответ модели: что она вернула, сколько это заняло и сколько стоило токенов.</div>
 
     <div class="label" data-i18n="prof.app">Приложение</div>
     <div class="list">

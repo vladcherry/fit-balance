@@ -17,10 +17,25 @@
 window.CloudRecognition = (function () {
   'use strict';
 
-  var DEFAULTS = {
-    endpoint: 'https://api.deepseek.com/chat/completions',
-    model: 'deepseek-flash'
-  };
+  /* Presets for the providers this app is pointed at most often. All three
+     speak the same OpenAI-shaped request, so a preset is nothing but a pair of
+     defaults the user can still edit. */
+  var PROVIDERS = [
+    {
+      id: 'deepseek',
+      label: 'DeepSeek',
+      endpoint: 'https://api.deepseek.com/chat/completions',
+      model: 'deepseek-flash'
+    },
+    {
+      id: 'gemini',
+      label: 'Gemini',
+      endpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+      model: 'gemini-2.5-flash'
+    }
+  ];
+
+  var DEFAULTS = { endpoint: PROVIDERS[0].endpoint, model: PROVIDERS[0].model };
 
   /* Long side of the picture as sent. A plate is perfectly legible at this
      size, and it keeps the upload to a few hundred kilobytes rather than the
@@ -40,13 +55,33 @@ window.CloudRecognition = (function () {
     '{"items":[{"name":"dish name","grams":250,"kcal_per_100g":150}]}. ' +
     'Keep the names short. If there is no food in the picture, return {"items":[]}.';
 
+  /* Each provider needs its own key, so keys are stored per host: switching
+     between DeepSeek and Gemini must not make one overwrite the other. */
+  function hostOf(endpoint) {
+    try { return new URL(endpoint).host.toLowerCase(); } catch (err) { return ''; }
+  }
+
   function settings(stored) {
     stored = stored || {};
+    var endpoint = (stored.endpoint || DEFAULTS.endpoint).trim();
+    var host = hostOf(endpoint);
+    var keys = stored.keys || {};
+    // `stored.key` is the single-key shape this used to have.
+    var key = (host && keys[host]) || stored.key || '';
     return {
-      endpoint: (stored.endpoint || DEFAULTS.endpoint).trim(),
+      endpoint: endpoint,
       model: (stored.model || DEFAULTS.model).trim(),
-      key: (stored.key || '').trim()
+      key: String(key).trim(),
+      host: host
     };
+  }
+
+  function providerOf(endpoint) {
+    var host = hostOf(endpoint);
+    for (var i = 0; i < PROVIDERS.length; i += 1) {
+      if (hostOf(PROVIDERS[i].endpoint) === host) { return PROVIDERS[i]; }
+    }
+    return null;
   }
 
   /* The picture is redrawn small before it is sent: less to upload, less to
@@ -143,6 +178,21 @@ window.CloudRecognition = (function () {
       if (controller) { controller.abort(); }
     }, TIMEOUT_MS);
 
+    /* Everything the developer panel shows. It is filled as the call proceeds,
+       so it is complete whether the call succeeds or fails. */
+    var startedAt = Date.now();
+    var debug = {
+      endpoint: config.endpoint,
+      model: config.model,
+      imageKb: Math.round(payload.messages[0].content[1].image_url.url.length / 1024),
+      status: null,
+      ms: null,
+      usage: null,
+      finish: null,
+      raw: null,
+      error: null
+    };
+
     return fetch(config.endpoint, {
       method: 'POST',
       headers: {
@@ -155,23 +205,34 @@ window.CloudRecognition = (function () {
       return response.text().then(function (text) {
         var body = null;
         try { body = JSON.parse(text); } catch (err) { /* not JSON */ }
+        debug.status = response.status;
+        debug.ms = Date.now() - startedAt;
+        debug.raw = text;
+        if (body && body.usage) { debug.usage = body.usage; }
+        if (body && body.choices && body.choices[0]) {
+          debug.finish = body.choices[0].finish_reason || null;
+        }
         if (!response.ok) { throw describeFailure(response, body); }
         var content = body && body.choices && body.choices[0] &&
           body.choices[0].message && body.choices[0].message.content;
         if (typeof content !== 'string') {
           throw { code: 'bad-reply', message: 'unexpected reply shape' };
         }
+        debug.raw = content;                   // the model's own words, not the envelope
         var items = readItems(extractJson(content));
-        return { items: items, model: config.model };
+        return { items: items, model: config.model, debug: debug };
       });
-    }).catch(function (err) {
+    })['catch'](function (err) {
+      debug.ms = debug.ms === null ? Date.now() - startedAt : debug.ms;
       /* A browser blocked by CORS reports a bare TypeError with no status, which
          is indistinguishable from being offline - say both. */
-      if (err && (err.status || err.code)) { throw err; }
-      throw {
+      var failure = err && (err.status || err.code) ? err : {
         code: err && err.name === 'AbortError' ? 'timeout' : 'network',
         message: err && err.message ? err.message : 'network error'
       };
+      debug.error = failure.message || failure.code;
+      failure.debug = debug;
+      throw failure;
     })['finally'](function () {
       clearTimeout(timer);
     });
@@ -180,6 +241,9 @@ window.CloudRecognition = (function () {
   return {
     analyse: analyse,
     settings: settings,
+    providers: function () { return PROVIDERS.slice(); },
+    providerOf: providerOf,
+    hostOf: hostOf,
     defaults: function () { return { endpoint: DEFAULTS.endpoint, model: DEFAULTS.model }; }
   };
 })();

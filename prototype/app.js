@@ -40,6 +40,7 @@
 
       'cloud.title': 'Облачное распознавание',
       'cloud.explain': 'Необязательно. Если вписать ключ, на экране фото появится кнопка «Уточнить в облаке» — она отправляет один снимок выбранной модели. Без неё всё остаётся на телефоне.',
+      'cloud.provider': 'Провайдер', 'cloud.custom': 'Свой',
       'cloud.key': 'API-ключ', 'cloud.model': 'Модель', 'cloud.endpoint': 'Эндпоинт',
       'cloud.storage': 'Ключ хранится только в этом браузере и уходит только на указанный эндпоинт.',
       'cloud.getDeepseek': 'Где взять ключ: зарегистрируйтесь на platform.deepseek.com, пополните баланс (DeepSeek работает по предоплате) и создайте ключ в разделе API keys. Ключ показывают один раз — скопируйте сразу.',
@@ -47,6 +48,16 @@
       'cloud.getGemini': 'Где взять ключ: Google AI Studio, кнопка Create API key. Есть бесплатный лимит.',
       'cloud.getGeneric': 'Ключ берётся в личном кабинете вашего провайдера — там же, где он выдаёт API-доступ.',
       'cloud.openPage': 'Открыть страницу ключей →',
+
+      'dev.title': 'Для разработчика', 'dev.mode': 'Режим разработчика',
+      'dev.off': 'Выключен', 'dev.on': 'Включён',
+      'dev.hint': 'Показывает под снимком полный ответ модели: что она вернула, сколько это заняло и сколько стоило токенов.',
+      'dev.rawTitle': 'Ответ модели',
+      'dev.meta': '{model} · {status} · {ms} мс · снимок {kb} КБ',
+      'dev.tokens': 'токены: {prompt} + {completion} = {total}',
+      'dev.finish': 'finish_reason: {reason}',
+      'dev.error': 'ошибка: {message}',
+      'dev.parsed': 'принято позиций: {count}',
       'cloud.refine': 'Уточнить в облаке', 'cloud.sending': 'Отправляю снимок…',
       'cloud.willSend': 'Снимок уйдёт в {model}. Это единственный случай, когда фото покидает телефон.',
       'cloud.needKey': 'Чтобы включить, впишите API-ключ в профиле.',
@@ -150,6 +161,7 @@
 
       'cloud.title': 'Cloud recognition',
       'cloud.explain': 'Optional. With a key set, the photo screen gets an "Ask the cloud" button that sends one picture to the model you choose. Without it, everything stays on the phone.',
+      'cloud.provider': 'Provider', 'cloud.custom': 'Custom',
       'cloud.key': 'API key', 'cloud.model': 'Model', 'cloud.endpoint': 'Endpoint',
       'cloud.storage': 'The key is kept in this browser only, and is sent to the configured endpoint and nowhere else.',
       'cloud.getDeepseek': 'Where to get one: sign up at platform.deepseek.com, top up the balance (DeepSeek bills up front), then create a key under API keys. The key is shown once — copy it straight away.',
@@ -157,6 +169,16 @@
       'cloud.getGemini': 'Where to get one: Google AI Studio, the Create API key button. It has a free tier.',
       'cloud.getGeneric': 'The key comes from your provider\u2019s own dashboard, wherever it hands out API access.',
       'cloud.openPage': 'Open the keys page →',
+
+      'dev.title': 'Developer', 'dev.mode': 'Developer mode',
+      'dev.off': 'Off', 'dev.on': 'On',
+      'dev.hint': 'Shows the model\u2019s full reply under the picture: what came back, how long it took and what it cost in tokens.',
+      'dev.rawTitle': 'Model reply',
+      'dev.meta': '{model} · {status} · {ms} ms · image {kb} KB',
+      'dev.tokens': 'tokens: {prompt} + {completion} = {total}',
+      'dev.finish': 'finish_reason: {reason}',
+      'dev.error': 'error: {message}',
+      'dev.parsed': 'items accepted: {count}',
       'cloud.refine': 'Ask the cloud', 'cloud.sending': 'Sending the picture…',
       'cloud.willSend': 'The picture goes to {model}. This is the only time a photo leaves the phone.',
       'cloud.needKey': 'Add an API key in the profile to enable this.',
@@ -398,8 +420,10 @@
     history: null,              // date -> closed day; filled with demo days on first run
     draft: { type: 'walking', minutes: 45, intensity: 'moderate', manual: '' },
     meal: { type: 'lunch', items: [], editing: -1 },
-    // Optional second opinion. The key never leaves this browser.
-    cloud: { key: '', model: '', endpoint: '' }
+    // Optional second opinion. Keys never leave this browser, and are kept per
+    // provider host so switching between them does not overwrite one another.
+    cloud: { keys: {}, model: '', endpoint: '' },
+    devMode: false
   };
 
   function mealTotals() {
@@ -1086,6 +1110,11 @@
     });
     el('p-goal').textContent = t(state.target > 0 ? 'prof.lose' : 'prof.maintain');
     renderCloudHelp();
+    renderCloudSettings();
+    Array.prototype.forEach.call(el('dev-switch').children, function (b) {
+      b.setAttribute('aria-pressed',
+        (b.getAttribute('data-dev') === 'on') === !!state.devMode ? 'true' : 'false');
+    });
     el('p-age').value = state.age;
     el('p-height').value = state.height;
     el('p-weight').value = state.weight;
@@ -1121,6 +1150,87 @@
     return null;
   }
 
+  /* The provider picker, the key field and the two text fields are one unit:
+     the endpoint decides which stored key is shown, so they redraw together. */
+  function renderCloudSettings() {
+    var config = CloudRecognition.settings(state.cloud);
+    var picker = el('cloud-providers');
+    var known = CloudRecognition.providers();
+    var current = CloudRecognition.providerOf(config.endpoint);
+
+    if (!picker.children.length) {
+      known.forEach(function (provider) {
+        picker.appendChild(button(provider.label, false, function () {
+          /* A preset moves the endpoint and the model only. The key for that
+             host is already stored under it and comes back on its own. */
+          state.cloud.endpoint = provider.endpoint;
+          state.cloud.model = provider.model;
+          save();
+          renderCloudSettings();
+          refreshCloudButton();
+          renderCloudHelp();
+        }));
+      });
+      picker.appendChild(button(t('cloud.custom'), false, function () {
+        el('cloud-endpoint').focus();
+        el('cloud-endpoint').select();
+      }));
+    }
+    Array.prototype.forEach.call(picker.children, function (node, i) {
+      var id = i < known.length ? known[i].id : 'custom';
+      node.textContent = i < known.length ? known[i].label : t('cloud.custom');
+      node.setAttribute('aria-pressed',
+        (current ? current.id : 'custom') === id ? 'true' : 'false');
+    });
+
+    /* The fields show what would actually be sent, defaults included, rather
+       than an empty box with a placeholder nobody can be sure applies. */
+    el('cloud-key').value = config.key;
+    el('cloud-model').value = config.model;
+    el('cloud-endpoint').value = config.endpoint;
+  }
+
+  /* Developer mode. The last exchange is held in memory only: a raw reply runs
+     to a couple of kilobytes and has no business in localStorage. */
+  var lastExchange = null;
+
+  function rememberExchange(debug, parsedCount) {
+    if (!debug) { return; }
+    debug.parsedCount = parsedCount;
+    lastExchange = debug;
+    renderRawReply();
+  }
+
+  function renderRawReply() {
+    var box = el('cloud-raw');
+    if (!state.devMode || !lastExchange) {
+      box.hidden = true;
+      return;
+    }
+    var debug = lastExchange;
+    var lines = [t('dev.meta', {
+      model: debug.model,
+      status: debug.status === null ? '—' : debug.status,
+      ms: debug.ms === null ? '—' : debug.ms,
+      kb: debug.imageKb
+    })];
+    if (debug.usage) {
+      lines.push(t('dev.tokens', {
+        prompt: debug.usage.prompt_tokens != null ? debug.usage.prompt_tokens : '—',
+        completion: debug.usage.completion_tokens != null ? debug.usage.completion_tokens : '—',
+        total: debug.usage.total_tokens != null ? debug.usage.total_tokens : '—'
+      }));
+    }
+    if (debug.finish) { lines.push(t('dev.finish', { reason: debug.finish })); }
+    if (debug.parsedCount != null) { lines.push(t('dev.parsed', { count: debug.parsedCount })); }
+    if (debug.error) { lines.push(t('dev.error', { message: debug.error })); }
+
+    el('cloud-raw-summary').textContent = t('dev.rawTitle');
+    el('cloud-raw-meta').textContent = lines.join('\n');
+    el('cloud-raw-body').textContent = debug.raw || '—';
+    box.hidden = false;
+  }
+
   function renderCloudHelp() {
     var config = CloudRecognition.settings(state.cloud);
     var source = keySource(config.endpoint);
@@ -1145,6 +1255,7 @@
     renderHistory();
     renderProfile();
     refreshCloudButton();
+    renderRawReply();
   }
 
   /* ---------------- navigation ---------------- */
@@ -1557,6 +1668,7 @@
         lang: state.lang
       }).then(function (result) {
         if (run !== analysisId) { return; }
+        rememberExchange(result.debug, result.items.length);
         if (!result.items.length) {
           // Nothing came back worth using, so what the on-device pass found
           // stays where it is rather than being cleared for nothing.
@@ -1575,6 +1687,7 @@
         }), false);
       })['catch'](function (err) {
         if (run !== analysisId) { return; }
+        rememberExchange(err && err.debug, 0);
         photoNote(cloudFailureText(err), true);
         if (window.console) { console.error('cloud recognition failed', err); }
       })['finally'](function () {
@@ -1585,24 +1698,39 @@
       });
     });
 
-    /* Cloud settings. The key is written straight to the stored state, which
-       lives in this browser's localStorage and goes nowhere else. */
-    function cloudField(id, key, placeholderFrom) {
-      var input = el(id);
-      input.placeholder = placeholderFrom || '';
-      input.value = state.cloud[key] || '';
-      input.addEventListener('change', function () {
-        state.cloud[key] = this.value.trim();
+    refreshCloudButton = renderCloudButton;
+
+    /* Cloud settings. Everything here goes straight into the stored state,
+       which lives in this browser's localStorage and nowhere else. */
+    el('cloud-key').addEventListener('change', function () {
+      var host = CloudRecognition.settings(state.cloud).host;
+      if (!state.cloud.keys) { state.cloud.keys = {}; }
+      if (host) { state.cloud.keys[host] = this.value.trim(); }
+      delete state.cloud.key;                 // the single-key shape is retired
+      save();
+      renderCloudButton();
+    });
+
+    ['cloud-model', 'cloud-endpoint'].forEach(function (id) {
+      el(id).addEventListener('change', function () {
+        state.cloud[id === 'cloud-model' ? 'model' : 'endpoint'] = this.value.trim();
         save();
+        renderCloudSettings();                // the endpoint decides which key shows
         renderCloudButton();
         renderCloudHelp();
       });
-    }
-    refreshCloudButton = renderCloudButton;
+    });
 
-    cloudField('cloud-key', 'key');
-    cloudField('cloud-model', 'model', CloudRecognition.defaults().model);
-    cloudField('cloud-endpoint', 'endpoint', CloudRecognition.defaults().endpoint);
+    el('dev-switch').addEventListener('click', function (e) {
+      var picked = e.target.closest('[data-dev]');
+      if (!picked) { return; }
+      state.devMode = picked.getAttribute('data-dev') === 'on';
+      save();
+      renderProfile();
+      renderRawReply();
+    });
+
+    renderCloudSettings();
 
     // Two inputs, because one cannot be both: `capture` goes straight to the
     // camera, the plain one opens the gallery.
@@ -1864,6 +1992,17 @@
   /* ---------------- start ---------------- */
 
   load();
+
+  /* A save from when there was one key field: move it under the host it was
+     entered for, so switching provider cannot hand it to the wrong one. */
+  if (state.cloud && state.cloud.key) {
+    var oldHost = CloudRecognition.hostOf(state.cloud.endpoint ||
+      CloudRecognition.defaults().endpoint);
+    if (!state.cloud.keys) { state.cloud.keys = {}; }
+    if (oldHost && !state.cloud.keys[oldHost]) { state.cloud.keys[oldHost] = state.cloud.key; }
+    delete state.cloud.key;
+    save();
+  }
 
   /* First run, or a save from before the diary kept days: give the app a today
      and a demo history so nothing renders against empty state. */

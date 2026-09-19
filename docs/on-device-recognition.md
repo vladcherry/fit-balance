@@ -155,6 +155,13 @@ This is now implemented in `prototype/cloud.js`:
 - **Failures say what happened.** A refused key names the status, a model that cannot see
   reports the provider's own message, and a request the browser could not make says so and
   mentions CORS, since a static page has no way around it.
+- **Developer mode shows the exchange.** Turned on in the profile, a collapsed panel under the
+  photo carries the status, the round-trip time, the size of the image as sent, token usage,
+  `finish_reason`, the number of items that passed validation, and the model's raw text. Since
+  the parser deliberately drops anything malformed, this is the only place that shows the
+  difference between "the model said nothing useful" and "the model said something we rejected".
+- **Presets for DeepSeek and Gemini**, with keys stored per provider host so switching between
+  them does not overwrite one with the other.
 
 Two caveats that belong to this shape and not to a bug:
 

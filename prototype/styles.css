@@ -669,3 +669,42 @@ button, .btn { font: inherit; border: 0; background: none; color: inherit; curso
 @media (prefers-reduced-motion: reduce) {
   .screen.is-settling { transition-duration: 0.01ms; }
 }
+
+/* ---------- developer panel ---------- */
+
+.rawbox {
+  margin: 10px 22px 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--surface);
+  font-size: 11px;
+}
+.rawbox[hidden] { display: none; }
+.rawbox summary {
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+.rawbox__meta {
+  margin-top: 8px;
+  font-weight: 700;
+  color: var(--ink-muted);
+  line-height: 1.5;
+  white-space: pre-line;   /* the panel writes one fact per line */
+}
+.rawbox__body {
+  margin: 8px 0 0;
+  padding: 8px;
+  max-height: 260px;
+  overflow: auto;
+  border-radius: 8px;
+  background: var(--white);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  -webkit-overflow-scrolling: touch;
+}
