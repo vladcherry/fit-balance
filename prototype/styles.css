@@ -643,3 +643,29 @@ button, .btn { font: inherit; border: 0; background: none; color: inherit; curso
 }
 .cloud-help .link { display: inline-block; margin-top: 4px; font-size: 12px; }
 .cloud-help .link:empty { display: none; }
+
+/* ---------- back gesture ---------- */
+
+/* The screen being dragged rides above the one it will return to. `.is-under`
+   has to outrank `.screen`'s own `display: none`, which it does by being more
+   specific. */
+.screen.is-under {
+  display: flex;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+/* Both take part in the same frame, so neither may be see-through: screens
+   normally borrow the white of `.app` and have no background of their own. */
+.screen.is-under, .screen.is-dragging { background: var(--white); }
+.screen.is-dragging {
+  position: relative;
+  z-index: 1;
+  box-shadow: -10px 0 30px rgba(23, 18, 15, 0.22);
+  will-change: transform;
+}
+.screen.is-settling { transition: transform 0.22s cubic-bezier(0.22, 0.61, 0.36, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .screen.is-settling { transition-duration: 0.01ms; }
+}

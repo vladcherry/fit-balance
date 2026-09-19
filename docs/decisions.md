@@ -239,3 +239,28 @@ vision closes that gap. The original request was to hardcode the key in the sour
   called from a page at all. Both are stated in
   [on-device-recognition.md](on-device-recognition.md); both are answered by the same thing, a
   server-side proxy, which is the next step whenever this stops being a personal prototype.
+
+---
+
+## 11. Back is a left-edge drag, and only when the app is installed
+
+**Decision.** Dragging from the left edge pulls the current screen aside, shows the one behind it
+and commits the step past roughly a third of the width. The gesture is installed only when the
+app is running standalone.
+
+**Context.** Navigation already pushes a history entry per forward move, so Android's system back
+walks the app correctly. iOS gives an installed PWA neither of the two ways back it has in a
+browser: no edge-swipe and no chrome. The in-app back buttons covered it, but only as a tap on a
+small target at the top of a tall screen.
+
+**Consequences.**
+
+- **Standalone only, deliberately.** In a browser tab the platform owns the edge swipe; running
+  ours alongside would pop two entries for one gesture. The cost is that the gesture cannot be
+  tried without installing the app — which is also the only place it is needed.
+- The gesture draws two screens at once, so both need an opaque background; screens otherwise
+  borrow the white of the frame around them and would show through each other.
+- A drag is claimed only once it is clearly horizontal and moving right, so vertical scrolling
+  keeps working from the edge. Anything starting more than 30 px in is not a back gesture.
+- Tidying up waits for the `popstate` that `goBack()` announces, because clearing the transform
+  before the new screen is active blanks the display for a frame.

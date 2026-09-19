@@ -1152,8 +1152,11 @@
   var MODALS = { photo: true, activity: true };
 
   /* Every forward move pushes a history entry, so the phone's own back gesture
-     walks back through the app instead of leaving it. */
+     walks back through the app instead of leaving it. `navStack` mirrors that
+     history by name, because the swipe gesture has to draw the screen it is
+     about to return to. */
   var navDepth = 0;
+  var navStack = [];
 
   function show(name) {
     document.querySelectorAll('.screen').forEach(function (s) {
@@ -1187,29 +1190,173 @@
     show(name);
     if (replace || current === name) {
       history.replaceState({ screen: name }, '', '#' + name);
+      navStack[Math.max(0, navStack.length - 1)] = name;
       return;
     }
     history.pushState({ screen: name }, '', '#' + name);
+    navStack.push(name);
     navDepth += 1;
   }
 
+  /* Returns true when a popstate is on its way, which the swipe gesture waits
+     for before it tidies up: clearing earlier would flash a blank screen. */
   function goBack() {
     if (navDepth > 0) {
       history.back();
-      return;
+      return true;
     }
     go('home', true);           // deep link straight into a screen: nowhere to go back to
+    return false;
+  }
+
+  /* What a back step would land on. A screen opened by deep link has nothing
+     behind it, and home is where goBack() sends it. */
+  function screenBehind() {
+    if (navStack.length > 1) { return navStack[navStack.length - 2]; }
+    var current = navStack[navStack.length - 1];
+    return current && current !== 'home' ? 'home' : null;
   }
 
   window.addEventListener('popstate', function (e) {
     var name = (e.state && e.state.screen) || (location.hash || '#home').slice(1);
     if (!document.getElementById('screen-' + name)) { name = 'home'; }
     navDepth = Math.max(0, navDepth - 1);
+    if (navStack.length > 1) { navStack.pop(); } else { navStack[0] = name; }
     show(name);
 
     var sheet = el('ios-sheet');
     if (sheet && !sheet.hidden) { sheet.hidden = true; }
   });
+
+  /* ---------------- back gesture ---------------- */
+
+  /* An installed PWA on iOS has no system back gesture and no browser chrome,
+     so the only way back is whatever the app draws itself. A drag from the left
+     edge fills that gap: the screen follows the finger, the one behind it shows
+     through, and letting go past a third of the width commits the step.
+
+     In a normal browser tab the platform already owns this gesture, and running
+     ours alongside it would go back twice - so it is installed only when the
+     app is standalone. */
+  var EDGE_ZONE = 30;        // px from the left edge where a drag may start
+  var COMMIT_RATIO = 0.32;   // how far across counts as "go back"
+  var FLING_SPEED = 0.45;    // px/ms that commits regardless of distance
+  var PEEK_RATIO = 0.25;     // how far the screen behind is held back
+  var SETTLE_MS = 220;
+
+  function isStandalone() {
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+      window.navigator.standalone === true;
+  }
+
+  function setupBackGesture() {
+    if (!isStandalone() || !('ontouchstart' in window)) { return; }
+
+    var app = document.querySelector('.app');
+    var dragged = null, behind = null;
+    var startX = 0, startY = 0, lastX = 0, startedAt = 0, width = 1;
+    var decided = false, dragging = false;
+
+    function paint(dx) {
+      var progress = Math.min(1, dx / width);
+      dragged.style.transform = 'translateX(' + dx + 'px)';
+      behind.style.transform = 'translateX(' + (-PEEK_RATIO * width * (1 - progress)) + 'px)';
+    }
+
+    function clear() {
+      if (dragged) {
+        dragged.classList.remove('is-dragging', 'is-settling');
+        dragged.style.transform = '';
+      }
+      if (behind) {
+        behind.classList.remove('is-under', 'is-settling');
+        behind.style.transform = '';
+      }
+      dragged = null;
+      behind = null;
+      dragging = false;
+      decided = false;
+    }
+
+    function settle(commit) {
+      var finishing = dragged, revealed = behind;
+      finishing.classList.add('is-settling');
+      revealed.classList.add('is-settling');
+      finishing.style.transform = 'translateX(' + (commit ? width + 'px' : '0px') + ')';
+      revealed.style.transform = commit
+        ? 'translateX(0px)'
+        : 'translateX(' + (-PEEK_RATIO * width) + 'px)';
+
+      setTimeout(function () {
+        if (!commit) { clear(); return; }
+        /* goBack() answers whether a popstate is coming. Tidying up before the
+           new screen is active would blank the display for a frame. */
+        if (goBack()) {
+          window.addEventListener('popstate', function once() {
+            window.removeEventListener('popstate', once);
+            clear();
+          });
+        } else {
+          clear();
+        }
+      }, SETTLE_MS);
+    }
+
+    app.addEventListener('touchstart', function (e) {
+      if (dragging || e.touches.length !== 1) { return; }
+      var touch = e.touches[0];
+      if (touch.clientX > EDGE_ZONE) { return; }
+
+      var previous = screenBehind();
+      var active = document.querySelector('.screen.is-active');
+      var under = previous && el('screen-' + previous);
+      if (!previous || !active || !under || active === under) { return; }
+
+      dragged = active;
+      behind = under;
+      startX = touch.clientX;
+      startY = touch.clientY;
+      lastX = touch.clientX;
+      startedAt = Date.now();
+      width = app.getBoundingClientRect().width || window.innerWidth;
+      decided = false;
+      dragging = false;
+    }, { passive: true });
+
+    app.addEventListener('touchmove', function (e) {
+      if (!dragged || e.touches.length !== 1) { return; }
+      var touch = e.touches[0];
+      var dx = touch.clientX - startX;
+      var dy = touch.clientY - startY;
+      lastX = touch.clientX;
+
+      if (!decided) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) { return; }
+        decided = true;
+        // A mostly vertical move is the user scrolling, and stays theirs.
+        if (Math.abs(dy) > Math.abs(dx) || dx <= 0) { clear(); return; }
+        dragging = true;
+        dragged.classList.add('is-dragging');
+        behind.classList.add('is-under');
+      }
+      if (!dragging) { return; }
+      e.preventDefault();                   // the screen moves, the page does not
+      paint(Math.max(0, dx));
+    }, { passive: false });
+
+    function release() {
+      if (!dragged) { return; }
+      if (!dragging) { clear(); return; }
+      var dx = Math.max(0, lastX - startX);
+      var speed = dx / Math.max(1, Date.now() - startedAt);
+      settle(dx > width * COMMIT_RATIO || speed > FLING_SPEED);
+    }
+
+    app.addEventListener('touchend', release);
+    app.addEventListener('touchcancel', function () {
+      if (dragging) { settle(false); } else { clear(); }
+    });
+  }
 
   function nowLabel() {
     var d = new Date();
@@ -1734,6 +1881,7 @@
   }
 
   wire();
+  setupBackGesture();
   renderAll();
   setupVersion();
   setupInstall();

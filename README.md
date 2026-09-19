@@ -6,7 +6,9 @@ A mobile-first PWA for tracking calories in and calories out, built around a sin
 ### ▶︎ [vladcherry.github.io/fit-balance](https://vladcherry.github.io/fit-balance/)
 
 Open it on a phone and install it to the home screen — the app offers to do that itself, with
-step-by-step instructions on iOS, where Safari has no install API.
+step-by-step instructions on iOS, where Safari has no install API. Installed, it answers a drag
+from the left edge by going back a screen, since an installed PWA on iOS has neither a system
+back gesture nor browser chrome to borrow one from.
 
 > **Status: prototype.** `prototype/` is a clickable, installable static prototype of the chosen
 > design: on-device food recognition, an editable diary, a day history and statistics that come
