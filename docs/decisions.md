@@ -242,11 +242,12 @@ vision closes that gap. The original request was to hardcode the key in the sour
 
 ---
 
-## 11. Back is a left-edge drag, and only when the app is installed
+## 11. Swipes move between tabs; the left edge goes back on modal screens
 
-**Decision.** Dragging from the left edge pulls the current screen aside, shows the one behind it
-and commits the step past roughly a third of the width. The gesture is installed only when the
-app is running standalone.
+**Decision.** A horizontal swipe on a tab screen moves between the four tabs, the neighbouring
+screen travelling in alongside. On a modal screen — the photo and activity sheets — a drag from
+the left edge goes back instead, showing the screen behind it; that one runs only when the app is
+standalone. Both commit past roughly a third of the width or on a fling.
 
 **Context.** Navigation already pushes a history entry per forward move, so Android's system back
 walks the app correctly. iOS gives an installed PWA neither of the two ways back it has in a
@@ -264,3 +265,15 @@ small target at the top of a tall screen.
   keeps working from the edge. Anything starting more than 30 px in is not a back gesture.
 - Tidying up waits for the `popstate` that `goBack()` announces, because clearing the transform
   before the new screen is active blanks the display for a frame.
+- **The outer 30 px at both edges are left to the phone.** That is where Android's and iOS's own
+  back gestures live, and a swipe starting there never reaches the page reliably anyway. The tab
+  swipe therefore starts inside the screen, which is also where a thumb naturally lands.
+- **Tab swiping needs no install**, unlike the back drag: it does not compete with anything the
+  platform provides, so it works in a browser tab too.
+- A drag beginning inside a sideways-scrolling box, such as the developer panel's raw reply,
+  belongs to that box. The gesture walks up from the touch target and stands down if it finds
+  one.
+- The two gestures cannot both apply: a screen is either a tab or a modal, which decides which
+  gesture its drags belong to. The cost is that a tab screen no longer has an edge-drag back —
+  swiping to the neighbouring tab replaced it, and on a tab screen that is the more predictable
+  of the two.

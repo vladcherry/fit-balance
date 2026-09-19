@@ -1339,20 +1339,24 @@
     if (sheet && !sheet.hidden) { sheet.hidden = true; }
   });
 
-  /* ---------------- back gesture ---------------- */
+  /* ---------------- swipe gestures ---------------- */
 
-  /* An installed PWA on iOS has no system back gesture and no browser chrome,
-     so the only way back is whatever the app draws itself. A drag from the left
-     edge fills that gap: the screen follows the finger, the one behind it shows
-     through, and letting go past a third of the width commits the step.
+  /* Two horizontal gestures, told apart by where they start and what screen
+     they start on:
 
-     In a normal browser tab the platform already owns this gesture, and running
-     ours alongside it would go back twice - so it is installed only when the
-     app is standalone. */
-  var EDGE_ZONE = 30;        // px from the left edge where a drag may start
-  var COMMIT_RATIO = 0.32;   // how far across counts as "go back"
+     - on a tab screen, a swipe moves between the four tabs, the way the tab bar
+       does, with the neighbouring screen sliding in alongside;
+     - on a modal screen (photo, activity), a drag from the left edge goes back,
+       which an installed PWA on iOS has no other way to do.
+
+     The tab swipe leaves the outer 30 px alone on both sides, because that is
+     where the phone's own back gesture lives and arguing with it is a fight
+     nobody wins. */
+  var TAB_ORDER = ['home', 'history', 'stats', 'profile'];
+  var EDGE_ZONE = 30;        // px at each edge that belongs to the system
+  var COMMIT_RATIO = 0.32;   // how far across counts as a committed move
   var FLING_SPEED = 0.45;    // px/ms that commits regardless of distance
-  var PEEK_RATIO = 0.25;     // how far the screen behind is held back
+  var PEEK_RATIO = 0.25;     // how far the screen behind is held back when going back
   var SETTLE_MS = 220;
 
   function isStandalone() {
@@ -1360,18 +1364,42 @@
       window.navigator.standalone === true;
   }
 
-  function setupBackGesture() {
-    if (!isStandalone() || !('ontouchstart' in window)) { return; }
+  function screenName(node) {
+    return node && node.id ? node.id.replace('screen-', '') : '';
+  }
+
+  /* A pre block or any other sideways-scrolling box owns horizontal drags that
+     begin inside it. */
+  function inHorizontalScroller(node) {
+    while (node && node !== document.body) {
+      if (node.scrollWidth > node.clientWidth + 4) {
+        var overflow = window.getComputedStyle(node).overflowX;
+        if (overflow === 'auto' || overflow === 'scroll') { return true; }
+      }
+      node = node.parentNode;
+    }
+    return false;
+  }
+
+  function setupSwipeGestures() {
+    if (!('ontouchstart' in window)) { return; }
 
     var app = document.querySelector('.app');
-    var dragged = null, behind = null;
+    var mode = null;               // 'tab' or 'back'
+    var dragged = null, partner = null, partnerName = '';
     var startX = 0, startY = 0, lastX = 0, startedAt = 0, width = 1;
     var decided = false, dragging = false;
 
     function paint(dx) {
-      var progress = Math.min(1, dx / width);
+      if (mode === 'back') {
+        var progress = Math.min(1, dx / width);
+        dragged.style.transform = 'translateX(' + dx + 'px)';
+        partner.style.transform = 'translateX(' + (-PEEK_RATIO * width * (1 - progress)) + 'px)';
+        return;
+      }
+      // Tabs travel together, like one strip being pulled sideways.
       dragged.style.transform = 'translateX(' + dx + 'px)';
-      behind.style.transform = 'translateX(' + (-PEEK_RATIO * width * (1 - progress)) + 'px)';
+      partner.style.transform = 'translateX(' + (dx + (dx < 0 ? width : -width)) + 'px)';
     }
 
     function clear() {
@@ -1379,27 +1407,38 @@
         dragged.classList.remove('is-dragging', 'is-settling');
         dragged.style.transform = '';
       }
-      if (behind) {
-        behind.classList.remove('is-under', 'is-settling');
-        behind.style.transform = '';
+      if (partner) {
+        partner.classList.remove('is-under', 'is-settling');
+        partner.style.transform = '';
       }
       dragged = null;
-      behind = null;
+      partner = null;
+      partnerName = '';
+      mode = null;
       dragging = false;
       decided = false;
     }
 
-    function settle(commit) {
-      var finishing = dragged, revealed = behind;
-      finishing.classList.add('is-settling');
-      revealed.classList.add('is-settling');
-      finishing.style.transform = 'translateX(' + (commit ? width + 'px' : '0px') + ')';
-      revealed.style.transform = commit
-        ? 'translateX(0px)'
-        : 'translateX(' + (-PEEK_RATIO * width) + 'px)';
+    function settle(commit, dx) {
+      var leaving = dragged, arriving = partner, target = partnerName, kind = mode;
+      leaving.classList.add('is-settling');
+      arriving.classList.add('is-settling');
+
+      var restingPlace = kind === 'back'
+        ? 'translateX(' + (-PEEK_RATIO * width) + 'px)'
+        : 'translateX(' + (dx < 0 ? width : -width) + 'px)';
+      var exit = kind === 'back' ? width : (dx < 0 ? -width : width);
+
+      leaving.style.transform = 'translateX(' + (commit ? exit + 'px' : '0px') + ')';
+      arriving.style.transform = commit ? 'translateX(0px)' : restingPlace;
 
       setTimeout(function () {
         if (!commit) { clear(); return; }
+        if (kind === 'tab') {
+          go(target);
+          clear();
+          return;
+        }
         /* goBack() answers whether a popstate is coming. Tidying up before the
            new screen is active would blank the display for a frame. */
         if (goBack()) {
@@ -1416,20 +1455,34 @@
     app.addEventListener('touchstart', function (e) {
       if (dragging || e.touches.length !== 1) { return; }
       var touch = e.touches[0];
-      if (touch.clientX > EDGE_ZONE) { return; }
-
-      var previous = screenBehind();
       var active = document.querySelector('.screen.is-active');
-      var under = previous && el('screen-' + previous);
-      if (!previous || !active || !under || active === under) { return; }
+      if (!active) { return; }
+
+      width = app.getBoundingClientRect().width || window.innerWidth;
+      var tab = TAB_ORDER.indexOf(screenName(active));
+
+      if (tab === -1) {
+        // A modal screen: only the left edge, and only where nothing else claims it.
+        if (!isStandalone() || touch.clientX > EDGE_ZONE) { return; }
+        var previous = screenBehind();
+        var under = previous && el('screen-' + previous);
+        if (!previous || !under || under === active) { return; }
+        mode = 'back';
+        partner = under;
+        partnerName = previous;
+      } else {
+        if (touch.clientX <= EDGE_ZONE || touch.clientX >= width - EDGE_ZONE) { return; }
+        if (inHorizontalScroller(e.target)) { return; }
+        mode = 'tab';
+        partner = null;                      // chosen once the direction is known
+        partnerName = '';
+      }
 
       dragged = active;
-      behind = under;
       startX = touch.clientX;
       startY = touch.clientY;
       lastX = touch.clientX;
       startedAt = Date.now();
-      width = app.getBoundingClientRect().width || window.innerWidth;
       decided = false;
       dragging = false;
     }, { passive: true });
@@ -1445,27 +1498,39 @@
         if (Math.abs(dx) < 8 && Math.abs(dy) < 8) { return; }
         decided = true;
         // A mostly vertical move is the user scrolling, and stays theirs.
-        if (Math.abs(dy) > Math.abs(dx) || dx <= 0) { clear(); return; }
+        if (Math.abs(dy) > Math.abs(dx)) { clear(); return; }
+
+        if (mode === 'back') {
+          if (dx <= 0) { clear(); return; }
+        } else {
+          var index = TAB_ORDER.indexOf(screenName(dragged));
+          var next = TAB_ORDER[index + (dx < 0 ? 1 : -1)];
+          if (!next) { clear(); return; }     // no tab that way: leave the drag alone
+          partnerName = next;
+          partner = el('screen-' + next);
+          if (!partner) { clear(); return; }
+        }
         dragging = true;
         dragged.classList.add('is-dragging');
-        behind.classList.add('is-under');
+        partner.classList.add('is-under');
       }
       if (!dragging) { return; }
-      e.preventDefault();                   // the screen moves, the page does not
-      paint(Math.max(0, dx));
+      e.preventDefault();                   // the screens move, the page does not
+      paint(mode === 'back' ? Math.max(0, dx) : dx);
     }, { passive: false });
 
     function release() {
       if (!dragged) { return; }
       if (!dragging) { clear(); return; }
-      var dx = Math.max(0, lastX - startX);
-      var speed = dx / Math.max(1, Date.now() - startedAt);
-      settle(dx > width * COMMIT_RATIO || speed > FLING_SPEED);
+      var dx = lastX - startX;
+      if (mode === 'back') { dx = Math.max(0, dx); }
+      var speed = Math.abs(dx) / Math.max(1, Date.now() - startedAt);
+      settle(Math.abs(dx) > width * COMMIT_RATIO || speed > FLING_SPEED, dx);
     }
 
     app.addEventListener('touchend', release);
     app.addEventListener('touchcancel', function () {
-      if (dragging) { settle(false); } else { clear(); }
+      if (dragging) { settle(false, lastX - startX); } else { clear(); }
     });
   }
 
@@ -2031,7 +2096,7 @@
   }
 
   wire();
-  setupBackGesture();
+  setupSwipeGestures();
   renderAll();
   setupVersion();
   setupInstall();
