@@ -49,16 +49,25 @@ window.CloudRecognition = (function () {
   var JPEG_QUALITY = 0.82;
   var TIMEOUT_MS = 45000;
 
+  /* Reasoning models spend the completion budget thinking before they write a
+     word, and that thinking is invisible in `completion_tokens` while still
+     counting against the limit. A budget sized for the JSON alone gets the
+     reply cut off mid-object, so this is deliberately far larger than the
+     answer needs. Unused budget costs nothing. */
+  var MAX_TOKENS = 2000;
+
   var PROMPT_RU = 'Ты помогаешь считать калории по фотографии еды. ' +
     'Определи блюда на снимке и оцени порции. Ответь ТОЛЬКО JSON без пояснений, в формате: ' +
     '{"items":[{"name":"название блюда","grams":250,"kcal_per_100g":150}]}. ' +
-    'Названия — по-русски, коротко. Если еды на снимке нет, верни {"items":[]}.';
+    'Названия — по-русски, коротко. Если еды на снимке нет, верни {"items":[]}. ' +
+    'Не рассуждай и не объясняй — сразу JSON.';
 
   var PROMPT_EN = 'You help count calories from a photo of food. ' +
     'Identify the dishes in the picture and estimate the portions. Reply with JSON ONLY, ' +
     'no commentary, in this shape: ' +
     '{"items":[{"name":"dish name","grams":250,"kcal_per_100g":150}]}. ' +
-    'Keep the names short. If there is no food in the picture, return {"items":[]}.';
+    'Keep the names short. If there is no food in the picture, return {"items":[]}. ' +
+    'Do not reason or explain — answer with the JSON straight away.';
 
   /* Each provider needs its own key, so keys are stored per host: switching
      between DeepSeek and Gemini must not make one overwrite the other. */
@@ -124,6 +133,30 @@ window.CloudRecognition = (function () {
     return n;
   }
 
+  /* A reply cut off mid-object still carries whole items before the break.
+     This walks the text, collects balanced {...} blocks and keeps the ones that
+     parse - so one truncated dish does not cost the user the others. */
+  function salvageItems(text) {
+    if (!text) { return []; }
+    var found = [];
+    var starts = [];                        // the items sit inside the array, not at the top
+    for (var i = 0; i < text.length; i += 1) {
+      var ch = text.charAt(i);
+      if (ch === '{') {
+        starts.push(i);
+      } else if (ch === '}' && starts.length) {
+        var from = starts.pop();
+        try {
+          var parsed = JSON.parse(text.slice(from, i + 1));
+          if (parsed && typeof parsed === 'object' && !parsed.items && parsed.name) {
+            found.push(parsed);
+          }
+        } catch (err) { /* an object that never finished, or not one at all */ }
+      }
+    }
+    return found;
+  }
+
   /* Whatever the model replies, only well-formed items reach the diary: a name,
      a believable weight and a believable energy density. */
   function readItems(payload) {
@@ -168,7 +201,7 @@ window.CloudRecognition = (function () {
     var payload = {
       model: config.model,
       temperature: 0.2,
-      max_tokens: 700,
+      max_tokens: MAX_TOKENS,
       messages: [{
         role: 'user',
         content: [
@@ -213,7 +246,14 @@ window.CloudRecognition = (function () {
         debug.status = response.status;
         debug.ms = Date.now() - startedAt;
         debug.raw = text;
-        if (body && body.usage) { debug.usage = body.usage; }
+        if (body && body.usage) {
+          debug.usage = body.usage;
+          /* Tokens billed but not shown: `total` minus what went in and what
+             came back is the model's hidden reasoning. */
+          var hidden = (body.usage.total_tokens || 0) - (body.usage.prompt_tokens || 0) -
+            (body.usage.completion_tokens || 0);
+          debug.reasoning = hidden > 0 ? hidden : null;
+        }
         if (body && body.choices && body.choices[0]) {
           debug.finish = body.choices[0].finish_reason || null;
         }
@@ -225,6 +265,11 @@ window.CloudRecognition = (function () {
         }
         debug.raw = content;                   // the model's own words, not the envelope
         var items = readItems(extractJson(content));
+        if (!items.length) {
+          // Truncated, or wrapped in something the extractor could not open.
+          items = readItems({ items: salvageItems(content) });
+          debug.salvaged = items.length > 0;
+        }
         return { items: items, model: config.model, debug: debug };
       });
     })['catch'](function (err) {

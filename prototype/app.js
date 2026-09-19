@@ -56,6 +56,8 @@
       'dev.meta': '{model} · {status} · {ms} мс · снимок {kb} КБ',
       'dev.tokens': 'токены: {prompt} + {completion} = {total}',
       'dev.finish': 'finish_reason: {reason}',
+      'dev.reasoning': 'скрытых рассуждений: {tokens} токенов',
+      'dev.salvaged': 'ответ был обрезан — позиции собраны из уцелевшей части',
       'dev.error': 'ошибка: {message}',
       'dev.parsed': 'принято позиций: {count}',
       'cloud.refine': 'Уточнить в облаке', 'cloud.sending': 'Отправляю снимок…',
@@ -63,6 +65,7 @@
       'cloud.needKey': 'Чтобы включить, впишите API-ключ в профиле.',
       'cloud.done': '{model}: {count} — проверьте вес и калории.',
       'cloud.nothing': '{model} не нашла еду на снимке.',
+      'cloud.truncated': 'Ответ {model} оборвался на полпути — не хватило лимита. Попробуйте ещё раз.',
       'cloud.failed': 'Облако не ответило: {message}',
       'cloud.badKey': 'Ключ не принят ({status}). Проверьте его в профиле.',
       'cloud.blocked': 'Не удалось связаться с {host}: нет сети, либо сервис не принимает запросы прямо со страницы (CORS) — тогда нужен прокси.',
@@ -177,6 +180,8 @@
       'dev.meta': '{model} · {status} · {ms} ms · image {kb} KB',
       'dev.tokens': 'tokens: {prompt} + {completion} = {total}',
       'dev.finish': 'finish_reason: {reason}',
+      'dev.reasoning': 'hidden reasoning: {tokens} tokens',
+      'dev.salvaged': 'the reply was truncated — items recovered from what survived',
       'dev.error': 'error: {message}',
       'dev.parsed': 'items accepted: {count}',
       'cloud.refine': 'Ask the cloud', 'cloud.sending': 'Sending the picture…',
@@ -184,6 +189,7 @@
       'cloud.needKey': 'Add an API key in the profile to enable this.',
       'cloud.done': '{model}: {count} — check the weights and calories.',
       'cloud.nothing': '{model} found no food in the picture.',
+      'cloud.truncated': 'The reply from {model} was cut off mid-sentence — it ran out of budget. Try again.',
       'cloud.failed': 'The cloud did not answer: {message}',
       'cloud.badKey': 'The key was refused ({status}). Check it in the profile.',
       'cloud.blocked': 'Could not reach {host}: either there is no network, or the service refuses calls straight from a page (CORS), which needs a proxy.',
@@ -1221,7 +1227,9 @@
         total: debug.usage.total_tokens != null ? debug.usage.total_tokens : '—'
       }));
     }
+    if (debug.reasoning) { lines.push(t('dev.reasoning', { tokens: num(debug.reasoning) })); }
     if (debug.finish) { lines.push(t('dev.finish', { reason: debug.finish })); }
+    if (debug.salvaged) { lines.push(t('dev.salvaged')); }
     if (debug.parsedCount != null) { lines.push(t('dev.parsed', { count: debug.parsedCount })); }
     if (debug.error) { lines.push(t('dev.error', { message: debug.error })); }
 
@@ -1735,9 +1743,14 @@
         if (run !== analysisId) { return; }
         rememberExchange(result.debug, result.items.length);
         if (!result.items.length) {
-          // Nothing came back worth using, so what the on-device pass found
-          // stays where it is rather than being cleared for nothing.
-          photoNote(t('cloud.nothing', { model: result.model }), true);
+          /* Nothing usable came back, so what the on-device pass found stays
+             where it is. A reply that ran out of budget is a different problem
+             from one that saw no food, and saying so is the difference between
+             "try again" and "give up". */
+          var cutOff = result.debug && result.debug.finish === 'length';
+          photoNote(t(cutOff ? 'cloud.truncated' : 'cloud.nothing', {
+            model: result.model
+          }), true);
           return;
         }
         state.meal.items = result.items.map(itemFromCloud).concat(

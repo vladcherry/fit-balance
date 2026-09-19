@@ -152,6 +152,16 @@ This is now implemented in `prototype/cloud.js`:
   the object out; then every item must have a name, a weight between 1 g and 5 kg and a density
   between 0 and 900 kcal/100 g, or it is dropped. A reply with nothing usable in it leaves the
   on-device result alone rather than clearing it.
+- **Reasoning models need a budget for thinking, not just for answering.** A model that reasons
+  first spends the completion allowance before it writes a character, and those tokens are
+  invisible in `completion_tokens` while still counting against the limit — `total` minus
+  `prompt` minus `completion` is what it thought. Gemini Flash burned ~670 tokens that way and
+  had 23 left for the answer, which cut the JSON off inside the first dish. The budget is
+  therefore 2000 rather than a size chosen for the JSON alone; unused budget costs nothing.
+- **A truncated reply is salvaged.** Whole items that landed before the cut are recovered by
+  walking the text for balanced objects, so one unfinished dish does not cost the user the
+  others. When nothing survives, the screen says the reply ran out of budget rather than that no
+  food was found — those are different problems and lead to different next steps.
 - **Failures say what happened.** A refused key names the status, a model that cannot see
   reports the provider's own message, and a request the browser could not make says so and
   mentions CORS, since a static page has no way around it.
