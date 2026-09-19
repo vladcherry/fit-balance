@@ -1362,7 +1362,14 @@
      where the phone's own back gesture lives and arguing with it is a fight
      nobody wins. */
   var TAB_ORDER = ['home', 'history', 'stats', 'profile'];
-  var EDGE_ZONE = 30;        // px at each edge that belongs to the system
+
+  /* The back drag starts at the edge, so it needs a band to start in. The tab
+     swipe reserves nothing: where a phone claims its own edge gesture it takes
+     those touches before the page ever sees them, and where the page does see
+     them the edge is ours to use. A reserved band only ever costs the user the
+     most natural place to start a swipe - which is exactly how this looked
+     broken on a real phone while passing every test on a desktop. */
+  var BACK_EDGE = 30;        // px from the left edge where a back drag may start
   var COMMIT_RATIO = 0.25;   // how far across counts as a committed move
   var FLING_SPEED = 0.35;    // px/ms that commits regardless of distance
   var PEEK_RATIO = 0.25;     // how far the screen behind is held back when going back
@@ -1512,7 +1519,7 @@
       if (tab === -1) {
         // A modal screen: only the left edge, and only where nothing else claims it.
         if (!isStandalone()) { note('stop', 'modal-not-standalone'); return; }
-        if (touch.clientX > EDGE_ZONE) { note('stop', 'modal-not-edge'); return; }
+        if (touch.clientX > BACK_EDGE) { note('stop', 'modal-not-edge'); return; }
         var previous = screenBehind();
         var under = previous && el('screen-' + previous);
         if (!previous || !under || under === active) { note('stop', 'nothing-behind'); return; }
@@ -1520,10 +1527,6 @@
         partner = under;
         partnerName = previous;
       } else {
-        if (touch.clientX <= EDGE_ZONE || touch.clientX >= width - EDGE_ZONE) {
-          note('stop', 'edge-zone@' + Math.round(touch.clientX));
-          return;
-        }
         if (inHorizontalScroller(e.target)) { note('stop', 'inside-scroller'); return; }
         mode = 'tab';
         partner = null;                      // chosen once the direction is known

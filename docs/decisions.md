@@ -265,9 +265,13 @@ small target at the top of a tall screen.
   keeps working from the edge. Anything starting more than 30 px in is not a back gesture.
 - Tidying up waits for the `popstate` that `goBack()` announces, because clearing the transform
   before the new screen is active blanks the display for a frame.
-- **The outer 30 px at both edges are left to the phone.** That is where Android's and iOS's own
-  back gestures live, and a swipe starting there never reaches the page reliably anyway. The tab
-  swipe therefore starts inside the screen, which is also where a thumb naturally lands.
+- **The tab swipe reserves no edge band, and that was a correction.** Reserving 30 px on each
+  side for the phone's own gestures sounded prudent and made the feature look broken: telemetry
+  from a real device showed drags starting at x = 6, 11, 334 and 335 on a 339-wide frame, all of
+  them discarded by our own guard. Where a phone claims an edge gesture it takes those touches
+  before the page sees them, so the band protects nothing; where the page does see them, the
+  edge is the most natural place to start a swipe. The back drag still needs its 30 px band,
+  because starting at the edge is what defines it.
 - **Tab swiping needs no install**, unlike the back drag: it does not compete with anything the
   platform provides, so it works in a browser tab too.
 - A drag beginning inside a sideways-scrolling box, such as the developer panel's raw reply,

@@ -30,12 +30,18 @@ body {
   display: flex;
   justify-content: center;
   min-height: 100dvh;
+  /* Scrolling belongs to the screen inside, never to the page. A scrolling
+     page also costs the frame the width of its scrollbar, which shrinks the
+     area every horizontal gesture is measured against. */
+  height: 100dvh;
+  overflow: hidden;
 }
 
 .app {
   position: relative;
   width: 100%;
   max-width: 430px;
+  height: 100dvh;
   min-height: 100dvh;
   background: var(--white);
   overflow: hidden;
