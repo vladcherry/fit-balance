@@ -20,18 +20,23 @@ window.CloudRecognition = (function () {
   /* Presets for the providers this app is pointed at most often. All three
      speak the same OpenAI-shaped request, so a preset is nothing but a pair of
      defaults the user can still edit. */
+  /* Gemini comes first because it is the one observed to actually read the
+     picture: its prompt token count includes the image, and it answers with
+     dish names. DeepSeek counted the same call at a few hundred prompt tokens -
+     the text alone - and spent the whole budget reasoning about a photo it
+     never received. */
   var PROVIDERS = [
-    {
-      id: 'deepseek',
-      label: 'DeepSeek',
-      endpoint: 'https://api.deepseek.com/chat/completions',
-      model: 'deepseek-flash'
-    },
     {
       id: 'gemini',
       label: 'Gemini',
       endpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
       model: 'gemini-3.6-flash'
+    },
+    {
+      id: 'deepseek',
+      label: 'DeepSeek',
+      endpoint: 'https://api.deepseek.com/chat/completions',
+      model: 'deepseek-flash'
     }
   ];
 
@@ -258,11 +263,24 @@ window.CloudRecognition = (function () {
           debug.finish = body.choices[0].finish_reason || null;
         }
         if (!response.ok) { throw describeFailure(response, body); }
-        var content = body && body.choices && body.choices[0] &&
-          body.choices[0].message && body.choices[0].message.content;
+        var message = body && body.choices && body.choices[0] && body.choices[0].message;
+        var content = message && message.content;
         if (typeof content !== 'string') {
           throw { code: 'bad-reply', message: 'unexpected reply shape' };
         }
+        /* Reasoning models keep their thinking in a separate field. When the
+           budget runs out inside it, `content` arrives empty and the call looks
+           successful while carrying nothing - worth seeing in the log. */
+        if (message.reasoning_content) {
+          debug.reasoningText = String(message.reasoning_content).slice(0, 600);
+        }
+        debug.promptTokens = body && body.usage ? body.usage.prompt_tokens : null;
+        debug.emptyContent = content.trim() === '';
+        /* A 768 px picture is worth roughly a thousand prompt tokens - Gemini
+           counted 1176 for this very call. A few hundred means the text went
+           and the image did not. */
+        debug.imageLikelyIgnored = debug.imageKb > 40 &&
+          typeof debug.promptTokens === 'number' && debug.promptTokens < 600;
         debug.raw = content;                   // the model's own words, not the envelope
         var items = readItems(extractJson(content));
         if (!items.length) {

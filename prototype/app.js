@@ -59,6 +59,8 @@
       'cloud.done': '{model}: {count} — проверьте вес и калории.',
       'cloud.nothing': '{model} не нашла еду на снимке.',
       'cloud.truncated': 'Ответ {model} оборвался на полпути — не хватило лимита. Попробуйте ещё раз.',
+      'cloud.allThinking': '{model} потратила весь лимит на размышления и не ответила ни словом. Попробуйте ещё раз или смените модель в профиле.',
+      'cloud.blind': '{model} не получила снимок — судя по счётчику токенов, ушёл только текст. Нужна модель, которая умеет смотреть фото; смените её в профиле.',
       'cloud.failed': 'Облако не ответило: {message}',
       'cloud.badKey': 'Ключ не принят ({status}). Проверьте его в профиле.',
       'cloud.blocked': 'Не удалось связаться с {host}: нет сети, либо сервис не принимает запросы прямо со страницы (CORS) — тогда нужен прокси.',
@@ -176,6 +178,8 @@
       'cloud.done': '{model}: {count} — check the weights and calories.',
       'cloud.nothing': '{model} found no food in the picture.',
       'cloud.truncated': 'The reply from {model} was cut off mid-sentence — it ran out of budget. Try again.',
+      'cloud.allThinking': '{model} spent the whole budget thinking and never wrote a word. Try again, or change the model in the profile.',
+      'cloud.blind': '{model} never received the picture — by the token count only the text went. This needs a model that can see photos; change it in the profile.',
       'cloud.failed': 'The cloud did not answer: {message}',
       'cloud.badKey': 'The key was refused ({status}). Check it in the profile.',
       'cloud.blocked': 'Could not reach {host}: either there is no network, or the service refuses calls straight from a page (CORS), which needs a proxy.',
@@ -1199,8 +1203,14 @@
     if (debug.finish) { line += ' · finish=' + debug.finish; }
     line += ' · items ' + parsedCount;
     if (debug.salvaged) { line += ' (salvaged)'; }
+    if (debug.imageLikelyIgnored) {
+      line += '\n  ! prompt is ' + debug.promptTokens +
+        ' tokens for a ' + debug.imageKb + 'kb image: the model likely ignored the picture';
+    }
+    if (debug.emptyContent) { line += '\n  ! content is empty'; }
     if (debug.error) { line += '\n  error: ' + debug.error; }
     if (debug.raw) { line += '\n  reply: ' + debug.raw; }
+    if (debug.reasoningText) { line += '\n  reasoning: ' + debug.reasoningText; }
     debugLog(line);
   }
 
@@ -1828,10 +1838,17 @@
              where it is. A reply that ran out of budget is a different problem
              from one that saw no food, and saying so is the difference between
              "try again" and "give up". */
-          var cutOff = result.debug && result.debug.finish === 'length';
-          photoNote(t(cutOff ? 'cloud.truncated' : 'cloud.nothing', {
-            model: result.model
-          }), true);
+          var info = result.debug || {};
+          var reason = 'cloud.nothing';
+          if (info.imageLikelyIgnored) {
+            // The give-away: a prompt too small to have contained the photo.
+            reason = 'cloud.blind';
+          } else if (info.emptyContent && info.finish === 'length') {
+            reason = 'cloud.allThinking';
+          } else if (info.finish === 'length') {
+            reason = 'cloud.truncated';
+          }
+          photoNote(t(reason, { model: result.model }), true);
           return;
         }
         state.meal.items = result.items.map(itemFromCloud).concat(

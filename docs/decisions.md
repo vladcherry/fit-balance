@@ -321,3 +321,32 @@ never close, so a downloaded worker can sit in `waiting` indefinitely.
   from a screenshot rather than from trust.
 - A tester reporting that a fix did not work is now worth believing before the fix is doubted —
   the first question is which build they are on, and the answer is on screen.
+
+
+---
+
+## 13. Gemini is the default cloud model; DeepSeek does not receive the picture
+
+**Decision.** The Gemini preset leads and is what a fresh install points at. DeepSeek stays
+available as a preset, and the app now names the failure when a model does not receive the image.
+
+**Context.** Decision 10 shipped `deepseek-flash` as the default on the strength of the user's
+account that the line is multimodal. The debug log settled it with two numbers: for the same
+photo Gemini counted **1176 prompt tokens** and answered with dish names, while DeepSeek counted
+**429** — the text of the prompt alone, with no room for a picture — then spent the entire 2000
+token completion budget inside `reasoning_content` and returned an empty `content` with
+`finish_reason: length`. Three attempts, identical every time.
+
+**Consequences.**
+
+- A default that cannot do the one thing the feature exists for is a bug, not a preference, so
+  the presets swapped order. Anyone preferring DeepSeek is one tap away.
+- **Token counts identify this class of failure.** A prompt in the low hundreds against a picture
+  of tens of kilobytes means the image never travelled: the app says so plainly rather than
+  reporting "no food found", which sends the user to re-photograph a plate that was never the
+  problem.
+- `reasoning_content` is read and logged. A reasoning model that burns its budget before writing
+  anything looks like a successful call carrying nothing, and only that field shows where it
+  went.
+- The failure was invisible for as long as the app only reported its own conclusions. It took
+  one screenshot of the log to diagnose — which is the argument for the log.
