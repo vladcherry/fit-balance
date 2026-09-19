@@ -273,6 +273,11 @@ small target at the top of a tall screen.
 - A drag beginning inside a sideways-scrolling box, such as the developer panel's raw reply,
   belongs to that box. The gesture walks up from the touch target and stands down if it finds
   one.
+- **The page has to claim horizontal gestures in CSS, not only in JavaScript.** `touch-action:
+  pan-y pinch-zoom` on the frame and `overscroll-behavior: none` leave vertical panning and zoom
+  to the browser while keeping sideways drags for the app. Without them a phone browser decides
+  what a horizontal swipe means before any handler runs, and usually decides it is its own
+  back/forward gesture — the handlers then look broken while being perfectly correct.
 - The two gestures cannot both apply: a screen is either a tab or a modal, which decides which
   gesture its drags belong to. The cost is that a tab screen no longer has an edge-drag back —
   swiping to the neighbouring tab replaced it, and on a tab screen that is the more predictable

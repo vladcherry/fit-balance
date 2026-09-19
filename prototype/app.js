@@ -1362,8 +1362,8 @@
      nobody wins. */
   var TAB_ORDER = ['home', 'history', 'stats', 'profile'];
   var EDGE_ZONE = 30;        // px at each edge that belongs to the system
-  var COMMIT_RATIO = 0.32;   // how far across counts as a committed move
-  var FLING_SPEED = 0.45;    // px/ms that commits regardless of distance
+  var COMMIT_RATIO = 0.25;   // how far across counts as a committed move
+  var FLING_SPEED = 0.35;    // px/ms that commits regardless of distance
   var PEEK_RATIO = 0.25;     // how far the screen behind is held back when going back
   var SETTLE_MS = 220;
 

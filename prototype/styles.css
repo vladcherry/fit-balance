@@ -20,7 +20,10 @@ html, body {
   font-family: var(--body);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
-  overscroll-behavior-y: none;
+  /* Horizontal overscroll is how a browser offers its own back/forward swipe.
+     The tab gesture needs those events instead, and without this Chrome on
+     Android can swallow the drag before the page ever sees it. */
+  overscroll-behavior: none;
 }
 
 body {
@@ -36,6 +39,10 @@ body {
   min-height: 100dvh;
   background: var(--white);
   overflow: hidden;
+  /* Vertical panning and pinch-zoom stay with the browser; anything sideways
+     belongs to the tab gesture. Without this the browser decides first, and on
+     a phone it usually decides against us. */
+  touch-action: pan-y pinch-zoom;
 }
 
 @media (min-width: 460px) {
@@ -695,6 +702,7 @@ button, .btn { font: inherit; border: 0; background: none; color: inherit; curso
   white-space: pre-line;   /* the panel writes one fact per line */
 }
 .rawbox__body {
+  touch-action: pan-x pan-y;   /* this box scrolls sideways on its own */
   margin: 8px 0 0;
   padding: 8px;
   max-height: 260px;
