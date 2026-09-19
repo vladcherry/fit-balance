@@ -165,11 +165,13 @@ This is now implemented in `prototype/cloud.js`:
 - **Failures say what happened.** A refused key names the status, a model that cannot see
   reports the provider's own message, and a request the browser could not make says so and
   mentions CORS, since a static page has no way around it.
-- **Developer mode shows the exchange.** Turned on in the profile, a collapsed panel under the
-  photo carries the status, the round-trip time, the size of the image as sent, token usage,
-  `finish_reason`, the number of items that passed validation, and the model's raw text. Since
-  the parser deliberately drops anything malformed, this is the only place that shows the
-  difference between "the model said nothing useful" and "the model said something we rejected".
+- **Developer mode keeps one window.** Turned on in the profile, a bar above the tab bar carries
+  the running build and the live gesture read-out; opening it shows a log of everything worth
+  seeing after the fact — each cloud call with its status, round-trip time, image size, token
+  usage, `finish_reason` and item count, the model's reply in full, what the on-device pass
+  found, and which gestures were committed or refused. Since the parser deliberately drops
+  anything malformed, the log is the only place that shows the difference between "the model said
+  nothing useful" and "the model said something we rejected".
 - **Presets for DeepSeek and Gemini**, with keys stored per provider host so switching between
   them does not overwrite one with the other. Providers retire model names, and the 404 that
   follows names the replacement, so a saved setting pointing at a retired name is moved to its

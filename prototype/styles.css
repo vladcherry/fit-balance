@@ -693,62 +693,86 @@ button, .btn { font: inherit; border: 0; background: none; color: inherit; curso
   .screen.is-settling { transition-duration: 0.01ms; }
 }
 
+/* ---------- back gesture ---------- */
+
+/* The screen being dragged rides above the one it will return to. `.is-under`
+   has to outrank `.screen`'s own `display: none`, which it does by being more
+   specific. */
+.screen.is-under {
+  display: flex;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+/* Both take part in the same frame, so neither may be see-through: screens
+   normally borrow the white of `.app` and have no background of their own. */
+.screen.is-under, .screen.is-dragging { background: var(--white); }
+.screen.is-dragging {
+  position: relative;
+  z-index: 1;
+  box-shadow: -10px 0 30px rgba(23, 18, 15, 0.22);
+  will-change: transform;
+}
+.screen.is-settling { transition: transform 0.22s cubic-bezier(0.22, 0.61, 0.36, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .screen.is-settling { transition-duration: 0.01ms; }
+}
+
 /* ---------- developer panel ---------- */
 
-.rawbox {
-  margin: 10px 22px 0;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: var(--surface);
-  font-size: 11px;
-}
-.rawbox[hidden] { display: none; }
-.rawbox summary {
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-  cursor: pointer;
-}
-.rawbox__meta {
-  margin-top: 8px;
-  font-weight: 700;
-  color: var(--ink-muted);
-  line-height: 1.5;
-  white-space: pre-line;   /* the panel writes one fact per line */
-}
-.rawbox__body {
-  touch-action: pan-x pan-y;   /* this box scrolls sideways on its own */
-  margin: 8px 0 0;
-  padding: 8px;
-  max-height: 260px;
-  overflow: auto;
-  border-radius: 8px;
-  background: var(--white);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 10px;
-  line-height: 1.45;
-  white-space: pre-wrap;
-  word-break: break-word;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Developer mode: a live read-out of the gesture handler, so a phone that
-   behaves differently from a desktop can say so itself. */
-.probe {
+/* Developer mode: one window for the gesture read-out, the log and every model
+   reply. Collapsed it is a single bar; opened it takes the lower third and
+   scrolls. */
+.debug {
   position: fixed;
-  left: 8px;
-  right: 8px;
-  bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 6px);
+  left: 6px;
+  right: 6px;
+  bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 4px);
   z-index: 40;
-  padding: 6px 8px;
-  border-radius: 8px;
-  background: rgba(23, 18, 15, 0.86);
+  border-radius: 10px;
+  background: rgba(23, 18, 15, 0.92);
   color: #fff;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 9px;
   line-height: 1.5;
-  white-space: pre-wrap;
-  pointer-events: none;
+  overflow: hidden;
 }
-.probe[hidden] { display: none; }
+.debug[hidden] { display: none; }
+
+.debug__bar { display: flex; align-items: center; gap: 6px; padding: 5px 8px; }
+.debug__toggle,
+.debug__clear {
+  flex-shrink: 0;
+  padding: 2px 4px;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.debug__caret { display: inline-block; margin-right: 4px; }
+.debug.is-open .debug__caret { transform: rotate(90deg); }
+.debug__status {
+  flex-grow: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.75;
+}
+
+.debug__body { display: none; }
+.debug.is-open .debug__body {
+  display: block;
+  margin: 0;
+  padding: 6px 8px 8px;
+  max-height: 34dvh;
+  overflow-y: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  white-space: pre-wrap;
+  word-break: break-word;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}

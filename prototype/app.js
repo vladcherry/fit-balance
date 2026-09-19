@@ -51,15 +51,8 @@
 
       'dev.title': 'Для разработчика', 'dev.mode': 'Режим разработчика',
       'dev.off': 'Выключен', 'dev.on': 'Включён',
-      'dev.hint': 'Показывает под снимком полный ответ модели: что она вернула, сколько это заняло и сколько стоило токенов.',
-      'dev.rawTitle': 'Ответ модели',
-      'dev.meta': '{model} · {status} · {ms} мс · снимок {kb} КБ',
-      'dev.tokens': 'токены: {prompt} + {completion} = {total}',
-      'dev.finish': 'finish_reason: {reason}',
-      'dev.reasoning': 'скрытых рассуждений: {tokens} токенов',
-      'dev.salvaged': 'ответ был обрезан — позиции собраны из уцелевшей части',
-      'dev.error': 'ошибка: {message}',
-      'dev.parsed': 'принято позиций: {count}',
+      'dev.hint': 'Показывает окно отладки над нижней панелью: жесты, облачные вызовы и полные ответы моделей.',
+      'dev.panel': 'Отладка', 'dev.clear': 'Очистить', 'dev.empty': 'пока пусто',
       'cloud.refine': 'Уточнить в облаке', 'cloud.sending': 'Отправляю снимок…',
       'cloud.willSend': 'Снимок уйдёт в {model}. Это единственный случай, когда фото покидает телефон.',
       'cloud.needKey': 'Чтобы включить, впишите API-ключ в профиле.',
@@ -175,15 +168,8 @@
 
       'dev.title': 'Developer', 'dev.mode': 'Developer mode',
       'dev.off': 'Off', 'dev.on': 'On',
-      'dev.hint': 'Shows the model\u2019s full reply under the picture: what came back, how long it took and what it cost in tokens.',
-      'dev.rawTitle': 'Model reply',
-      'dev.meta': '{model} · {status} · {ms} ms · image {kb} KB',
-      'dev.tokens': 'tokens: {prompt} + {completion} = {total}',
-      'dev.finish': 'finish_reason: {reason}',
-      'dev.reasoning': 'hidden reasoning: {tokens} tokens',
-      'dev.salvaged': 'the reply was truncated — items recovered from what survived',
-      'dev.error': 'error: {message}',
-      'dev.parsed': 'items accepted: {count}',
+      'dev.hint': 'Shows a debug window above the tab bar: gestures, cloud calls and the models\u2019 full replies.',
+      'dev.panel': 'Debug', 'dev.clear': 'Clear', 'dev.empty': 'nothing yet',
       'cloud.refine': 'Ask the cloud', 'cloud.sending': 'Sending the picture…',
       'cloud.willSend': 'The picture goes to {model}. This is the only time a photo leaves the phone.',
       'cloud.needKey': 'Add an API key in the profile to enable this.',
@@ -1196,47 +1182,26 @@
     el('cloud-endpoint').value = config.endpoint;
   }
 
-  /* Developer mode. The last exchange is held in memory only: a raw reply runs
-     to a couple of kilobytes and has no business in localStorage. */
-  var lastExchange = null;
-
+  /* Everything about one cloud call, written to the log the moment it lands -
+     the reply in full, because the parser drops whatever it cannot use and the
+     difference only shows here. */
   function rememberExchange(debug, parsedCount) {
     if (!debug) { return; }
-    debug.parsedCount = parsedCount;
-    lastExchange = debug;
-    renderRawReply();
-  }
-
-  function renderRawReply() {
-    var box = el('cloud-raw');
-    if (!state.devMode || !lastExchange) {
-      box.hidden = true;
-      return;
-    }
-    var debug = lastExchange;
-    var lines = [t('dev.meta', {
-      model: debug.model,
-      status: debug.status === null ? '—' : debug.status,
-      ms: debug.ms === null ? '—' : debug.ms,
-      kb: debug.imageKb
-    })];
+    var line = 'cloud ' + debug.model +
+      ' · ' + (debug.status === null ? 'no reply' : debug.status) +
+      ' · ' + (debug.ms === null ? '?' : debug.ms) + 'ms' +
+      ' · img ' + debug.imageKb + 'kb';
     if (debug.usage) {
-      lines.push(t('dev.tokens', {
-        prompt: debug.usage.prompt_tokens != null ? debug.usage.prompt_tokens : '—',
-        completion: debug.usage.completion_tokens != null ? debug.usage.completion_tokens : '—',
-        total: debug.usage.total_tokens != null ? debug.usage.total_tokens : '—'
-      }));
+      line += ' · tokens ' + (debug.usage.prompt_tokens || 0) + '+' +
+        (debug.usage.completion_tokens || 0) + '=' + (debug.usage.total_tokens || 0);
     }
-    if (debug.reasoning) { lines.push(t('dev.reasoning', { tokens: num(debug.reasoning) })); }
-    if (debug.finish) { lines.push(t('dev.finish', { reason: debug.finish })); }
-    if (debug.salvaged) { lines.push(t('dev.salvaged')); }
-    if (debug.parsedCount != null) { lines.push(t('dev.parsed', { count: debug.parsedCount })); }
-    if (debug.error) { lines.push(t('dev.error', { message: debug.error })); }
-
-    el('cloud-raw-summary').textContent = t('dev.rawTitle');
-    el('cloud-raw-meta').textContent = lines.join('\n');
-    el('cloud-raw-body').textContent = debug.raw || '—';
-    box.hidden = false;
+    if (debug.reasoning) { line += ' (+' + debug.reasoning + ' hidden)'; }
+    if (debug.finish) { line += ' · finish=' + debug.finish; }
+    line += ' · items ' + parsedCount;
+    if (debug.salvaged) { line += ' (salvaged)'; }
+    if (debug.error) { line += '\n  error: ' + debug.error; }
+    if (debug.raw) { line += '\n  reply: ' + debug.raw; }
+    debugLog(line);
   }
 
   function renderCloudHelp() {
@@ -1263,8 +1228,7 @@
     renderHistory();
     renderProfile();
     refreshCloudButton();
-    renderRawReply();
-    renderProbe();
+    renderDebug();
   }
 
   /* ---------------- navigation ---------------- */
@@ -1397,12 +1361,15 @@
     return false;
   }
 
-  /* Developer-mode telemetry. Every decision the handler makes is written here,
-     so a device that behaves unlike a desktop can be asked what it saw instead
-     of being guessed at. */
+  /* Developer mode keeps one window: the gesture read-out in its bar, and a log
+     underneath carrying everything worth seeing after the fact - gestures that
+     were refused, cloud calls, and the models' replies in full. */
+  var LOG_LIMIT = 300;
+  var debugLines = [];
+
   var probe = {
     starts: 0, moves: 0, ends: 0, cancels: 0,
-    mode: '-', stop: '-', dx: 0, dy: 0, screen: '-', touchAction: '-'
+    mode: '-', stop: '-', dx: 0, dy: 0, screen: '-', touchAction: '-', width: 0
   };
 
   function frameWidth() {
@@ -1410,25 +1377,53 @@
     return frame ? frame.getBoundingClientRect().width : 0;
   }
 
-  function renderProbe() {
-    var box = el('gesture-probe');
-    if (!box) { return; }
-    if (!state.devMode) { box.hidden = true; return; }
-    box.hidden = false;
-    box.textContent =
+  function stamp() {
+    var now = new Date();
+    return String(now.getHours()).padStart(2, '0') + ':' +
+      String(now.getMinutes()).padStart(2, '0') + ':' +
+      String(now.getSeconds()).padStart(2, '0');
+  }
+
+  function debugLog(text) {
+    debugLines.push(stamp() + ' ' + text);
+    if (debugLines.length > LOG_LIMIT) { debugLines.shift(); }
+    renderDebug();
+  }
+
+  function renderDebug() {
+    var panel = el('debug-panel');
+    if (!panel) { return; }
+    if (!state.devMode) { panel.hidden = true; return; }
+    panel.hidden = false;
+    panel.classList.toggle('is-open', !!state.devOpen);
+    el('debug-toggle').setAttribute('aria-expanded', state.devOpen ? 'true' : 'false');
+
+    el('debug-status').textContent =
+      (loadedVersion || 'local') + ' · ' + probe.screen + ' · ' +
+      'start' + probe.starts + ' move' + probe.moves + ' end' + probe.ends +
+      (probe.cancels ? ' cancel' + probe.cancels : '') +
+      ' · ' + probe.stop;
+
+    if (!state.devOpen) { return; }
+    var body = el('debug-body');
+    var head =
       'build=' + (loadedVersion || 'local') +
-      ' touch=' + ('ontouchstart' in window) + ' standalone=' + isStandalone() +
+      ' touch=' + ('ontouchstart' in window) +
+      ' standalone=' + isStandalone() +
       ' w=' + Math.round(probe.width || frameWidth()) + '\n' +
-      'start=' + probe.starts + ' move=' + probe.moves +
-      ' end=' + probe.ends + ' cancel=' + probe.cancels + '\n' +
-      'screen=' + probe.screen + ' mode=' + probe.mode +
-      ' dx=' + Math.round(probe.dx) + ' dy=' + Math.round(probe.dy) + '\n' +
-      'stop=' + probe.stop + ' touch-action=' + probe.touchAction;
+      'gesture: screen=' + probe.screen + ' mode=' + probe.mode +
+      ' dx=' + Math.round(probe.dx) + ' dy=' + Math.round(probe.dy) +
+      ' stop=' + probe.stop + '\n' +
+      'touch-action=' + probe.touchAction + '\n' +
+      '----\n';
+    var stuckToBottom = body.scrollTop + body.clientHeight >= body.scrollHeight - 24;
+    body.textContent = head + (debugLines.length ? debugLines.join('\n') : '(' + t('dev.empty') + ')');
+    if (stuckToBottom) { body.scrollTop = body.scrollHeight; }
   }
 
   function note(field, value) {
     probe[field] = value;
-    renderProbe();
+    renderDebug();
   }
 
   function setupSwipeGestures() {
@@ -1511,6 +1506,10 @@
       probe.dy = 0;
       if (dragging || e.touches.length !== 1) { note('stop', 'busy/multitouch'); return; }
       var touch = e.touches[0];
+      if (e.target && e.target.closest && e.target.closest('#debug-panel')) {
+        note('stop', 'debug-panel');            // the window scrolls on its own
+        return;
+      }
       var active = document.querySelector('.screen.is-active');
       if (!active) { note('stop', 'no-active-screen'); return; }
       probe.screen = screenName(active);
@@ -1582,6 +1581,7 @@
         dragged.classList.add('is-dragging');
         partner.classList.add('is-under');
         note('stop', 'dragging->' + partnerName);
+        debugLog('gesture ' + mode + ' ' + screenName(dragged) + ' -> ' + partnerName);
       }
       if (!dragging) { return; }
       probe.dx = dx;
@@ -1596,12 +1596,15 @@
       var dx = lastX - startX;
       if (mode === 'back') { dx = Math.max(0, dx); }
       var speed = Math.abs(dx) / Math.max(1, Date.now() - startedAt);
-      settle(Math.abs(dx) > width * COMMIT_RATIO || speed > FLING_SPEED, dx);
+      var commit = Math.abs(dx) > width * COMMIT_RATIO || speed > FLING_SPEED;
+      debugLog('gesture end dx=' + Math.round(dx) + ' v=' + speed.toFixed(2) +
+        ' -> ' + (commit ? 'commit ' + partnerName : 'spring back'));
+      settle(commit, dx);
     }
 
     surface.addEventListener('touchend', function () {
       probe.ends += 1;
-      renderProbe();
+      renderDebug();
       release();
     });
     surface.addEventListener('touchcancel', function () {
@@ -1736,6 +1739,14 @@
       }).then(function (result) {
         if (run !== analysisId || !result) { return; }
         frame.classList.remove('is-busy');
+        debugLog('on-device ' + (result.food
+          ? result.food.id + ' ' + Math.round(result.food.probability * 100) + '%'
+          : 'nothing') +
+          (result.guesses.length
+            ? ' · also ' + result.guesses.map(function (g) {
+              return g.id + ' ' + Math.round(g.probability * 100) + '%';
+            }).join(', ')
+            : ''));
         if (result.food) {
           applyFood(result.food);
           photoNote(t('photo.recognised', {
@@ -1799,6 +1810,7 @@
       var frame = el('photo-frame');
 
       cloudBusy = true;
+      debugLog('cloud -> ' + config.model + ' at ' + config.endpoint);
       renderCloudButton();
       frame.classList.add('is-busy');
       photoStatus(t('cloud.sending'));
@@ -1874,8 +1886,18 @@
       state.devMode = picked.getAttribute('data-dev') === 'on';
       save();
       renderProfile();
-      renderRawReply();
-      renderProbe();
+      renderDebug();
+    });
+
+    el('debug-toggle').addEventListener('click', function () {
+      state.devOpen = !state.devOpen;
+      save();
+      renderDebug();
+    });
+
+    el('debug-clear').addEventListener('click', function () {
+      debugLines.length = 0;
+      renderDebug();
     });
 
     renderCloudSettings();
@@ -2055,7 +2077,7 @@
     fetchVersion().then(function (info) {
       loadedVersion = info && info.version;
       showVersion(info);
-      renderProbe();
+      renderDebug();
     });
 
     el('check-update').addEventListener('click', function () {

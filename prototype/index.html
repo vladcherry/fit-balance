@@ -129,12 +129,6 @@
       <span id="photo-note-text"></span>
     </div>
 
-    <details class="rawbox" id="cloud-raw" hidden>
-      <summary id="cloud-raw-summary" data-i18n="dev.rawTitle">Ответ модели</summary>
-      <div class="rawbox__meta" id="cloud-raw-meta"></div>
-      <pre class="rawbox__body" id="cloud-raw-body"></pre>
-    </details>
-
     <div class="guesses" id="photo-guesses" hidden>
       <span class="guesses__k" data-i18n="photo.maybe">Может быть</span>
       <span class="chips chips--inline" id="photo-guess-chips"></span>
@@ -418,8 +412,17 @@
     </div>
   </section>
 
-  <!-- Developer mode only: what the gesture handler is seeing right now. -->
-  <div class="probe" id="gesture-probe" hidden></div>
+  <!-- Developer mode only: the gesture read-out, the log and every model reply. -->
+  <div class="debug" id="debug-panel" hidden>
+    <div class="debug__bar">
+      <button type="button" class="debug__toggle" id="debug-toggle" aria-expanded="false">
+        <span class="debug__caret">▸</span><span data-i18n="dev.panel">Отладка</span>
+      </button>
+      <span class="debug__status" id="debug-status"></span>
+      <button type="button" class="debug__clear" id="debug-clear" data-i18n="dev.clear">Очистить</button>
+    </div>
+    <pre class="debug__body" id="debug-body"></pre>
+  </div>
 
   <nav class="tabbar" id="tabbar">
     <button type="button" data-go="home" aria-current="page">
