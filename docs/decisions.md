@@ -274,10 +274,15 @@ small target at the top of a tall screen.
   belongs to that box. The gesture walks up from the touch target and stands down if it finds
   one.
 - **The page has to claim horizontal gestures in CSS, not only in JavaScript.** `touch-action:
-  pan-y pinch-zoom` on the frame and `overscroll-behavior: none` leave vertical panning and zoom
-  to the browser while keeping sideways drags for the app. Without them a phone browser decides
-  what a horizontal swipe means before any handler runs, and usually decides it is its own
-  back/forward gesture — the handlers then look broken while being perfectly correct.
+  pan-y pinch-zoom` and `overscroll-behavior` leave vertical panning and zoom to the browser
+  while keeping sideways drags for the app. Without them a phone browser decides what a
+  horizontal swipe means before any handler runs, and usually decides it is its own back/forward
+  gesture — the handlers then look broken while being perfectly correct.
+- **The declaration belongs on the scrolling element, not only on its parent.** `.screen` is what
+  scrolls, and a phone consults the scroller under the finger when it decides who owns a drag.
+  With the rule only on the frame, swipes worked over buttons and other non-scrolling things and
+  died over ordinary content — which reads as "the gesture works in some places", the most
+  confusing way for it to fail.
 - The two gestures cannot both apply: a screen is either a tab or a modal, which decides which
   gesture its drags belong to. The cost is that a tab screen no longer has an edge-drag back —
   swiping to the neighbouring tab replaced it, and on a tab screen that is the more predictable

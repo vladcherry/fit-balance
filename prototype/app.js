@@ -1393,6 +1393,7 @@
     if (!('ontouchstart' in window)) { return; }
 
     var app = document.querySelector('.app');
+    var surface = document;        // a drag can start on anything, so listen wide
     var mode = null;               // 'tab' or 'back'
     var dragged = null, partner = null, partnerName = '';
     var startX = 0, startY = 0, lastX = 0, startedAt = 0, width = 1;
@@ -1460,7 +1461,7 @@
       }, SETTLE_MS);
     }
 
-    app.addEventListener('touchstart', function (e) {
+    surface.addEventListener('touchstart', function (e) {
       if (dragging || e.touches.length !== 1) { return; }
       var touch = e.touches[0];
       var active = document.querySelector('.screen.is-active');
@@ -1495,7 +1496,7 @@
       dragging = false;
     }, { passive: true });
 
-    app.addEventListener('touchmove', function (e) {
+    surface.addEventListener('touchmove', function (e) {
       if (!dragged || e.touches.length !== 1) { return; }
       var touch = e.touches[0];
       var dx = touch.clientX - startX;
@@ -1536,8 +1537,8 @@
       settle(Math.abs(dx) > width * COMMIT_RATIO || speed > FLING_SPEED, dx);
     }
 
-    app.addEventListener('touchend', release);
-    app.addEventListener('touchcancel', function () {
+    surface.addEventListener('touchend', release);
+    surface.addEventListener('touchcancel', function () {
       if (dragging) { settle(false, lastX - startX); } else { clear(); }
     });
   }

@@ -60,6 +60,12 @@ body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+  /* The screen is the scrolling element, and on a phone the scroller - not its
+     parent - is what decides whether a drag belongs to the page or to the
+     browser. Declaring it here is what makes the tab swipe work over content
+     rather than only over non-scrolling things like buttons. */
+  touch-action: pan-y pinch-zoom;
+  overscroll-behavior-x: none;
 }
 .screen.is-active { display: flex; }
 .screen.is-modal { padding-bottom: env(safe-area-inset-bottom, 0px); }
