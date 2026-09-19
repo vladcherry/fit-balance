@@ -1264,6 +1264,7 @@
     renderProfile();
     refreshCloudButton();
     renderRawReply();
+    renderProbe();
   }
 
   /* ---------------- navigation ---------------- */
@@ -1389,6 +1390,34 @@
     return false;
   }
 
+  /* Developer-mode telemetry. Every decision the handler makes is written here,
+     so a device that behaves unlike a desktop can be asked what it saw instead
+     of being guessed at. */
+  var probe = {
+    starts: 0, moves: 0, ends: 0, cancels: 0,
+    mode: '-', stop: '-', dx: 0, dy: 0, screen: '-', touchAction: '-'
+  };
+
+  function renderProbe() {
+    var box = el('gesture-probe');
+    if (!box) { return; }
+    if (!state.devMode) { box.hidden = true; return; }
+    box.hidden = false;
+    box.textContent =
+      'touch=' + ('ontouchstart' in window) + ' standalone=' + isStandalone() +
+      ' w=' + Math.round(probe.width || 0) + '\n' +
+      'start=' + probe.starts + ' move=' + probe.moves +
+      ' end=' + probe.ends + ' cancel=' + probe.cancels + '\n' +
+      'screen=' + probe.screen + ' mode=' + probe.mode +
+      ' dx=' + Math.round(probe.dx) + ' dy=' + Math.round(probe.dy) + '\n' +
+      'stop=' + probe.stop + ' touch-action=' + probe.touchAction;
+  }
+
+  function note(field, value) {
+    probe[field] = value;
+    renderProbe();
+  }
+
   function setupSwipeGestures() {
     if (!('ontouchstart' in window)) { return; }
 
@@ -1462,26 +1491,40 @@
     }
 
     surface.addEventListener('touchstart', function (e) {
-      if (dragging || e.touches.length !== 1) { return; }
+      probe.starts += 1;
+      probe.stop = '-';
+      probe.mode = '-';
+      probe.dx = 0;
+      probe.dy = 0;
+      if (dragging || e.touches.length !== 1) { note('stop', 'busy/multitouch'); return; }
       var touch = e.touches[0];
       var active = document.querySelector('.screen.is-active');
-      if (!active) { return; }
+      if (!active) { note('stop', 'no-active-screen'); return; }
+      probe.screen = screenName(active);
+      try {
+        probe.touchAction = window.getComputedStyle(active).touchAction;
+      } catch (err) { probe.touchAction = '?'; }
 
       width = app.getBoundingClientRect().width || window.innerWidth;
       var tab = TAB_ORDER.indexOf(screenName(active));
 
+      probe.width = width;
       if (tab === -1) {
         // A modal screen: only the left edge, and only where nothing else claims it.
-        if (!isStandalone() || touch.clientX > EDGE_ZONE) { return; }
+        if (!isStandalone()) { note('stop', 'modal-not-standalone'); return; }
+        if (touch.clientX > EDGE_ZONE) { note('stop', 'modal-not-edge'); return; }
         var previous = screenBehind();
         var under = previous && el('screen-' + previous);
-        if (!previous || !under || under === active) { return; }
+        if (!previous || !under || under === active) { note('stop', 'nothing-behind'); return; }
         mode = 'back';
         partner = under;
         partnerName = previous;
       } else {
-        if (touch.clientX <= EDGE_ZONE || touch.clientX >= width - EDGE_ZONE) { return; }
-        if (inHorizontalScroller(e.target)) { return; }
+        if (touch.clientX <= EDGE_ZONE || touch.clientX >= width - EDGE_ZONE) {
+          note('stop', 'edge-zone@' + Math.round(touch.clientX));
+          return;
+        }
+        if (inHorizontalScroller(e.target)) { note('stop', 'inside-scroller'); return; }
         mode = 'tab';
         partner = null;                      // chosen once the direction is known
         partnerName = '';
@@ -1494,27 +1537,34 @@
       startedAt = Date.now();
       decided = false;
       dragging = false;
+      note('mode', mode);
     }, { passive: true });
 
     surface.addEventListener('touchmove', function (e) {
-      if (!dragged || e.touches.length !== 1) { return; }
+      probe.moves += 1;
+      if (!dragged || e.touches.length !== 1) {
+        if (!dragged && probe.stop === '-') { note('stop', 'no-drag-in-progress'); }
+        return;
+      }
       var touch = e.touches[0];
       var dx = touch.clientX - startX;
       var dy = touch.clientY - startY;
       lastX = touch.clientX;
 
       if (!decided) {
+        probe.dx = dx;
+        probe.dy = dy;
         if (Math.abs(dx) < 8 && Math.abs(dy) < 8) { return; }
         decided = true;
         // A mostly vertical move is the user scrolling, and stays theirs.
-        if (Math.abs(dy) > Math.abs(dx)) { clear(); return; }
+        if (Math.abs(dy) > Math.abs(dx)) { note('stop', 'vertical'); clear(); return; }
 
         if (mode === 'back') {
           if (dx <= 0) { clear(); return; }
         } else {
           var index = TAB_ORDER.indexOf(screenName(dragged));
           var next = TAB_ORDER[index + (dx < 0 ? 1 : -1)];
-          if (!next) { clear(); return; }     // no tab that way: leave the drag alone
+          if (!next) { note('stop', 'no-tab-that-way'); clear(); return; }
           partnerName = next;
           partner = el('screen-' + next);
           if (!partner) { clear(); return; }
@@ -1522,8 +1572,11 @@
         dragging = true;
         dragged.classList.add('is-dragging');
         partner.classList.add('is-under');
+        note('stop', 'dragging->' + partnerName);
       }
       if (!dragging) { return; }
+      probe.dx = dx;
+      probe.dy = dy;
       e.preventDefault();                   // the screens move, the page does not
       paint(mode === 'back' ? Math.max(0, dx) : dx);
     }, { passive: false });
@@ -1537,8 +1590,14 @@
       settle(Math.abs(dx) > width * COMMIT_RATIO || speed > FLING_SPEED, dx);
     }
 
-    surface.addEventListener('touchend', release);
+    surface.addEventListener('touchend', function () {
+      probe.ends += 1;
+      renderProbe();
+      release();
+    });
     surface.addEventListener('touchcancel', function () {
+      probe.cancels += 1;
+      note('stop', 'cancelled-by-browser');
       if (dragging) { settle(false, lastX - startX); } else { clear(); }
     });
   }
@@ -1807,6 +1866,7 @@
       save();
       renderProfile();
       renderRawReply();
+      renderProbe();
     });
 
     renderCloudSettings();

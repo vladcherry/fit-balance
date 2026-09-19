@@ -41,7 +41,10 @@ body {
   overflow: hidden;
   /* Vertical panning and pinch-zoom stay with the browser; anything sideways
      belongs to the tab gesture. Without this the browser decides first, and on
-     a phone it usually decides against us. */
+     a phone it usually decides against us. The plain value comes first because
+     a browser that cannot parse the combined one discards the declaration
+     entirely, taking the protection with it. */
+  touch-action: pan-y;
   touch-action: pan-y pinch-zoom;
 }
 
@@ -64,6 +67,7 @@ body {
      parent - is what decides whether a drag belongs to the page or to the
      browser. Declaring it here is what makes the tab swipe work over content
      rather than only over non-scrolling things like buttons. */
+  touch-action: pan-y;
   touch-action: pan-y pinch-zoom;
   overscroll-behavior-x: none;
 }
@@ -722,3 +726,23 @@ button, .btn { font: inherit; border: 0; background: none; color: inherit; curso
   word-break: break-word;
   -webkit-overflow-scrolling: touch;
 }
+
+/* Developer mode: a live read-out of the gesture handler, so a phone that
+   behaves differently from a desktop can say so itself. */
+.probe {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 6px);
+  z-index: 40;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(23, 18, 15, 0.86);
+  color: #fff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 9px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  pointer-events: none;
+}
+.probe[hidden] { display: none; }
