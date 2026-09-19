@@ -630,3 +630,16 @@ button, .btn { font: inherit; border: 0; background: none; color: inherit; curso
   font-weight: 700;
   color: var(--ink);
 }
+
+.cloud-help {
+  margin: 8px 22px 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--surface);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+.cloud-help .link { display: inline-block; margin-top: 4px; font-size: 12px; }
+.cloud-help .link:empty { display: none; }

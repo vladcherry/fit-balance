@@ -42,6 +42,11 @@
       'cloud.explain': 'Необязательно. Если вписать ключ, на экране фото появится кнопка «Уточнить в облаке» — она отправляет один снимок выбранной модели. Без неё всё остаётся на телефоне.',
       'cloud.key': 'API-ключ', 'cloud.model': 'Модель', 'cloud.endpoint': 'Эндпоинт',
       'cloud.storage': 'Ключ хранится только в этом браузере и уходит только на указанный эндпоинт.',
+      'cloud.getDeepseek': 'Где взять ключ: зарегистрируйтесь на platform.deepseek.com, пополните баланс (DeepSeek работает по предоплате) и создайте ключ в разделе API keys. Ключ показывают один раз — скопируйте сразу.',
+      'cloud.getOpenai': 'Где взять ключ: platform.openai.com, раздел API keys. Нужен оплаченный баланс; ключ показывают один раз.',
+      'cloud.getGemini': 'Где взять ключ: Google AI Studio, кнопка Create API key. Есть бесплатный лимит.',
+      'cloud.getGeneric': 'Ключ берётся в личном кабинете вашего провайдера — там же, где он выдаёт API-доступ.',
+      'cloud.openPage': 'Открыть страницу ключей →',
       'cloud.refine': 'Уточнить в облаке', 'cloud.sending': 'Отправляю снимок…',
       'cloud.willSend': 'Снимок уйдёт в {model}. Это единственный случай, когда фото покидает телефон.',
       'cloud.needKey': 'Чтобы включить, впишите API-ключ в профиле.',
@@ -95,7 +100,7 @@
       'prof.manualHint': 'Вид, время, интенсивность — и приложение считает ккал',
       'prof.healthConnect': 'Health Connect', 'prof.healthHint': 'Android, в следующей версии', 'prof.later': 'Позже',
       'prof.language': 'Язык',
-      'prof.disclaimer': 'Фото разбираются на устройстве и никуда не уходят. Жировой эквивалент (7 700 ккал = 1 кг) — условный ориентир, а не измерение состава тела.',
+      'prof.disclaimer': 'Фото разбираются на устройстве; наружу снимок уходит только по кнопке «Уточнить в облаке». Жировой эквивалент (7 700 ккал = 1 кг) — условный ориентир, а не измерение состава тела.',
       'prof.reset': 'Сбросить данные до демо', 'prof.resetDone': 'Данные сброшены',
 
       'install.title': 'Установить FitBalance',
@@ -147,6 +152,11 @@
       'cloud.explain': 'Optional. With a key set, the photo screen gets an "Ask the cloud" button that sends one picture to the model you choose. Without it, everything stays on the phone.',
       'cloud.key': 'API key', 'cloud.model': 'Model', 'cloud.endpoint': 'Endpoint',
       'cloud.storage': 'The key is kept in this browser only, and is sent to the configured endpoint and nowhere else.',
+      'cloud.getDeepseek': 'Where to get one: sign up at platform.deepseek.com, top up the balance (DeepSeek bills up front), then create a key under API keys. The key is shown once — copy it straight away.',
+      'cloud.getOpenai': 'Where to get one: platform.openai.com, under API keys. Needs a funded balance; the key is shown once.',
+      'cloud.getGemini': 'Where to get one: Google AI Studio, the Create API key button. It has a free tier.',
+      'cloud.getGeneric': 'The key comes from your provider\u2019s own dashboard, wherever it hands out API access.',
+      'cloud.openPage': 'Open the keys page →',
       'cloud.refine': 'Ask the cloud', 'cloud.sending': 'Sending the picture…',
       'cloud.willSend': 'The picture goes to {model}. This is the only time a photo leaves the phone.',
       'cloud.needKey': 'Add an API key in the profile to enable this.',
@@ -199,7 +209,7 @@
       'prof.manualHint': 'Type, duration, intensity — the app does the calories',
       'prof.healthConnect': 'Health Connect', 'prof.healthHint': 'Android, next release', 'prof.later': 'Later',
       'prof.language': 'Language',
-      'prof.disclaimer': 'Photos are analysed on the device and never leave it. The fat equivalent (7,700 kcal = 1 kg) is a conventional figure, not a body-composition measurement.',
+      'prof.disclaimer': 'Photos are analysed on the device; a picture only leaves it through the "Ask the cloud" button. The fat equivalent (7,700 kcal = 1 kg) is a conventional figure, not a body-composition measurement.',
       'prof.reset': 'Reset the data to demo', 'prof.resetDone': 'Data reset',
 
       'install.title': 'Install FitBalance',
@@ -1075,6 +1085,7 @@
       g: num(Math.round(state.target / KCAL_PER_KG * 1000))
     });
     el('p-goal').textContent = t(state.target > 0 ? 'prof.lose' : 'prof.maintain');
+    renderCloudHelp();
     el('p-age').value = state.age;
     el('p-height').value = state.height;
     el('p-weight').value = state.weight;
@@ -1089,6 +1100,41 @@
   /* Set by wire(); the photo screen owns the button, but a language switch has
      to reach it from here. */
   var refreshCloudButton = function () {};
+
+  /* The endpoint is a free-text field, so the "where do I get a key" line
+     follows whatever provider is actually configured. */
+  var KEY_SOURCES = [
+    { host: 'deepseek', copy: 'cloud.getDeepseek', url: 'https://platform.deepseek.com/api_keys' },
+    { host: 'openai', copy: 'cloud.getOpenai', url: 'https://platform.openai.com/api-keys' },
+    { host: 'googleapis', copy: 'cloud.getGemini', url: 'https://aistudio.google.com/apikey' },
+    { host: 'google', copy: 'cloud.getGemini', url: 'https://aistudio.google.com/apikey' }
+  ];
+
+  function keySource(endpoint) {
+    /* Matched on the host alone: Gemini's compatibility endpoint carries
+       "openai" in its path, which would otherwise claim it for OpenAI. */
+    var host = String(endpoint || '').toLowerCase();
+    try { host = new URL(endpoint).host.toLowerCase(); } catch (err) { /* as typed */ }
+    for (var i = 0; i < KEY_SOURCES.length; i += 1) {
+      if (host.indexOf(KEY_SOURCES[i].host) !== -1) { return KEY_SOURCES[i]; }
+    }
+    return null;
+  }
+
+  function renderCloudHelp() {
+    var config = CloudRecognition.settings(state.cloud);
+    var source = keySource(config.endpoint);
+    var link = el('cloud-help-link');
+    el('cloud-help-steps').textContent = t(source ? source.copy : 'cloud.getGeneric');
+    if (source) {
+      link.href = source.url;
+      link.textContent = t('cloud.openPage');
+      link.removeAttribute('hidden');
+    } else {
+      link.removeAttribute('href');
+      link.textContent = '';
+    }
+  }
 
   function renderAll() {
     renderStaticCopy();
@@ -1402,6 +1448,7 @@
         state.cloud[key] = this.value.trim();
         save();
         renderCloudButton();
+        renderCloudHelp();
       });
     }
     refreshCloudButton = renderCloudButton;

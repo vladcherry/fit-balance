@@ -358,9 +358,18 @@
       <label class="tile__k" for="cloud-key" data-i18n="cloud.key">API-ключ</label>
       <input id="cloud-key" type="password" autocomplete="off" spellcheck="false" placeholder="sk-…">
     </div>
-    <div class="grid2">
-      <div class="tile"><label class="tile__k" for="cloud-model" data-i18n="cloud.model">Модель</label><input id="cloud-model" type="text" autocomplete="off" spellcheck="false"></div>
-      <div class="tile"><label class="tile__k" for="cloud-endpoint" data-i18n="cloud.endpoint">Эндпоинт</label><input id="cloud-endpoint" type="url" autocomplete="off" spellcheck="false"></div>
+    <div class="cloud-help" id="cloud-help">
+      <span id="cloud-help-steps"></span>
+      <a id="cloud-help-link" class="link" target="_blank" rel="noopener noreferrer"></a>
+    </div>
+    <div class="tile tile--wide">
+      <label class="tile__k" for="cloud-model" data-i18n="cloud.model">Модель</label>
+      <input id="cloud-model" type="text" autocomplete="off" spellcheck="false">
+    </div>
+    <!-- An endpoint URL is long; on a phone it needs the whole row to be readable. -->
+    <div class="tile tile--wide">
+      <label class="tile__k" for="cloud-endpoint" data-i18n="cloud.endpoint">Эндпоинт</label>
+      <input id="cloud-endpoint" type="url" autocomplete="off" spellcheck="false">
     </div>
     <div class="cloud-hint" style="margin:6px 22px 0" data-i18n="cloud.storage">Ключ хранится только в этом браузере и уходит только на указанный эндпоинт.</div>
 

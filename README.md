@@ -88,6 +88,8 @@ picture — downscaled to 768 px — to the configured model. The default is Dee
 
 The key is typed into the app and lives in that browser's localStorage. It is not in this
 repository, not in the deployed files, and it is sent to the configured endpoint and nowhere else.
+The profile explains where to obtain one and links to the provider's key page, following whatever
+endpoint is configured — DeepSeek, OpenAI or Google AI Studio.
 
 ## Privacy
 
