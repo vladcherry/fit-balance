@@ -1993,6 +1993,17 @@
 
   load();
 
+  /* A model the provider has since retired keeps failing with a 404 that says
+     what to use instead; move the saved setting there rather than leaving the
+     user to retype it. */
+  if (state.cloud && state.cloud.model) {
+    var replacement = CloudRecognition.replacementFor(state.cloud.model);
+    if (replacement) {
+      state.cloud.model = replacement;
+      save();
+    }
+  }
+
   /* A save from when there was one key field: move it under the host it was
      entered for, so switching provider cannot hand it to the wrong one. */
   if (state.cloud && state.cloud.key) {

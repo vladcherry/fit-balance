@@ -161,7 +161,9 @@ This is now implemented in `prototype/cloud.js`:
   the parser deliberately drops anything malformed, this is the only place that shows the
   difference between "the model said nothing useful" and "the model said something we rejected".
 - **Presets for DeepSeek and Gemini**, with keys stored per provider host so switching between
-  them does not overwrite one with the other.
+  them does not overwrite one with the other. Providers retire model names, and the 404 that
+  follows names the replacement, so a saved setting pointing at a retired name is moved to its
+  successor on load instead of failing on every press.
 
 Two caveats that belong to this shape and not to a bug:
 

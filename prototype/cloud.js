@@ -31,9 +31,14 @@ window.CloudRecognition = (function () {
       id: 'gemini',
       label: 'Gemini',
       endpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
-      model: 'gemini-2.5-flash'
+      model: 'gemini-3.6-flash'
     }
   ];
+
+  /* Model names a provider has retired. A saved setting pointing at one of
+     these is moved to its replacement, because the request would otherwise
+     fail with a 404 nobody could act on from inside the app. */
+  var RETIRED_MODELS = { 'gemini-2.5-flash': 'gemini-3.6-flash' };
 
   var DEFAULTS = { endpoint: PROVIDERS[0].endpoint, model: PROVIDERS[0].model };
 
@@ -242,6 +247,7 @@ window.CloudRecognition = (function () {
     analyse: analyse,
     settings: settings,
     providers: function () { return PROVIDERS.slice(); },
+    replacementFor: function (model) { return RETIRED_MODELS[model] || null; },
     providerOf: providerOf,
     hostOf: hostOf,
     defaults: function () { return { endpoint: DEFAULTS.endpoint, model: DEFAULTS.model }; }
