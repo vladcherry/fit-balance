@@ -1405,14 +1405,20 @@
     mode: '-', stop: '-', dx: 0, dy: 0, screen: '-', touchAction: '-'
   };
 
+  function frameWidth() {
+    var frame = document.querySelector('.app');
+    return frame ? frame.getBoundingClientRect().width : 0;
+  }
+
   function renderProbe() {
     var box = el('gesture-probe');
     if (!box) { return; }
     if (!state.devMode) { box.hidden = true; return; }
     box.hidden = false;
     box.textContent =
-      'touch=' + ('ontouchstart' in window) + ' standalone=' + isStandalone() +
-      ' w=' + Math.round(probe.width || 0) + '\n' +
+      'build=' + (loadedVersion || 'local') +
+      ' touch=' + ('ontouchstart' in window) + ' standalone=' + isStandalone() +
+      ' w=' + Math.round(probe.width || frameWidth()) + '\n' +
       'start=' + probe.starts + ' move=' + probe.moves +
       ' end=' + probe.ends + ' cancel=' + probe.cancels + '\n' +
       'screen=' + probe.screen + ' mode=' + probe.mode +
@@ -2007,6 +2013,23 @@
      the prototype is being served locally, which is worth showing plainly. */
 
   var loadedVersion = null;
+  var versionReloaded = false;
+
+  /* Asks the worker to forget the shell - the pages and scripts - while keeping
+     the model and the runtime, which are tens of megabytes and never change in
+     place. */
+  function clearShell() {
+    if (!('serviceWorker' in navigator) || !navigator.serviceWorker.controller) {
+      return Promise.resolve();
+    }
+    return new Promise(function (resolve) {
+      var channel = new MessageChannel();
+      var settled = false;
+      channel.port1.onmessage = function () { settled = true; resolve(); };
+      navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_SHELL' }, [channel.port2]);
+      setTimeout(function () { if (!settled) { resolve(); } }, 1500);
+    });
+  }
 
   function fetchVersion() {
     return fetch('./version.json?ts=' + Date.now(), { cache: 'no-store' })
@@ -2032,6 +2055,7 @@
     fetchVersion().then(function (info) {
       loadedVersion = info && info.version;
       showVersion(info);
+      renderProbe();
     });
 
     el('check-update').addEventListener('click', function () {
@@ -2056,7 +2080,14 @@
           return;
         }
         toast(t('prof.updating'));
-        setTimeout(function () { location.reload(); }, 900);
+        /* Reloading alone is not enough: the cached shell and the browser's own
+           HTTP cache can each hand back the build we are trying to leave. Drop
+           the shell, then return on a URL neither of them has seen. */
+        clearShell().then(function () {
+          setTimeout(function () {
+            location.replace(location.pathname + '?v=' + Date.now() + location.hash);
+          }, 600);
+        });
       });
     });
   }
@@ -2182,7 +2213,29 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
-      navigator.serviceWorker.register('./sw.js').catch(function () { /* offline support is optional */ });
+      navigator.serviceWorker.register('./sw.js').then(function (reg) {
+        if (!reg) { return; }
+        /* A worker sitting in `waiting` means a newer build is downloaded and
+           held back until every tab closes - which, for an installed app, may
+           be never. Let it take over now. */
+        if (reg.waiting) { reg.waiting.postMessage({ type: 'SKIP_WAITING' }); }
+        reg.addEventListener('updatefound', function () {
+          var incoming = reg.installing;
+          if (!incoming) { return; }
+          incoming.addEventListener('statechange', function () {
+            if (incoming.state === 'installed' && navigator.serviceWorker.controller) {
+              incoming.postMessage({ type: 'SKIP_WAITING' });
+            }
+          });
+        });
+      })['catch'](function () { /* offline support is optional */ });
+    });
+
+    // A new worker taking control means new files: come back on them once.
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (versionReloaded) { return; }
+      versionReloaded = true;
+      location.reload();
     });
   }
 }());

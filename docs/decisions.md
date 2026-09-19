@@ -291,3 +291,33 @@ small target at the top of a tall screen.
   gesture its drags belong to. The cost is that a tab screen no longer has an edge-drag back —
   swiping to the neighbouring tab replaced it, and on a tab screen that is the more predictable
   of the two.
+
+
+---
+
+## 12. The service worker must bypass the browser's own cache
+
+**Decision.** The network-first fetch in the service worker runs with
+`cache: 'no-store'`, a new worker takes control as soon as it is installed rather than waiting
+for every tab to close, and the update button in the profile clears the cached shell before
+returning on a fresh URL.
+
+**Context.** Three rounds of gesture fixes were tested against a phone that never received any of
+them. The developer read-out settled it: the device was reporting a guard that the deployed build
+no longer contained. GitHub Pages sends `max-age=600`, and a plain `fetch(request)` inside a
+service worker is answered from the browser's HTTP cache — so the worker went "to the network",
+got a ten-minute-old file, and cached it as current. An installed PWA compounds this: its tabs
+never close, so a downloaded worker can sit in `waiting` indefinitely.
+
+**Consequences.**
+
+- Every shell request costs a real round trip. That is the right trade for a prototype that
+  changes several times an hour; the model and the runtime stay cache-first and untouched, so the
+  15 MB download is never repeated.
+- `skipWaiting` plus a reload on `controllerchange` means a new build can replace the running one
+  mid-session. For an app holding only a local diary this is safe; an app with unsaved remote
+  state would need to ask first.
+- The developer read-out now carries the running build, so "which version is this" is answerable
+  from a screenshot rather than from trust.
+- A tester reporting that a fix did not work is now worth believing before the fix is doubted —
+  the first question is which build they are on, and the answer is on screen.

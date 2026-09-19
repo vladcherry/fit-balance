@@ -1,7 +1,7 @@
 /* Minimal offline shell for the prototype.
    Bump CACHE when the shell changes so old copies are dropped. */
 
-var CACHE = 'fitbalance-prototype-v5';
+var CACHE = 'fitbalance-prototype-v6';
 var SHELL = [
   './',
   './index.html',
@@ -67,8 +67,12 @@ self.addEventListener('fetch', function (event) {
     );
     return;
   }
+  /* `cache: 'no-store'` is the whole point: without it this fetch is answered
+     from the browser's own HTTP cache, and GitHub Pages sends a ten-minute
+     max-age. The service worker would then dutifully serve a stale build while
+     believing it had gone to the network. */
   event.respondWith(
-    fetch(request)
+    fetch(request, { cache: 'no-store' })
       .then(function (response) {
         if (response.ok) {
           var copy = response.clone();
@@ -81,5 +85,30 @@ self.addEventListener('fetch', function (event) {
           return hit || caches.match('./index.html');
         });
       })
+  );
+});
+
+/* The update button talks to the worker directly: drop the shell so the next
+   load is fetched fresh, but keep the model and the runtime, which are tens of
+   megabytes and never change in place. */
+self.addEventListener('message', function (event) {
+  var data = event.data || {};
+  if (data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+    return;
+  }
+  if (data.type !== 'CLEAR_SHELL') { return; }
+  event.waitUntil(
+    caches.open(CACHE).then(function (cache) {
+      return cache.keys().then(function (requests) {
+        return Promise.all(requests.map(function (request) {
+          return isImmutableAsset(new URL(request.url).pathname)
+            ? null
+            : cache.delete(request);
+        }));
+      });
+    }).then(function () {
+      if (event.ports && event.ports[0]) { event.ports[0].postMessage({ cleared: true }); }
+    })
   );
 });
