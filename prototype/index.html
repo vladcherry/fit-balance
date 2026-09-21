@@ -48,11 +48,15 @@
     </div>
 
     <div class="card-dark">
-      <div>
+      <div style="min-width:0">
         <div class="stack__k" data-i18n="home.deficitNow">Дефицит сейчас</div>
         <div style="display:flex;align-items:baseline;gap:8px;margin-top:3px">
           <div class="card-dark__big" id="deficit-kcal">300</div>
-          <div style="font-size:12px;font-weight:700" id="deficit-grams">ккал · ≈ 39 г</div>
+          <div style="font-size:12px;font-weight:700" data-i18n="unit.kcal">ккал</div>
+        </div>
+        <div class="fatline">
+          <span class="fatline__v" id="deficit-grams"></span>
+          <span class="fatline__k" id="deficit-fat-note"></span>
         </div>
       </div>
       <div class="stack">
@@ -232,10 +236,17 @@
         </button>
       </div>
       <h1 id="stats-title" style="font-family:var(--display);font-size:60px;line-height:0.98;letter-spacing:-0.02em;margin:10px 0 0;white-space:nowrap">≈ −2,4 <span data-i18n="unit.kg">кг</span></h1>
-      <div style="font-size:13px;font-weight:700;margin-top:4px" data-i18n="stats.accumulated">накопленный дефицит в жировом эквиваленте</div>
+      <div style="font-size:15px;font-weight:800;margin-top:2px" id="stats-total-kcal"></div>
+      <div style="font-size:13px;font-weight:700;margin-top:4px" id="stats-sub">накопленный дефицит в жировом эквиваленте</div>
     </div>
 
     <div class="seg" style="margin-top:18px" id="stats-period"></div>
+
+    <div class="period">
+      <button type="button" class="period__step" id="period-prev"></button>
+      <span class="period__now" id="period-label"></span>
+      <button type="button" class="period__step" id="period-next"></button>
+    </div>
 
     <div class="label" style="display:flex;justify-content:space-between;align-items:baseline">
       <span id="stats-period-label">Дефицит по дням</span>
@@ -352,7 +363,11 @@
     <div class="label" data-i18n="cloud.title">Облачное распознавание</div>
     <div class="notice notice--quiet">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c736d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8v.1"/></svg>
-      <span data-i18n="cloud.explain">Необязательно. Если вписать ключ, на экране фото появится кнопка «Уточнить в облаке» — она отправляет один снимок выбранной модели. Без неё всё остаётся на телефоне.</span>
+      <span data-i18n="cloud.explain">Зачем это нужно.</span>
+    </div>
+    <div class="notice notice--quiet">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c736d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+      <span data-i18n="cloud.explainCost">Цена — приватность.</span>
     </div>
     <div class="tile tile--wide">
       <span class="tile__k" data-i18n="cloud.provider">Провайдер</span>

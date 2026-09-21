@@ -18,6 +18,9 @@
       'home.leftToBurn': 'Осталось сжечь', 'home.targetMet': 'Цель дня выполнена',
       'home.eaten': 'Съедено', 'home.burned': 'Сожжено', 'home.maintenance': 'Норма',
       'home.deficitNow': 'Дефицит сейчас', 'home.surplusNow': 'Профицит сейчас',
+      'home.fatEquivalent': 'Жировой эквивалент ≈ {sign}{g} г',
+      'home.fatFromStores': 'использовано из запасов',
+      'home.fatToStores': 'отложено в запас',
       'home.days7': '7 дней', 'home.days30': '30 дней',
       'home.feed': 'ЛЕНТА ДНЯ', 'home.all': 'Всё', 'home.snapFood': 'Снять еду',
       'home.targetNote': 'чтобы выйти на дневной дефицит {target} ккал',
@@ -39,7 +42,8 @@
       'photo.privacy': 'Снимок разбирается на телефоне. Наружу он уходит, только если вы сами нажмёте «Уточнить в облаке».',
 
       'cloud.title': 'Облачное распознавание',
-      'cloud.explain': 'Необязательно. Если вписать ключ, на экране фото появится кнопка «Уточнить в облаке» — она отправляет один снимок выбранной модели. Без неё всё остаётся на телефоне.',
+      'cloud.explain': 'Зачем это нужно. Модель на телефоне знает около 40 категорий и домашнюю еду не распознаёт — борщ, плов или салат она назвать не может. Облачная модель узнаёт конкретные блюда, разбирает тарелку на составляющие и оценивает вес порций — качество распознавания несоизмеримо выше.',
+      'cloud.explainCost': 'Цена — приватность: с ключом на экране фото появляется кнопка «Уточнить в облаке», и она отправляет один снимок выбранной модели. Без ключа всё остаётся на телефоне, как и было.',
       'cloud.provider': 'Провайдер', 'cloud.custom': 'Свой',
       'cloud.key': 'API-ключ', 'cloud.model': 'Модель', 'cloud.endpoint': 'Эндпоинт',
       'cloud.storage': 'Ключ хранится только в этом браузере и уходит только на указанный эндпоинт.',
@@ -94,7 +98,7 @@
       'stats.remaining': 'ещё {kcal} ккал', 'stats.last30': 'Последние 30 дней',
       'stats.surplus': 'профицит', 'stats.deficit': 'дефицит',
       'stats.week': 'Неделя', 'stats.month': 'Месяц', 'stats.year': 'Год',
-      'stats.accumulatedSurplus': 'накопленный профицит в жировом эквиваленте',
+      'stats.accumulatedSurplus': 'профицит за период в жировом эквиваленте',
       'hist.eyebrow': 'FitBalance · дни', 'hist.title': 'ИСТОРИЯ',
       'hist.today': 'Сегодня', 'hist.empty': 'Пока ни одного записанного дня',
 
@@ -127,7 +131,9 @@
       'prof.updating': 'Есть новая версия — обновляю…', 'prof.dev': 'локальная сборка',
 
       'weekdays': ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'],
-      'months': ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
+      'months': ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'],
+      'monthsFull': ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+        'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
     },
     en: {
       'nav.today': 'Today', 'nav.history': 'History', 'nav.stats': 'Stats', 'nav.profile': 'Profile',
@@ -137,6 +143,9 @@
       'home.leftToBurn': 'Left to burn', 'home.targetMet': "Today's target is met",
       'home.eaten': 'Eaten', 'home.burned': 'Burned', 'home.maintenance': 'Maintenance',
       'home.deficitNow': 'Deficit now', 'home.surplusNow': 'Surplus now',
+      'home.fatEquivalent': 'Fat equivalent ≈ {sign}{g} g',
+      'home.fatFromStores': 'drawn from stores',
+      'home.fatToStores': 'put into stores',
       'home.days7': '7 days', 'home.days30': '30 days',
       'home.feed': 'TODAY’S FEED', 'home.all': 'All', 'home.snapFood': 'Snap a meal',
       'home.targetNote': 'to reach the {target} kcal daily deficit',
@@ -158,7 +167,8 @@
       'photo.privacy': 'The picture is analysed on the phone. It only leaves it if you press "Ask the cloud" yourself.',
 
       'cloud.title': 'Cloud recognition',
-      'cloud.explain': 'Optional. With a key set, the photo screen gets an "Ask the cloud" button that sends one picture to the model you choose. Without it, everything stays on the phone.',
+      'cloud.explain': 'What it buys you. The on-device model knows about forty categories and cannot name home cooking — a stew, a pilaf or a salad is beyond it. A cloud model names the actual dishes, breaks a plate into its parts and estimates the portions: incomparably better recognition.',
+      'cloud.explainCost': 'The price is privacy: with a key, the photo screen gets an "Ask the cloud" button that sends one picture to the model you choose. Without a key everything stays on the phone, as before.',
       'cloud.provider': 'Provider', 'cloud.custom': 'Custom',
       'cloud.key': 'API key', 'cloud.model': 'Model', 'cloud.endpoint': 'Endpoint',
       'cloud.storage': 'The key is kept in this browser only, and is sent to the configured endpoint and nowhere else.',
@@ -212,7 +222,7 @@
       'stats.remaining': '{kcal} kcal to go', 'stats.last30': 'Last 30 days',
       'stats.surplus': 'surplus', 'stats.deficit': 'deficit',
       'stats.week': 'Week', 'stats.month': 'Month', 'stats.year': 'Year',
-      'stats.accumulatedSurplus': 'accumulated surplus in fat equivalent',
+      'stats.accumulatedSurplus': 'surplus over the period in fat equivalent',
       'hist.eyebrow': 'FitBalance · days', 'hist.title': 'HISTORY',
       'hist.today': 'Today', 'hist.empty': 'No day recorded yet',
 
@@ -245,7 +255,9 @@
       'prof.updating': 'A new version is available — updating…', 'prof.dev': 'local build',
 
       'weekdays': ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      'months': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      'months': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      'monthsFull': ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December']
     }
   };
 
@@ -410,6 +422,7 @@
     maintenance: null,          // null = derived from the body data below
     target: 700,
     statsPeriod: 'week',
+    statsAnchor: null,
     today: null,                // the date `entries` belong to
     entries: seedEntries(),
     editingEntry: -1,
@@ -567,7 +580,15 @@
     document.querySelector('[data-i18n="home.deficitNow"]').textContent =
       s.deficit >= 0 ? t('home.deficitNow') : t('home.surplusNow');
     el('deficit-kcal').textContent = num(Math.abs(s.deficit));
-    el('deficit-grams').textContent = t('unit.kcal') + ' · ≈ ' + num(s.grams) + ' ' + t('unit.g');
+    /* The same balance in the unit people think in. A deficit is fat drawn on,
+       a surplus is fat put away - stated as such, with the sign that belongs to
+       the direction. */
+    el('deficit-grams').textContent = t('home.fatEquivalent', {
+      sign: s.deficit >= 0 ? '−' : '+',
+      g: num(s.grams)
+    });
+    el('deficit-fat-note').textContent =
+      t(s.deficit >= 0 ? 'home.fatFromStores' : 'home.fatToStores');
 
     /* The two roll-ups next to the deficit card: a week in grams, a month in
        kilograms, both of fat equivalent. */
@@ -927,44 +948,121 @@
     el('act-basis').textContent = t('act.basis', { weight: num(state.weight) });
   }
 
-  var STATS_PERIODS = { week: 7, month: 30, year: 365 };
+  /* ---------------- statistics periods ---------------- */
 
-  /* Year view is twelve monthly columns; the shorter views are one column per
-     day. Both come out as { value, label, isNow } so the chart draws either. */
-  function statsColumns(period) {
+  /* Periods are calendar periods, not the last N days: a week runs Monday to
+     Sunday, a month is the month, a year is January to December. `statsAnchor`
+     is any date inside the period on show, which is what the arrows move. */
+  function startOfWeek(date) {
+    var monday = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+    return monday;
+  }
+
+  function periodRange(period, anchor) {
+    if (period === 'week') {
+      var from = startOfWeek(anchor);
+      return { from: from, to: new Date(from.getFullYear(), from.getMonth(), from.getDate() + 6) };
+    }
+    if (period === 'month') {
+      return {
+        from: new Date(anchor.getFullYear(), anchor.getMonth(), 1),
+        to: new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0)
+      };
+    }
+    return {
+      from: new Date(anchor.getFullYear(), 0, 1),
+      to: new Date(anchor.getFullYear(), 11, 31)
+    };
+  }
+
+  function shiftAnchor(period, anchor, step) {
+    if (period === 'week') {
+      return new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate() + step * 7);
+    }
+    if (period === 'month') {
+      return new Date(anchor.getFullYear(), anchor.getMonth() + step, 1);
+    }
+    return new Date(anchor.getFullYear() + step, 0, 1);
+  }
+
+  function statsAnchorDate() {
+    return state.statsAnchor ? parseKey(state.statsAnchor) : new Date();
+  }
+
+  function periodLabel(period, anchor) {
+    var months = COPY[state.lang].months;
+    if (period === 'year') { return String(anchor.getFullYear()); }
+    if (period === 'month') {
+      // Spelled out here, abbreviated on the arrows and the chart.
+      return COPY[state.lang].monthsFull[anchor.getMonth()] + ' ' + anchor.getFullYear();
+    }
+    var range = periodRange('week', anchor);
+    var sameMonth = range.from.getMonth() === range.to.getMonth();
+    return range.from.getDate() + (sameMonth ? '' : ' ' + months[range.from.getMonth()]) +
+      '–' + range.to.getDate() + ' ' + months[range.to.getMonth()] + ' ' + range.to.getFullYear();
+  }
+
+  /* The label on the arrow: the period it would move to. */
+  function neighbourLabel(period, anchor, step) {
+    var moved = shiftAnchor(period, anchor, step);
+    if (period === 'year') { return String(moved.getFullYear()); }
+    if (period === 'month') { return COPY[state.lang].months[moved.getMonth()]; }
+    var range = periodRange('week', moved);
+    return range.from.getDate() + '–' + range.to.getDate();
+  }
+
+  function daysBetween(from, to) {
+    var out = [];
+    var cursor = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+    while (cursor <= to) {
+      var key = dateKey(cursor);
+      out.push(dayStats(key) || {
+        key: key, eaten: 0, burned: 0, maintenance: maintenance(), empty: true
+      });
+      cursor = new Date(cursor.getFullYear(), cursor.getMonth(), cursor.getDate() + 1);
+    }
+    return out;
+  }
+
+  /* Every column of the chart, plus the total behind it. Week and month are one
+     column per day; a year is twelve months, January first. */
+  function statsColumns(period, anchor) {
+    var range = periodRange(period, anchor);
+    var today = dateKey(new Date());
+
     if (period !== 'year') {
-      return lastDays(STATS_PERIODS[period]).map(function (day) {
+      var days = daysBetween(range.from, range.to);
+      return days.map(function (day, i) {
         var date = parseKey(day.key);
+        var dense = days.length > 14;
         return {
           value: day.empty ? 0 : dayDeficit(day),
+          // A month has too many columns to label every one of them.
           label: period === 'week'
             ? COPY[state.lang].weekdays[(date.getDay() + 6) % 7]
-            : String(date.getDate()),
-          isNow: day.isToday
+            : (i === 0 || (date.getDate() % 5 === 0) ? String(date.getDate()) : ''),
+          isNow: day.key === today,
+          dense: dense
         };
       });
     }
 
-    var now = new Date();
     var buckets = [];
-    for (var back = 11; back >= 0; back -= 1) {
-      var month = new Date(now.getFullYear(), now.getMonth() - back, 1);
-      buckets.push({ year: month.getFullYear(), month: month.getMonth(), total: 0 });
+    for (var month = 0; month < 12; month += 1) {
+      buckets.push({ month: month, total: 0 });
     }
-    recordedDays().forEach(function (day) {
-      var date = parseKey(day.key);
-      for (var i = 0; i < buckets.length; i += 1) {
-        if (buckets[i].year === date.getFullYear() && buckets[i].month === date.getMonth()) {
-          buckets[i].total += dayDeficit(day);
-          return;
-        }
-      }
+    daysBetween(range.from, range.to).forEach(function (day) {
+      if (day.empty) { return; }
+      buckets[parseKey(day.key).getMonth()].total += dayDeficit(day);
     });
-    return buckets.map(function (bucket, i) {
+    var now = new Date();
+    return buckets.map(function (bucket) {
       return {
         value: bucket.total,
         label: COPY[state.lang].months[bucket.month],
-        isNow: i === buckets.length - 1
+        isNow: anchor.getFullYear() === now.getFullYear() && bucket.month === now.getMonth(),
+        dense: false
       };
     });
   }
@@ -976,6 +1074,7 @@
       periods.forEach(function (key, i) {
         seg.appendChild(button(t('stats.' + key), i === 0, function () {
           state.statsPeriod = key;
+          state.statsAnchor = dateKey(new Date());   // a new period starts at today
           save();
           renderStats();
         }));
@@ -986,22 +1085,35 @@
       seg.children[i].setAttribute('aria-pressed', state.statsPeriod === key ? 'true' : 'false');
     });
 
-    var columns = statsColumns(state.statsPeriod);
-    var periodTotal = columns.reduce(function (sum, c) { return sum + c.value; }, 0);
-    var accumulated = accumulatedDeficit();
+    var anchor = statsAnchorDate();
+    var period = state.statsPeriod;
+    var range = periodRange(period, anchor);
+    var columns = statsColumns(period, anchor);
+    var total = daysBetween(range.from, range.to).reduce(function (sum, day) {
+      return sum + (day.empty ? 0 : dayDeficit(day));
+    }, 0);
 
-    el('stats-title').innerHTML = '≈ ' + (accumulated >= 0 ? '−' : '+') +
-      num(Math.round(Math.abs(accumulated) / KCAL_PER_KG * 10) / 10) +
-      ' <span data-i18n="unit.kg">' + t('unit.kg') + '</span>';
-    document.querySelector('[data-i18n="stats.accumulated"]').textContent =
-      t(accumulated >= 0 ? 'stats.accumulated' : 'stats.accumulatedSurplus');
+    /* Stepping forward past the current period would show an empty future. */
+    var ahead = periodRange(period, shiftAnchor(period, anchor, 1)).from > new Date();
+    el('period-label').textContent = periodLabel(period, anchor);
+    el('period-prev').textContent = '‹ ' + neighbourLabel(period, anchor, -1);
+    el('period-next').textContent = neighbourLabel(period, anchor, 1) + ' ›';
+    el('period-next').disabled = ahead;
+    el('period-next').style.opacity = ahead ? '0.35' : '1';
+
+    /* The headline is the period on show, not all of recorded time, and it
+       carries both units: the calories and what they are worth in fat. */
+    var sign = total === 0 ? '' : (total > 0 ? '−' : '+');
+    el('stats-title').innerHTML = '≈ ' + sign +
+      num(Math.round(Math.abs(total) / KCAL_PER_KG * 100) / 100) +
+      ' <span>' + t('unit.kg') + '</span>';
+    el('stats-sub').textContent = t(total >= 0 ? 'stats.accumulated' : 'stats.accumulatedSurplus');
+    el('stats-total-kcal').textContent = sign + num(Math.abs(total)) + ' ' + t('unit.kcal');
 
     el('stats-period-label').textContent = t('stats.perDay', { target: num(state.target) });
-    el('stats-period-total').innerHTML = (periodTotal >= 0 ? '−' : '+') +
-      num(gramsOf(periodTotal)) + ' <span>' + t('unit.g') + '</span>';
+    el('stats-period-total').innerHTML = sign +
+      num(gramsOf(total)) + ' <span>' + t('unit.g') + '</span>';
 
-    /* One scale for both halves of the chart, taken from the tallest column, so
-       a surplus bar and a deficit bar of the same size look the same. */
     var peak = columns.reduce(function (max, c) { return Math.max(max, Math.abs(c.value)); }, 1);
     var pos = el('chart-pos'), neg = el('chart-neg'), days = el('chart-days');
     pos.innerHTML = ''; neg.innerHTML = ''; days.innerHTML = '';
@@ -1014,7 +1126,7 @@
       bar.className = 'chart__bar';
       var height = Math.round(Math.abs(column.value) / peak * 86);
 
-      if (column.value < 0) {                 // a surplus day sits above the axis
+      if (column.value < 0) {                 // a surplus sits above the axis
         bar.classList.add('is-surplus');
         bar.style.height = Math.min(26, height) + 'px';
         bar.style.borderRadius = '4px 4px 0 0';
@@ -1035,10 +1147,9 @@
     });
     days.classList.toggle('is-dense', columns.length > 14);
 
-    /* The next half-kilo of fat equivalent, and what is left to reach it. */
-    var kg = accumulated / KCAL_PER_KG;
+    var kg = total / KCAL_PER_KG;
     var milestone = (Math.floor(Math.abs(kg) / 0.5) + 1) * 0.5;
-    var remaining = Math.round(milestone * KCAL_PER_KG - Math.abs(accumulated));
+    var remaining = Math.round(milestone * KCAL_PER_KG - Math.abs(total));
     el('stats-milestone').textContent = t('stats.toNextKg', {
       kg: num(kg >= 0 ? milestone : -milestone)
     });
@@ -1046,8 +1157,6 @@
     el('goal-fill').style.width =
       Math.max(2, Math.min(100, Math.round((1 - remaining / (0.5 * KCAL_PER_KG)) * 100))) + '%';
 
-    /* Thirty days at a glance: one cell per day, shaded by how close that day
-       came to the deficit target. */
     var strip = el('strip');
     strip.innerHTML = '';
     var fills = ['#17120f', '#f6d9d8', '#e8807f', '#d8161d'];
@@ -1895,6 +2004,19 @@
         renderCloudButton();
         renderCloudHelp();
       });
+    });
+
+    el('period-prev').addEventListener('click', function () {
+      state.statsAnchor = dateKey(shiftAnchor(state.statsPeriod, statsAnchorDate(), -1));
+      save();
+      renderStats();
+    });
+
+    el('period-next').addEventListener('click', function () {
+      if (this.disabled) { return; }
+      state.statsAnchor = dateKey(shiftAnchor(state.statsPeriod, statsAnchorDate(), 1));
+      save();
+      renderStats();
     });
 
     el('dev-switch').addEventListener('click', function (e) {
