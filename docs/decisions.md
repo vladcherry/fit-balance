@@ -350,3 +350,45 @@ token completion budget inside `reasoning_content` and returned an empty `conten
   went.
 - The failure was invisible for as long as the app only reported its own conclusions. It took
   one screenshot of the log to diagnose — which is the argument for the log.
+
+---
+
+## 14. Dragging a diary entry sets its time
+
+**Decision.** The diary is ordered by the clock, earliest first, and a long press on an entry
+lets it be dragged. Dropping it between two others gives it a time between theirs; at either end
+it steps half an hour past its new neighbour.
+
+**Context.** Two requests arrived together: let the order be rearranged by hand, and keep entries
+in chronological order when they have times. Taken literally those are two orders competing for
+one list — a manual order that a later edit to a time would silently undo.
+
+**Consequences.**
+
+- There is only one order, and the drag edits the data behind it rather than an ordering stored
+  beside it. An entry moved between 13:10 and 16:20 becomes 14:45, which is both where the user
+  put it and true.
+- The gesture is a long press, not an immediate drag: the same finger scrolls the screen and
+  swipes between tabs, and 350 ms separates them without feeling stuck.
+- A dropped entry's time is a guess at what the user meant. It is visible immediately in the row
+  and editable in one tap, which is the same contract as every other estimate in this app.
+- The feed now reads earliest-first, the order the day happened in and the order the drag works
+  in. Newest-first would have made dragging read backwards.
+
+---
+
+## 15. The activity catalogue is a picked subset, not a fixed list
+
+**Decision.** The app ships about fifty activities with MET values, grouped by kind. The activity
+screen offers only the ones ticked in the profile; the default six are what it offered before.
+
+**Context.** Six activities cannot describe what people actually do, and fifty chips on the entry
+screen would make the common case slower for everyone.
+
+**Consequences.**
+
+- Adding an activity is a profile decision made once, not a search performed at every entry.
+- The last chosen activity cannot be removed: the entry screen needs something to offer.
+- MET values come from the Compendium of Physical Activities, rounded to a precision this app can
+  honestly claim — the estimate's error is dominated by intensity and body composition, not by
+  the second decimal of a MET.

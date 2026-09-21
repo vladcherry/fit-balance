@@ -76,6 +76,10 @@ body {
   touch-action: pan-y;
   touch-action: pan-y pinch-zoom;
   overscroll-behavior-x: none;
+  /* A screen never scrolls sideways. Without this, one element overflowing by a
+     few pixels turns the screen into a horizontal scroller, and the tab gesture
+     politely stands aside for it. */
+  overflow-x: hidden;
 }
 .screen.is-active { display: flex; }
 .screen.is-modal { padding-bottom: env(safe-area-inset-bottom, 0px); }
@@ -822,3 +826,93 @@ button, .btn { font: inherit; border: 0; background: none; color: inherit; curso
   font-weight: 800;
   text-transform: capitalize;
 }
+
+/* The activity catalogue: grouped checkboxes, because a flat list of fifty is
+   unreadable on a phone. */
+.act-picker { margin: 8px 22px 0; }
+.act-group { margin-top: 12px; }
+.act-group:first-child { margin-top: 4px; }
+.act-group__k {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.act-group__items { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.act-pill {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 600;
+}
+.act-pill[aria-pressed="true"] { background: var(--ink); color: var(--white); font-weight: 700; }
+
+/* Reordering the diary: the row being moved rides above the rest, and the rows
+   it passes step aside. */
+.feed.is-sorting .feed__wrap { transition: transform 0.16s ease; }
+.feed__wrap.is-moving {
+  position: relative;
+  z-index: 3;
+  transition: none;
+}
+.feed__wrap.is-moving .feed__row {
+  background: var(--white);
+  box-shadow: 0 8px 20px rgba(23, 18, 15, 0.22);
+  border-radius: 12px;
+  border-bottom-color: transparent;
+}
+
+/* ---------- who this is ---------- */
+
+.person { display: flex; align-items: center; gap: 12px; margin: 14px 22px 0; }
+.person__avatar {
+  flex-shrink: 0;
+  width: 66px;
+  height: 66px;
+  border-radius: 33px;
+  background: var(--surface) center / cover no-repeat;
+  font-family: var(--display);
+  font-size: 24px;
+  color: var(--ink-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.person__avatar.has-photo { color: transparent; }
+.person__fields { flex-grow: 1; min-width: 0; display: grid; gap: 6px; }
+.person__fields .tile { display: block; }
+.person__fields input {
+  width: 100%;
+  margin-top: 2px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.avatar-pick { margin: 10px 22px 0; }
+.avatar-pick[hidden] { display: none; }
+.avatar-pick__row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.avatar-pick__row .btn { flex-grow: 1; }
+.avatar-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background: var(--surface);
+  font-size: 22px;
+  line-height: 1;
+}
+.avatar-icon[aria-pressed="true"] { background: var(--ink); }
+.avatar-pick__file { display: flex; cursor: pointer; }
+
+/* The home screen shows the same face in its corner. */
+#home-avatar.has-avatar { background: center / cover no-repeat; border: 2px solid rgba(255,255,255,0.7); }
+#home-avatar.has-avatar svg { display: none; }
+#home-avatar .avatar-emoji { font-size: 20px; }

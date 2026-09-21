@@ -87,8 +87,33 @@
       'act.willCount': 'Будет засчитано', 'act.knowBetter': 'Знаете точнее — впишите сами',
       'act.add': 'Добавить в день', 'act.metNote': 'Оценка по MET — это ориентир, а не измерение',
       'act.basis': 'расчёт по весу {weight} кг', 'act.saved': 'Активность записана: −{kcal} ккал',
-      'act.walking': 'Ходьба', 'act.running': 'Бег', 'act.gym': 'Зал',
-      'act.cycling': 'Велосипед', 'act.swimming': 'Плавание', 'act.chores': 'Дом. дела',
+      'act.walking': 'Ходьба', 'act.walkingBrisk': 'Быстрая ходьба', 'act.nordic': 'Скандинавская ходьба',
+      'act.hiking': 'Поход', 'act.stairs': 'Лестница', 'act.dogWalking': 'Выгул собаки',
+      'act.running': 'Бег', 'act.runningSlow': 'Лёгкий бег', 'act.runningFast': 'Быстрый бег',
+      'act.treadmill': 'Беговая дорожка',
+      'act.cycling': 'Велосипед', 'act.cyclingSlow': 'Велосипед спокойно',
+      'act.cyclingFast': 'Велосипед быстро', 'act.spinning': 'Сайкл',
+      'act.gym': 'Зал', 'act.strength': 'Силовая', 'act.crossfit': 'Кроссфит',
+      'act.calisthenics': 'Турник и брусья',
+      'act.swimming': 'Плавание', 'act.swimmingSlow': 'Плавание спокойно',
+      'act.waterAerobics': 'Аквааэробика', 'act.rowing': 'Гребля',
+      'act.yoga': 'Йога', 'act.pilates': 'Пилатес', 'act.stretching': 'Растяжка',
+      'act.dancing': 'Танцы', 'act.aerobics': 'Аэробика',
+      'act.football': 'Футбол', 'act.basketball': 'Баскетбол', 'act.volleyball': 'Волейбол',
+      'act.tennis': 'Теннис', 'act.tableTennis': 'Настольный теннис', 'act.badminton': 'Бадминтон',
+      'act.boxing': 'Бокс', 'act.martialArts': 'Единоборства', 'act.climbing': 'Скалолазание',
+      'act.skating': 'Коньки', 'act.skiing': 'Лыжи', 'act.snowboard': 'Сноуборд',
+      'act.sledding': 'Санки', 'act.horseRiding': 'Верховая езда', 'act.golf': 'Гольф',
+      'act.chores': 'Дом. дела', 'act.cleaning': 'Уборка', 'act.cooking': 'Готовка',
+      'act.shopping': 'Покупки', 'act.gardening': 'Сад и огород', 'act.childcare': 'С детьми',
+      'act.repairs': 'Ремонт', 'act.snowShovelling': 'Уборка снега', 'act.moving': 'Переноска вещей',
+      'actGroup.walk': 'Ходьба и прогулки', 'actGroup.run': 'Бег',
+      'actGroup.wheels': 'Велосипед', 'actGroup.strength': 'Силовые',
+      'actGroup.water': 'Вода', 'actGroup.studio': 'Студия и растяжка',
+      'actGroup.sport': 'Игры и единоборства', 'actGroup.outdoor': 'На улице',
+      'actGroup.home': 'Дом и быт',
+      'act.pick': 'Виды активности', 'act.pickHint': 'Отмеченные появляются на экране активности. Сейчас выбрано: {count}.',
+      'act.pickOpen': 'Выбрать виды активности', 'act.pickDone': 'Готово',
       'act.light': 'Лёгкая', 'act.moderate': 'Средняя', 'act.high': 'Высокая',
 
       'meal.breakfast': 'Завтрак', 'meal.lunch': 'Обед', 'meal.dinner': 'Ужин', 'meal.snack': 'Перекус',
@@ -102,6 +127,9 @@
       'hist.eyebrow': 'FitBalance · дни', 'hist.title': 'ИСТОРИЯ',
       'hist.today': 'Сегодня', 'hist.empty': 'Пока ни одного записанного дня',
 
+      'prof.firstName': 'Имя', 'prof.lastName': 'Фамилия',
+      'prof.avatar': 'Фото или иконка', 'prof.avatarPhoto': 'Загрузить фото',
+      'prof.avatarClear': 'Убрать',
       'prof.title': 'ВАШИ НАСТРОЙКИ', 'prof.body': 'Данные тела', 'prof.sex': 'Пол', 'prof.male': 'Мужской',
       'prof.female': 'Женский',
       'prof.age': 'Возраст', 'prof.height': 'Рост, см', 'prof.weight': 'Вес, кг',
@@ -211,8 +239,33 @@
       'act.willCount': 'Will be counted', 'act.knowBetter': 'Know it better — type it in',
       'act.add': 'Add to the day', 'act.metNote': 'A MET estimate is a guide, not a measurement',
       'act.basis': 'based on {weight} kg body weight', 'act.saved': 'Activity saved: −{kcal} kcal',
-      'act.walking': 'Walking', 'act.running': 'Running', 'act.gym': 'Gym',
-      'act.cycling': 'Cycling', 'act.swimming': 'Swimming', 'act.chores': 'Housework',
+      'act.walking': 'Walking', 'act.walkingBrisk': 'Brisk walking', 'act.nordic': 'Nordic walking',
+      'act.hiking': 'Hiking', 'act.stairs': 'Stairs', 'act.dogWalking': 'Walking the dog',
+      'act.running': 'Running', 'act.runningSlow': 'Easy run', 'act.runningFast': 'Fast run',
+      'act.treadmill': 'Treadmill',
+      'act.cycling': 'Cycling', 'act.cyclingSlow': 'Easy cycling',
+      'act.cyclingFast': 'Fast cycling', 'act.spinning': 'Spinning',
+      'act.gym': 'Gym', 'act.strength': 'Strength', 'act.crossfit': 'CrossFit',
+      'act.calisthenics': 'Calisthenics',
+      'act.swimming': 'Swimming', 'act.swimmingSlow': 'Easy swimming',
+      'act.waterAerobics': 'Water aerobics', 'act.rowing': 'Rowing',
+      'act.yoga': 'Yoga', 'act.pilates': 'Pilates', 'act.stretching': 'Stretching',
+      'act.dancing': 'Dancing', 'act.aerobics': 'Aerobics',
+      'act.football': 'Football', 'act.basketball': 'Basketball', 'act.volleyball': 'Volleyball',
+      'act.tennis': 'Tennis', 'act.tableTennis': 'Table tennis', 'act.badminton': 'Badminton',
+      'act.boxing': 'Boxing', 'act.martialArts': 'Martial arts', 'act.climbing': 'Climbing',
+      'act.skating': 'Skating', 'act.skiing': 'Skiing', 'act.snowboard': 'Snowboarding',
+      'act.sledding': 'Sledding', 'act.horseRiding': 'Horse riding', 'act.golf': 'Golf',
+      'act.chores': 'Housework', 'act.cleaning': 'Cleaning', 'act.cooking': 'Cooking',
+      'act.shopping': 'Shopping', 'act.gardening': 'Gardening', 'act.childcare': 'With the kids',
+      'act.repairs': 'Repairs', 'act.snowShovelling': 'Shovelling snow', 'act.moving': 'Carrying things',
+      'actGroup.walk': 'Walking', 'actGroup.run': 'Running',
+      'actGroup.wheels': 'Cycling', 'actGroup.strength': 'Strength',
+      'actGroup.water': 'Water', 'actGroup.studio': 'Studio and stretching',
+      'actGroup.sport': 'Games and combat', 'actGroup.outdoor': 'Outdoors',
+      'actGroup.home': 'Home and errands',
+      'act.pick': 'Activity types', 'act.pickHint': 'The ones you tick appear on the activity screen. Chosen: {count}.',
+      'act.pickOpen': 'Choose activity types', 'act.pickDone': 'Done',
       'act.light': 'Light', 'act.moderate': 'Moderate', 'act.high': 'High',
 
       'meal.breakfast': 'Breakfast', 'meal.lunch': 'Lunch', 'meal.dinner': 'Dinner', 'meal.snack': 'Snack',
@@ -226,6 +279,9 @@
       'hist.eyebrow': 'FitBalance · days', 'hist.title': 'HISTORY',
       'hist.today': 'Today', 'hist.empty': 'No day recorded yet',
 
+      'prof.firstName': 'First name', 'prof.lastName': 'Last name',
+      'prof.avatar': 'Photo or icon', 'prof.avatarPhoto': 'Upload a photo',
+      'prof.avatarClear': 'Remove',
       'prof.title': 'YOUR SETTINGS', 'prof.body': 'Body data', 'prof.sex': 'Sex', 'prof.male': 'Male',
       'prof.female': 'Female',
       'prof.age': 'Age', 'prof.height': 'Height, cm', 'prof.weight': 'Weight, kg',
@@ -263,9 +319,50 @@
 
   /* ---------------- domain ---------------- */
 
-  var MET = { walking: 3.8, running: 9.8, gym: 5.0, cycling: 7.5, swimming: 7.0, chores: 3.3 };
+  /* A catalogue rather than a handful: MET values from the Compendium of
+     Physical Activities, rounded to the precision this app can honestly claim.
+     The user picks which of these they actually do; the rest stay out of the
+     way in a "more" list. */
+  var MET = {
+    walking: 3.5, walkingBrisk: 4.3, hiking: 6.0, nordic: 4.8, stairs: 8.0,
+    running: 9.8, runningSlow: 7.0, runningFast: 11.5, treadmill: 8.5,
+    cycling: 7.5, cyclingSlow: 4.0, cyclingFast: 10.0, spinning: 8.5,
+    gym: 5.0, strength: 6.0, crossfit: 8.0, calisthenics: 5.5,
+    swimming: 7.0, swimmingSlow: 5.3, waterAerobics: 4.5, rowing: 7.0,
+    yoga: 3.0, pilates: 3.5, stretching: 2.3, dancing: 5.5, aerobics: 7.3,
+    football: 7.0, basketball: 6.5, volleyball: 4.0, tennis: 7.3, tableTennis: 4.0,
+    badminton: 5.5, boxing: 9.0, martialArts: 10.3, climbing: 8.0, skating: 7.0,
+    skiing: 7.0, snowboard: 5.3, sledding: 5.0, horseRiding: 5.5, golf: 4.8,
+    chores: 3.3, cleaning: 3.5, cooking: 2.5, shopping: 2.3, gardening: 4.0,
+    childcare: 3.0, dogWalking: 3.0, repairs: 4.5, snowShovelling: 6.0, moving: 5.8
+  };
   var INTENSITY = { light: 0.8, moderate: 1.0, high: 1.3 };
-  var ACTIVITY_TYPES = ['walking', 'running', 'gym', 'cycling', 'swimming', 'chores'];
+
+  /* What the activity screen offers by default. Everything else lives in the
+     catalogue and is added from the profile. */
+  var DEFAULT_ACTIVITIES = ['walking', 'running', 'gym', 'cycling', 'swimming', 'chores'];
+
+  /* Grouped for the picker, in the order they are offered. */
+  var ACTIVITY_GROUPS = [
+    { id: 'walk', items: ['walking', 'walkingBrisk', 'nordic', 'hiking', 'stairs', 'dogWalking'] },
+    { id: 'run', items: ['running', 'runningSlow', 'runningFast', 'treadmill'] },
+    { id: 'wheels', items: ['cycling', 'cyclingSlow', 'cyclingFast', 'spinning'] },
+    { id: 'strength', items: ['gym', 'strength', 'crossfit', 'calisthenics'] },
+    { id: 'water', items: ['swimming', 'swimmingSlow', 'waterAerobics', 'rowing'] },
+    { id: 'studio', items: ['yoga', 'pilates', 'stretching', 'dancing', 'aerobics'] },
+    { id: 'sport', items: ['football', 'basketball', 'volleyball', 'tennis', 'tableTennis',
+      'badminton', 'boxing', 'martialArts', 'climbing'] },
+    { id: 'outdoor', items: ['skating', 'skiing', 'snowboard', 'sledding', 'horseRiding', 'golf'] },
+    { id: 'home', items: ['chores', 'cleaning', 'cooking', 'shopping', 'gardening',
+      'childcare', 'repairs', 'snowShovelling', 'moving'] }
+  ];
+
+  function activityTypes() {
+    var chosen = state.activities && state.activities.length
+      ? state.activities
+      : DEFAULT_ACTIVITIES;
+    return chosen.filter(function (key) { return MET[key]; });
+  }
   var DURATION_PRESETS = [15, 30, 45, 60, 90];
 
   function seedEntries() {
@@ -415,6 +512,7 @@
 
   var state = {
     lang: 'ru',
+    person: { first: '', last: '', icon: '', photo: null },
     sex: 'male',
     age: 34,
     height: 182,
@@ -427,6 +525,7 @@
     entries: seedEntries(),
     editingEntry: -1,
     history: null,              // date -> closed day; filled with demo days on first run
+    activities: DEFAULT_ACTIVITIES.slice(),
     draft: { type: 'walking', minutes: 45, intensity: 'moderate', manual: '' },
     meal: { type: 'lunch', items: [], editing: -1 },
     // Optional second opinion. Keys never leave this browser, and are kept per
@@ -606,9 +705,9 @@
       feed.innerHTML = '<div class="feed__empty">' + t('home.empty') + '</div>';
       return;
     }
-    // Newest first, by the clock rather than by the order things were added -
-    // an entry whose time was edited has to move with it.
-    byTimeDescending(state.entries).forEach(function (e) {
+    /* In clock order, earliest first: the day as it happened, which is also the
+       order a drag rearranges. */
+    byTime(state.entries).forEach(function (e) {
       var index = state.entries.indexOf(e);
       var wrap = document.createElement('div');
       wrap.className = 'feed__wrap' + (state.editingEntry === index ? ' is-editing' : '');
@@ -625,9 +724,12 @@
       row.children[1].textContent = t(e.key);
       row.children[2].textContent = (burn ? '−' : '+') + num(e.kcal);
       row.addEventListener('click', function () {
+        if (dragMoved) { return; }            // the press that ended a drag is not a tap
         state.editingEntry = state.editingEntry === index ? -1 : index;
         renderHome();
       });
+      wrap.setAttribute('data-entry', index);
+      startDragWatch(wrap, row, index);
       wrap.appendChild(row);
 
       if (state.editingEntry === index) { wrap.appendChild(buildEntryEditor(e, index)); }
@@ -635,10 +737,161 @@
     });
   }
 
-  function byTimeDescending(entries) {
-    return entries.slice().sort(function (a, b) {
-      return a.time === b.time ? 0 : (a.time < b.time ? 1 : -1);
+  /* Press and hold a diary row to move it. A long press rather than an
+     immediate drag, because the same finger scrolls the screen and swipes
+     between tabs; 350 ms is long enough to tell them apart and short enough not
+     to feel stuck. */
+  var HOLD_MS = 350;
+  var dragMoved = false;
+
+  function startDragWatch(wrap, row, index) {
+    var holdTimer = null;
+    var startY = 0, startX = 0;
+    var dragging = false;
+    var rowHeight = 0;
+    var offset = 0;
+    var siblings = [];
+    var fromPosition = 0;
+
+    function positions() {
+      var list = [];
+      Array.prototype.forEach.call(el('feed').children, function (node) {
+        list.push(node);
+      });
+      return list;
+    }
+
+    function begin() {
+      dragging = true;
+      dragMoved = false;
+      siblings = positions();
+      fromPosition = siblings.indexOf(wrap);
+      rowHeight = wrap.getBoundingClientRect().height || 44;
+      wrap.classList.add('is-moving');
+      el('feed').classList.add('is-sorting');
+      if (navigator.vibrate) { navigator.vibrate(10); }
+    }
+
+    function targetPosition() {
+      var moved = Math.round(offset / rowHeight);
+      return Math.max(0, Math.min(siblings.length - 1, fromPosition + moved));
+    }
+
+    function paint() {
+      wrap.style.transform = 'translateY(' + offset + 'px)';
+      var target = targetPosition();
+      siblings.forEach(function (node, i) {
+        if (node === wrap) { return; }
+        var shift = 0;
+        if (fromPosition < target && i > fromPosition && i <= target) { shift = -rowHeight; }
+        if (fromPosition > target && i >= target && i < fromPosition) { shift = rowHeight; }
+        node.style.transform = shift ? 'translateY(' + shift + 'px)' : '';
+      });
+    }
+
+    function finish(apply) {
+      clearTimeout(holdTimer);
+      var target = targetPosition();
+      siblings.forEach(function (node) { node.style.transform = ''; });
+      wrap.classList.remove('is-moving');
+      el('feed').classList.remove('is-sorting');
+      if (apply && dragging && target !== fromPosition) {
+        var ordered = byTime(state.entries);
+        var entry = ordered[fromPosition];
+        entry.time = timeForPosition(ordered, fromPosition, target);
+        state.editingEntry = -1;
+        save();
+        renderHome();
+      }
+      dragging = false;
+      offset = 0;
+    }
+
+    row.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1) { return; }
+      startY = e.touches[0].clientY;
+      startX = e.touches[0].clientX;
+      dragMoved = false;
+      holdTimer = setTimeout(begin, HOLD_MS);
+    }, { passive: true });
+
+    row.addEventListener('touchmove', function (e) {
+      var touch = e.touches[0];
+      if (!dragging) {
+        // Moving before the hold completes means a scroll or a tab swipe.
+        if (Math.abs(touch.clientY - startY) > 8 || Math.abs(touch.clientX - startX) > 8) {
+          clearTimeout(holdTimer);
+        }
+        return;
+      }
+      e.preventDefault();                      // the row moves, the screen does not
+      e.stopPropagation();
+      dragMoved = true;
+      offset = touch.clientY - startY;
+      paint();
+    }, { passive: false });
+
+    row.addEventListener('touchend', function () { finish(true); });
+    row.addEventListener('touchcancel', function () { finish(false); });
+
+    /* The same thing with a mouse, so the prototype can be rearranged on a
+       desktop as well. */
+    row.addEventListener('mousedown', function (e) {
+      startY = e.clientY;
+      startX = e.clientX;
+      dragMoved = false;
+      holdTimer = setTimeout(begin, HOLD_MS);
+
+      function onMove(move) {
+        if (!dragging) {
+          if (Math.abs(move.clientY - startY) > 8) { clearTimeout(holdTimer); }
+          return;
+        }
+        dragMoved = true;
+        offset = move.clientY - startY;
+        paint();
+      }
+      function onUp() {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        finish(true);
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
     });
+  }
+
+  function byTime(entries) {
+    return entries.slice().sort(function (a, b) {
+      return a.time === b.time ? 0 : (a.time < b.time ? -1 : 1);
+    });
+  }
+
+  function minutesOf(time) {
+    var parts = String(time || '00:00').split(':');
+    return (parseInt(parts[0], 10) || 0) * 60 + (parseInt(parts[1], 10) || 0);
+  }
+
+  function timeOf(minutes) {
+    var clamped = Math.max(0, Math.min(24 * 60 - 1, Math.round(minutes)));
+    return String(Math.floor(clamped / 60)).padStart(2, '0') + ':' +
+      String(clamped % 60).padStart(2, '0');
+  }
+
+  /* Dropping an entry between two others gives it a time between theirs, which
+     is what keeps "drag to reorder" and "sorted by the clock" from being two
+     different orders. At the ends there is nothing to split, so it steps half
+     an hour past the neighbour it landed beside. */
+  function timeForPosition(ordered, movedIndex, targetIndex) {
+    var without = ordered.slice();
+    without.splice(movedIndex, 1);
+    var before = without[targetIndex - 1];
+    var after = without[targetIndex];
+    if (!before && !after) { return ordered[movedIndex].time; }
+    if (!before) { return timeOf(minutesOf(after.time) - 30); }
+    if (!after) { return timeOf(minutesOf(before.time) + 30); }
+    var gap = minutesOf(after.time) - minutesOf(before.time);
+    return timeOf(minutesOf(before.time) + (gap > 1 ? Math.round(gap / 2) : 1));
   }
 
   /* Tapping a diary entry opens it: the time, the calories and what it was are
@@ -676,7 +929,7 @@
     chips.style.marginTop = '6px';
     var keys = entry.kind === 'food'
       ? MEAL_TYPES.map(function (k) { return 'meal.' + k; })
-      : ACTIVITY_TYPES.map(function (k) { return 'act.' + k; });
+      : activityTypes().map(function (k) { return 'act.' + k; });
     keys.forEach(function (key) {
       chips.appendChild(button(t(key), entry.key === key, function () {
         entry.key = key;
@@ -913,7 +1166,7 @@
   function renderActivity() {
     var types = el('act-types');
     types.innerHTML = '';
-    ACTIVITY_TYPES.forEach(function (key) {
+    activityTypes().forEach(function (key) {
       types.appendChild(button(t('act.' + key), state.draft.type === key, function () {
         state.draft.type = key;
         state.draft.manual = '';
@@ -1204,6 +1457,142 @@
     });
   }
 
+  /* The catalogue, grouped. Ticking a type adds it to the activity screen;
+     the last one cannot be removed, since the screen needs something to offer. */
+  function renderActivityPicker() {
+    var box = el('act-picker');
+    var chosen = activityTypes();
+    el('act-pick-hint').textContent = t('act.pickHint', { count: chosen.length });
+
+    if (box.children.length) {
+      Array.prototype.forEach.call(box.querySelectorAll('.act-pill'), function (pill) {
+        var on = chosen.indexOf(pill.getAttribute('data-act')) !== -1;
+        pill.textContent = t('act.' + pill.getAttribute('data-act'));
+        pill.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      Array.prototype.forEach.call(box.querySelectorAll('.act-group__k'), function (head) {
+        head.textContent = t('actGroup.' + head.getAttribute('data-group'));
+      });
+      return;
+    }
+
+    ACTIVITY_GROUPS.forEach(function (group) {
+      var section = document.createElement('div');
+      section.className = 'act-group';
+      var head = document.createElement('div');
+      head.className = 'act-group__k';
+      head.setAttribute('data-group', group.id);
+      head.textContent = t('actGroup.' + group.id);
+      section.appendChild(head);
+
+      var items = document.createElement('div');
+      items.className = 'act-group__items';
+      group.items.forEach(function (key) {
+        var pill = button(t('act.' + key), chosen.indexOf(key) !== -1, function () {
+          toggleActivity(key);
+        }, 'act-pill');
+        pill.setAttribute('data-act', key);
+        items.appendChild(pill);
+      });
+      section.appendChild(items);
+      box.appendChild(section);
+    });
+  }
+
+  function toggleActivity(key) {
+    var chosen = activityTypes().slice();
+    var at = chosen.indexOf(key);
+    if (at === -1) {
+      chosen.push(key);
+    } else {
+      if (chosen.length === 1) { return; }        // the screen needs one to offer
+      chosen.splice(at, 1);
+    }
+    state.activities = chosen;
+    // A draft pointing at a type that is gone would render nothing.
+    if (chosen.indexOf(state.draft.type) === -1) { state.draft.type = chosen[0]; }
+    save();
+    renderActivityPicker();
+    renderActivity();
+  }
+
+  var AVATAR_ICONS = ['🏃', '🚴', '🏋️', '🧘', '⚽', '🥗', '🍎', '🐱'];
+  var AVATAR_SIZE = 160;        // px, square: enough for a 66px circle on any screen
+
+  function initials(person) {
+    var letters = (person.first || '').trim().charAt(0) + (person.last || '').trim().charAt(0);
+    return letters.toUpperCase();
+  }
+
+  /* The face in two places: the profile and the home screen corner. A photo
+     wins over an icon, an icon over initials, initials over the default mark. */
+  function renderPerson() {
+    var person = state.person || {};
+    var avatar = el('person-avatar');
+    var corner = el('home-avatar');
+
+    el('p-first').value = person.first || '';
+    el('p-last').value = person.last || '';
+
+    avatar.classList.toggle('has-photo', !!person.photo);
+    avatar.style.backgroundImage = person.photo ? 'url(' + person.photo + ')' : '';
+    avatar.textContent = person.photo ? '' : (person.icon || initials(person) || '—');
+
+    corner.classList.toggle('has-avatar', !!(person.photo || person.icon));
+    corner.style.backgroundImage = person.photo ? 'url(' + person.photo + ')' : '';
+    var emoji = corner.querySelector('.avatar-emoji');
+    if (!person.photo && person.icon) {
+      if (!emoji) {
+        emoji = document.createElement('span');
+        emoji.className = 'avatar-emoji';
+        corner.appendChild(emoji);
+      }
+      emoji.textContent = person.icon;
+    } else if (emoji) {
+      emoji.remove();
+    }
+
+    var icons = el('avatar-icons');
+    if (!icons.children.length) {
+      AVATAR_ICONS.forEach(function (glyph) {
+        icons.appendChild(button(glyph, false, function () {
+          state.person.icon = state.person.icon === glyph ? '' : glyph;
+          state.person.photo = null;          // an icon replaces a photo
+          save();
+          renderPerson();
+        }, 'avatar-icon'));
+      });
+    }
+    Array.prototype.forEach.call(icons.children, function (node) {
+      node.setAttribute('aria-pressed', node.textContent === person.icon ? 'true' : 'false');
+    });
+  }
+
+  /* A phone photo is megabytes; a 160px square is a few kilobytes, which is what
+     belongs in localStorage next to the diary. */
+  function storeAvatarPhoto(file) {
+    var url = URL.createObjectURL(file);
+    var image = new Image();
+    image.onload = function () {
+      var side = Math.min(image.naturalWidth, image.naturalHeight);
+      var canvas = document.createElement('canvas');
+      canvas.width = AVATAR_SIZE;
+      canvas.height = AVATAR_SIZE;
+      canvas.getContext('2d').drawImage(
+        image,
+        (image.naturalWidth - side) / 2, (image.naturalHeight - side) / 2, side, side,
+        0, 0, AVATAR_SIZE, AVATAR_SIZE
+      );
+      state.person.photo = canvas.toDataURL('image/jpeg', 0.8);
+      state.person.icon = '';
+      URL.revokeObjectURL(url);
+      save();
+      renderPerson();
+    };
+    image.onerror = function () { URL.revokeObjectURL(url); };
+    image.src = url;
+  }
+
   function renderProfile() {
     var manual = state.maintenance !== null && state.maintenance !== undefined;
     el('p-target').value = state.target;
@@ -1216,6 +1605,8 @@
     el('p-goal').textContent = t(state.target > 0 ? 'prof.lose' : 'prof.maintain');
     renderCloudHelp();
     renderCloudSettings();
+    renderActivityPicker();
+    renderPerson();
     Array.prototype.forEach.call(el('dev-switch').children, function (b) {
       b.setAttribute('aria-pressed',
         (b.getAttribute('data-dev') === 'on') === !!state.devMode ? 'true' : 'false');
@@ -2004,6 +2395,32 @@
         renderCloudButton();
         renderCloudHelp();
       });
+    });
+
+    ['p-first', 'p-last'].forEach(function (id) {
+      el(id).addEventListener('input', function () {
+        state.person[id === 'p-first' ? 'first' : 'last'] = this.value.slice(0, 30);
+        save();
+        renderPerson();
+      });
+    });
+
+    el('person-avatar').addEventListener('click', function () {
+      var picker = el('avatar-pick');
+      picker.hidden = !picker.hidden;
+    });
+
+    el('avatar-file').addEventListener('change', function () {
+      var file = this.files && this.files[0];
+      this.value = '';
+      if (file) { storeAvatarPhoto(file); }
+    });
+
+    el('avatar-clear').addEventListener('click', function () {
+      state.person.photo = null;
+      state.person.icon = '';
+      save();
+      renderPerson();
     });
 
     el('period-prev').addEventListener('click', function () {
