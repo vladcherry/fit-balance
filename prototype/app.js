@@ -25,7 +25,8 @@
       'home.feed': 'ЛЕНТА ДНЯ', 'home.all': 'Всё', 'home.snapFood': 'Снять еду',
       'home.targetNote': 'чтобы выйти на дневной дефицит {target} ккал',
       'home.targetDone': 'сверх цели ещё {extra} ккал',
-      'home.empty': 'Сегодня пока ничего не записано',
+      'home.empty': 'Сегодня пока ничего не записано — новый день начинается пустым.',
+      'home.emptyHistory': 'Прошлые дни →',
 
       'photo.eyebrow': 'Распознавание на устройстве', 'photo.cancel': 'Отмена',
       'photo.newMeal': 'НОВЫЙ ПРИЁМ ПИЩИ', 'photo.headlineTotal': '≈ {kcal} ККАЛ',
@@ -73,6 +74,7 @@
       'photo.emptyItems': 'Снимите фото или добавьте продукт вручную.',
       'photo.total': 'Итого', 'photo.totalWeight': '{g} г всего',
       'photo.addProduct': 'Добавить продукт', 'photo.save': 'Записать в дневник',
+      'photo.saveNeedsKcal': 'Впишите калории продукта',
       'photo.saved': 'Записано: +{kcal} ккал',
 
       'entry.time': 'Время',
@@ -226,6 +228,7 @@
       'photo.emptyItems': 'Take a photo, or add an item by hand.',
       'photo.total': 'Total', 'photo.totalWeight': '{g} g in total',
       'photo.addProduct': 'Add an item', 'photo.save': 'Save to diary',
+      'photo.saveNeedsKcal': 'Enter the item\u2019s calories',
       'photo.saved': 'Saved: +{kcal} kcal',
 
       'entry.time': 'Time',
@@ -702,7 +705,14 @@
     var feed = el('feed');
     feed.innerHTML = '';
     if (!state.entries.length) {
-      feed.innerHTML = '<div class="feed__empty">' + t('home.empty') + '</div>';
+      /* A day that rolled over at midnight starts empty, which reads as lost
+         data unless the screen says where the previous one went. */
+      var empty = document.createElement('div');
+      empty.className = 'feed__empty';
+      empty.textContent = t('home.empty') + ' ';
+      var link = button(t('home.emptyHistory'), false, function () { go('history'); }, 'link');
+      empty.appendChild(link);
+      feed.appendChild(empty);
       return;
     }
     /* In clock order, earliest first: the day as it happened, which is also the
@@ -1009,8 +1019,11 @@
     el('photo-headline').textContent = m.kcal
       ? t('photo.headlineTotal', { kcal: num(m.kcal) })
       : t('photo.newMeal');
+    /* A meal with no calories cannot be written to the diary, and a disabled
+       button that says nothing reads as broken. */
     el('save-meal').disabled = m.kcal === 0;
     el('save-meal').style.opacity = m.kcal === 0 ? '0.45' : '1';
+    el('save-meal').textContent = t(m.kcal === 0 ? 'photo.saveNeedsKcal' : 'photo.save');
   }
 
   function numberField(labelText, value) {
@@ -2158,6 +2171,8 @@
       state.entries.push({
         time: nowLabel(), kind: 'activity', key: 'act.' + state.draft.type, kcal: kcal
       });
+      debugLog('diary + activity ' + state.draft.type + ' ' + kcal + 'kcal at ' + nowLabel() +
+        ' (entries now ' + state.entries.length + ')');
       state.draft.manual = '';
       el('act-manual').value = '';
       save();
@@ -2494,6 +2509,8 @@
       state.entries.push({
         time: nowLabel(), kind: 'food', key: 'meal.' + state.meal.type, kcal: m.kcal
       });
+      debugLog('diary + meal ' + state.meal.type + ' ' + m.kcal + 'kcal at ' + nowLabel() +
+        ' (entries now ' + state.entries.length + ')');
       resetMeal();
       save();
       renderHome();

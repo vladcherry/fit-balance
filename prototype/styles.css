@@ -114,7 +114,14 @@ body {
 
 .metric__label { font-size: 12px; font-weight: 800; letter-spacing: 0.16em; margin-top: 14px; }
 .metric__row { display: flex; align-items: baseline; gap: 10px; margin-top: -4px; }
-.metric__value { font-family: var(--display); font-size: 108px; line-height: 0.92; letter-spacing: -0.02em; }
+.metric__value {
+  font-family: var(--display);
+  /* Four digits and a unit have to fit the width of a phone, and 108px only
+     ever fitted three. */
+  font-size: clamp(64px, 24vw, 108px);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
 .metric__unit { font-size: 16px; font-weight: 700; }
 .metric__note { font-size: 13px; font-weight: 600; margin-top: 4px; }
 
@@ -143,9 +150,9 @@ body {
 }
 .card-dark--plain { margin: 0 22px; box-shadow: none; display: block; }
 .card-dark__big { font-family: var(--display); font-size: 34px; line-height: 1; }
-.stack { text-align: right; }
-.stack__k { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
-.stack__v { font-size: 17px; font-weight: 700; margin-top: 1px; }
+.stack { text-align: right; flex-shrink: 0; }
+.stack__k { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+.stack__v { font-size: 17px; font-weight: 700; margin-top: 1px; white-space: nowrap; }
 .stack__k + .stack__v { margin-bottom: 6px; }
 
 .section-head {
@@ -375,8 +382,17 @@ button, .btn { font: inherit; border: 0; background: none; color: inherit; curso
   color: var(--ink);
 }
 .editor input:focus { outline: 2px solid var(--ink); outline-offset: -2px; }
-.editor__pair { display: flex; gap: 10px; }
-.editor__pair label { flex: 1; min-width: 0; }
+/* Two fields side by side, except where they cannot both fit. A native time
+   input carries the platform's own widget, which on Android is far wider than
+   the same field in a desktop browser - side by side they end up on top of
+   each other. */
+.editor__pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+}
+.editor__pair label { min-width: 0; }
+.editor__pair input { min-width: 0; max-width: 100%; }
 .editor__k { display: block; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 4px; }
 .editor__row { display: flex; gap: 10px; }
 .editor__row button { flex: 1; height: 44px; border-radius: 10px; font-size: 13px; font-weight: 800; }
